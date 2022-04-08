@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+# Load appropriate sources even if script is a symlink:
+declare SFOLDER=$( readlink -f "$0" )
+SFOLDER="${SFOLDER%/*}/sources"
+source "$SFOLDER"/include
+
+declare -a Man_Menu
+
+manlinks_display_line()
+{
+   local -i hilite="$1"
+   local -i padding="$2"
+
+   local title="$3"
+   local desc="$4"
+
+   if [ "$hilite" -ne 0 ]; then
+       echo -n $'\e[44m'
+   fi
+   force_length "${3}:  $4" "$2"
+   echo $'\e[m'
+}
+
+# Key action function invoked with item selection
+# Args
+#    (string)      A character string representing the keypress that
+#                  triggers this action
+#    (name)        name of the current lui_list
+#    (integer)     row number of the currently indicated lui_list row
+#    (various...)  optional extra parameters passed to lui_list_generic()
+#                  following the first five parameters.
+#
+# Returns 0 to continue the interaction
+manlinks_execute_line()
+{
+    local keyp="$1"
+    local list_name="$2"
+    local -i row_ndx="$3"
+
+    local -i list_ndx
+    lui_list_ndx_from_row_cell_nameref "list_ndx" "Man_Menu" "$row_ndx" 2
+
+    local cmd="${Man_Menu[$list_ndx]}"
+    local packed_args="${Man_Menu[$((list_ndx+1))]}"
+
+    local IFS="${packed_args:0:1}"
+    packed_args="${packed_args:1}"
+    local -a args=( $packed_args )
+
+    "$cmd" "${args[@]}"
+}
+
+#########################
+#         Main          #
+# Execution begins here #
+#########################
+
+# @def Execution packed-array element
+#
+# Since lui_list_generic needs a fixed-width array table,
+# the fourth field of each row will be a packed array
+# of options to be passed to the command in the third field.
+#
+# Since the same IFS character may not be appropriate for
+# all argument lists, the first character of the packed-array
+# is the IFS character to use to split the array.
+Man_Menu=(
+    4 0
+
+    "Man Pager Directions"
+    "man can issue pager directions, including options passed directly to the pager."
+    "man"
+    "|-P|less -p '^\ +-P pager'|man"
+
+    "Bash Here documents"
+    "Read about Bash handling of here documents."
+    "man"
+    "|-P|less -p 'Here Documents'|bash"
+
+    "ANSI-C quoting"
+    "Quoting formulae for placing control characters"
+    "man"
+    "|-P|less -p Words of the form $\'string|bash"
+)
+lui_list_init "Man_Menu"
+
+declare -a Man_Keys_List=(
+    $'\e|q:LUI_ABORT'
+    $'\n:manlinks_execute_line'
+)
+
+declare -a Man_Menu_Args=(
+    ""                      # ignoring selection
+    "Man_Menu"              # guiding lui_list
+    0 0                     # row and column values to trigger centering
+    20                      # limit of lines to be displayed at once
+    80                      # character-count limit for each line
+    "manlinks_display_line" # custom line displayer
+    "Man_Keys_List"         # name of keylist array
+)
+
+reset_screen
+
+lui_list_generic "${Man_Menu_Args[@]}"
+
