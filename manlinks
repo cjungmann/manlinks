@@ -9,6 +9,14 @@ declare -a Man_Menu
 declare COL_EMP=$'\e[36;1m'
 declare COL_OFF=$'\e[m'
 
+# Display line function for manlinks
+#
+# Hilight the title part to set it off from the description
+#
+# Args
+#    (integer):    flag (1 for true, 0 for false) if line is target
+#    (integer):    width of characters to print
+#    (various):    elements of selected row start here
 manlinks_display_line()
 {
    local -i hilite="$1"
@@ -25,19 +33,14 @@ manlinks_display_line()
    local -i gutter=3
 
    # print emphasized title
-   echo -n "${COL_EMP}"
-
    local -i len_title="${#title}"
    local -i trim
-
    (( trim = len_title - padding ))
-   if (( trim > -gutter )); then
-       # not enough room for desc
-       if (( trim > 0 )); then
-           echo -n "${title:0: -$trim}"
-       else
-           echo -n "$title"
-       fi
+
+   echo -n "${COL_EMP}"
+
+   if (( trim > 0 )); then
+       echo -n "${title:0: -$trim}"
    else
        echo -n "$title"
    fi
@@ -121,12 +124,13 @@ Man_Menu=(
     "Bash Here documents"
     "Read about Bash handling of here documents."
     "man"
-    "|-P|less -p 'Here Documents'|bash"
+    "|-P|less -p Here\ Documents|bash"
 
     "ANSI-C quoting"
     "Quoting formulae for placing control characters"
     "man"
-    "|-P|less -p Words of the form $\'string|bash"
+    # "|-P|less -p Words\ of\ the\ form\ \$\'string|bash"
+    "|-P|less -pANSI\ C\ standard|bash"
 
     "Bash Parameter Expansion"
     "\$-prefixed variable manipulation syntax"
@@ -146,22 +150,13 @@ Man_Menu=(
     "Bash Regular Expression [[ ]]"
     "Notation for applying regular expression searches"
     "man"
-    "|-P|less -p ^\ +[[\ expression|bash"
+    # Need triple-backslash to escape the [
+    '|-P|less -p^\ +\\\[\\\[\ expression|bash'
 
     "Bash Regular Expression flavor"
     "Bash regular expressions are of the POSIX extended flavor"
     "man"
     "|7|regex"
-
-    "This test title is very long to see how the line displayer handles text longer than the screen."
-    "Short description"
-    "man"
-    "|man"
-
-    "This test title is very long to see how the line displayer handles text lon"
-    "Short description"
-    "man"
-    "|man"
 )
 lui_list_init "Man_Menu"
 
@@ -188,7 +183,5 @@ trap restore_console_state_show_cursor EXIT
 reset_screen
 
 lui_list_generic "${Man_Menu_Args[@]}"
-
-read -n1 -p To\ continue
 
 reset_screen
