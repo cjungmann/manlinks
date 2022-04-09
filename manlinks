@@ -6,6 +6,8 @@ SFOLDER="${SFOLDER%/*}/sources"
 source "$SFOLDER"/include
 
 declare -a Man_Menu
+declare COL_EMP=$'\e[36;1m'
+declare COL_OFF=$'\e[m'
 
 manlinks_display_line()
 {
@@ -18,7 +20,45 @@ manlinks_display_line()
    if [ "$hilite" -ne 0 ]; then
        echo -n $'\e[44m'
    fi
-   force_length "${3}:  $4" "$2"
+
+   # allowance for abandoning description after title
+   local -i gutter=3
+
+   # print emphasized title
+   echo -n "${COL_EMP}"
+
+   local -i len_title="${#title}"
+   local -i trim
+
+   (( trim = len_title - padding ))
+   if (( trim > -gutter )); then
+       # not enough room for desc
+       if (( trim > 0 )); then
+           echo -n "${title:0: -$trim}"
+       else
+           echo -n "$title"
+       fi
+   else
+       echo -n "$title"
+   fi
+
+   echo -n "${COL_OFF}"
+
+   # print description if enough room
+   if (( trim < -gutter )); then
+       echo -n ": "
+       (( padding -= ( len_title + 2 ) ))
+
+       local -i len_desc="${#desc}"
+
+       if (( len_desc < padding )); then
+           echo -n "${desc}"
+       else
+           (( trim = len_desc - padding ))
+           echo -n "${desc:0: -$trim}"
+       fi
+   fi
+
    echo $'\e[m'
 }
 
@@ -44,9 +84,14 @@ manlinks_execute_line()
     local cmd="${Man_Menu[$list_ndx]}"
     local packed_args="${Man_Menu[$((list_ndx+1))]}"
 
-    local IFS="${packed_args:0:1}"
+    local delimiter="${packed_args:0:1}"
     packed_args="${packed_args:1}"
+
+    # Only change IFS until the array is initialized
+    local OIFS="$IFS"
+    local IFS="$delimiter"
     local -a args=( $packed_args )
+    IFS="$OIFS"
 
     "$cmd" "${args[@]}"
 }
@@ -82,6 +127,41 @@ Man_Menu=(
     "Quoting formulae for placing control characters"
     "man"
     "|-P|less -p Words of the form $\'string|bash"
+
+    "Bash Parameter Expansion"
+    "\$-prefixed variable manipulation syntax"
+    "man"
+    "|-P|less -p ^\ +Parameter\ Expansion|bash"
+
+    "Bash Conditional Expressions"
+    "List of options executing different tests"
+    "man"
+    "|-P|less -p ^CONDITIONAL\ EXPRESSIONS|bash"
+
+    "Bash Signal Handling"
+    "Signals that can be trapped in a Bash script"
+    "man"
+    "|-P|less -p ^SIGNALS|bash"
+
+    "Bash Regular Expression [[ ]]"
+    "Notation for applying regular expression searches"
+    "man"
+    "|-P|less -p ^\ +[[\ expression|bash"
+
+    "Bash Regular Expression flavor"
+    "Bash regular expressions are of the POSIX extended flavor"
+    "man"
+    "|7|regex"
+
+    "This test title is very long to see how the line displayer handles text longer than the screen."
+    "Short description"
+    "man"
+    "|man"
+
+    "This test title is very long to see how the line displayer handles text lon"
+    "Short description"
+    "man"
+    "|man"
 )
 lui_list_init "Man_Menu"
 
@@ -100,7 +180,15 @@ declare -a Man_Menu_Args=(
     "Man_Keys_List"         # name of keylist array
 )
 
+# Setup for unexpected termination
+save_console_state_hide_cursor
+trap restore_console_state_show_cursor SIGINT
+trap restore_console_state_show_cursor EXIT
+
 reset_screen
 
 lui_list_generic "${Man_Menu_Args[@]}"
 
+read -n1 -p To\ continue
+
+reset_screen
