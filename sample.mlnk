@@ -1,0 +1,65 @@
+#!manlinks
+# -*- mode: sh -*-
+
+Select from the following list of topics to open the associated resource.
+This manlinks file, along with regex.mlnk, can serve as a model for writing your own manlinks files.
+
+4
+0
+
+"Man Pager Directions"
+"man can issue pager directions, including options passed directly to the pager."
+"man"
+"|-P|less -p '^\ +-P pager'|man"
+
+"Bash Here documents"
+"Read about Bash handling of here documents."
+"man"
+"|-P|less -p Here\ Documents|bash"
+
+"ANSI-C quoting"
+"Quoting formulae for placing control characters"
+"man"
+# "|-P|less -p Words\ of\ the\ form\ \$\'string|bash"
+"|-P|less -pANSI\ C\ standard|bash"
+
+"Bash Parameter Expansion"
+"\$-prefixed variable manipulation syntax"
+"man"
+"|-P|less -p ^\ +Parameter\ Expansion|bash"
+
+"Bash Conditional Expressions"
+"List of options executing different tests"
+"man"
+"|-P|less -p ^CONDITIONAL\ EXPRESSIONS|bash"
+
+"Bash Signal Handling"
+"Signals that can be trapped in a Bash script"
+"man"
+"|-P|less -p ^SIGNALS|bash"
+
+"Bash Regular Expression [[ ]]"
+"Notation for applying regular expression searches"
+"man"
+# Need triple-backslash to escape the [
+'|-P|less -p^\ +\\\[\\\[\ expression|bash'
+
+"Bash Regular Expression flavor"
+"Bash regular expressions are of the POSIX extended flavor"
+"man"
+"|7|regex"
+
+"Bash Regular Expression 'nocasematch'"
+"shopt option for case-insensitive regex pattern matching"
+"man"
+"|-P|less -p^\ +nocasematch$|bash"
+
+"xdg-open opens all files"
+"xdg-open opens files with registered programs"
+"man"
+"|xdg-open"
+
+"xargs: I should learn how to use this"
+"xargs redirects stdin to be arguments in another program"
+"man"
+"|xargs"

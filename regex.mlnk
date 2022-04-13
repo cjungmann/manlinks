@@ -1,0 +1,34 @@
+#!manlinks
+# -*- mode: sh -*-
+
+Regular Expressions Resources
+
+4
+0
+
+Bash Regular Expression [[ ]]
+Bash syntax for evaluating regular expressions
+man
+|-P|less -p^\ +\\\[\\\[\ expression|bash
+
+Posix Regular Expressions
+Posix flavor of regular expressions
+man
+|7|regex
+
+PCRE syntax
+Syntax guide for Perl-compatible regular expressions (PCRE)
+man
+|pcresyntax
+
+PCRE Pattern
+Patterns guide for Perl-compatible regular expressions (PCRE)
+man
+|pcrepattern
+
+PCRE Grep
+Grep program using Perl-compatible regular expressions (PCRE)
+man
+|pcregrep
+
+
