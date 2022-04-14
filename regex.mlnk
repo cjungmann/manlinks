@@ -1,7 +1,13 @@
 #!manlinks
 # -*- mode: sh -*-
 
-Regular Expressions Resources
+The following items open resources about Regular Expressions.
+
+There are two major flavors of regular expressions, Posix and Perl-compatible (PCRE).
+
+Bash regular expressions (using the =~ operator within [[...]]) use Posix syntax.
+
+*pcregrep* uses PCRE expressions, and common Linux tools like *grep*, *awk*
 
 4
 0
@@ -15,6 +21,11 @@ Posix Regular Expressions
 Posix flavor of regular expressions
 man
 |7|regex
+
+Awk Regular Expressions
+Awk uses its own flavor of regular expressions
+info
+|awk|--node=Regular Expressions
 
 PCRE syntax
 Syntax guide for Perl-compatible regular expressions (PCRE)
