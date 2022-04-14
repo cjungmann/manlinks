@@ -1,13 +1,205 @@
 #!/usr/bin/env bash
 
 # Load appropriate sources even if script is a symlink:
-declare SFOLDER=$( readlink -f "$0" )
-SFOLDER="${SFOLDER%/*}/sources"
+declare AFOLDER=$( readlink -f "$0" )   # App's true location
+AFOLDER="${AFOLDER%/*}"
+SFOLDER="${AFOLDER}/sources"
 source "$SFOLDER"/include
 
+declare -a Man_Keys_List
 declare -a Man_Menu
 declare COL_EMP=$'\e[36;1m'
 declare COL_OFF=$'\e[m'
+
+to_continue() { read -n1 -p Press\ any\ key; }
+
+# @def Manlink lui_list
+#
+# This list is a 4 field list, each record has the following fields:
+# - title
+# - short description
+# - command name (usually 'man', but could be 'info' or something else)
+# - arguments for the command
+#
+# The fourth field, the packed arguments array, needs some explanation.
+# The arguments field is a packed array, indicating a delimiter
+# character that will be used as the IFS value to split the string into
+# an array.
+#
+# The first character of the fourth field is the delimiter, which allows
+# flexibility if another delimiter is included in the data.  The delimiter
+# is required (for now) even for single-argument packed arrays.
+
+# @def Manlinks files
+#
+# Manlinks files are identified by a shebank on the first line:
+# #!manlinks
+# The manlinks line can be followed by a file variables line like:
+# # -*- mode: sh -*-
+#
+# Like shell scripts, a line that begins with '#' are considered to
+# be comments and will be ignored, though unlike shell scripts, a
+# '#' elsewhere in the line will NOT introduce a comment.  Empty
+# lines will also be ignored.
+#
+# The first non-ignored line of characters will be used as an
+# introduction to the interaction.  This may change in order to
+# allow multi-paragraph introductions, but for now it is only a
+# single paragraph that might extend multiple lines.
+#
+# The first numeral or pair of numerals will be interpreted as the
+# columns and rows values in a lui_list definition.  The initial
+# design is for four (4) fields per row.
+#
+# When reading the remainder of the manlinks file, the program will
+# simply append each following non-ignored line as an element in the
+# array, but the data should be organized according to the columns
+# value.
+#
+# It would be reasonable to use extra columns, just use an appropriate
+# columns value along with a matching organization of fields.
+#
+# There are a few manlinks sample files along with the script.  The
+# files are recognized by their shebangs rather than their extensions,
+# but for ease of reference here, the sample manlinks files have an
+# extension '.mlnk'.
+
+# Search a directory for manlink files, identified by shebang '#!manlinks'
+#
+# This function returns the list of manlinks files found in the
+# indicated directory.
+#
+# Args
+#    (name):   name of array in which manlinks file are added
+#    (string): path to search
+identify_manlinks_files()
+{
+    local list_name="$1"
+    local -n fl_links="$list_name"
+    local path="${2:-.}"
+
+    # Create a lui_list if the array is empty
+    if [ "${#fl_links[@]}" -eq 0 ]; then
+        fl_links=( 4 0 )
+    fi
+
+    local -a raw=( "${path}/"* )
+
+    local file line title
+    local -i is_manlinks
+    for file in "${raw[@]}"; do
+        is_manlinks=0
+        if [ -f "$file" ]; then
+            title=
+            while [ "${#title}" -eq 0 ] && IFS= read line; do
+                if [ "$is_manlinks" -eq 0 ]; then
+                    if [ "$line" == '#!manlinks' ]; then
+                        is_manlinks=1
+                    else
+                        break;
+                    fi
+                elif [ -z "$title" ]; then
+                    if [ "${#line}" -gt 0 ]; then
+                        if [ "${line:0:1}" != '#' ]; then
+                            if [[ "$line" =~ [[:digit:]]+\(\ +[[:digit:]]+\) ]]; then
+                                title="$file"
+                            else
+                                title="$line"
+                            fi
+                        fi
+                    fi
+                fi
+            done< "$file"
+
+            if [ -n "$title" ]; then
+                fl_links+=( "$title" "$title" "manlinks" "|$file" )
+            fi
+        fi
+    done
+
+    lui_list_init "$list_name"
+
+    return 0
+}
+
+# Package the condition identifying ignored lines for open_manlinks_file()
+#
+# Args
+#    (string):   contents of a line of a manlinks file
+manlinks_skip_line()
+{
+    local nospaces="${1// /}"
+    [ "${1:0:1}" == "#" ] || [ "${#nospaces}" -eq 0 ]
+}
+
+# Create a lui_list object from the contents of a named manlinks file.
+#
+# The lui_list will be initialized after the contents are read in.
+#
+# Args
+#    (name):   name of array variable in which the lui_list will be
+#              created.
+#    (name):   optional name of array of bound paragraphs.
+#    (string): path to manlinks file
+open_manlinks_file()
+{
+    local list_name="$1"
+    local paras_name="$2"
+    local file_name="$3"
+
+    local -n omf_list="$list_name"
+    omf_list=()
+
+    local -i pre_intro=1
+    is_pre_intro() { [ "$pre_intro" -gt 0 ]; }
+
+    local -i rows=-1 cols=0
+    past_dims() { [ "$rows" -ge 0 ]; }
+
+    local -a omf_intro=()
+    local -i intro_progress=0
+    past_intro() { [ "$intro_progress" -gt 0 ]; }
+
+    local line
+    while IFS= read -r line; do
+        if past_dims; then
+            if manlinks_skip_line "$line"; then continue; fi
+
+            if [[ "$line" =~ ^\"(.*)\"$ ]] || [[ ^"$line" =~ \"(.*)\"$ ]]; then
+                line="${BASH_REMATCH[1]}"
+            fi
+            omf_list+=( "$line" )
+        elif is_pre_intro && manlinks_skip_line "$line"; then
+            continue
+        elif ! past_dims; then
+            pre_intro=0
+            if [[ "$line" =~ ^([[:digit:]]+)(\ +([[:digit:]]+))?$ ]]; then
+                if ! past_intro; then
+                    bind_array_to_paragraphs "$paras_name" "omf_intro"
+                    (( ++intro_progress ))
+                fi
+
+                if [ "$cols" -eq 0 ]; then
+                    cols="${BASH_REMATCH[1]}"
+                    if [ "${#BASH_REMATCH[3]}" -gt 0 ] && value_is_int "${BASH_REMATCH[3]}"; then
+                        rows="${BASH_REMATCH[3]}"
+                    fi
+                else
+                    rows="${BASH_REMATCH[1]}"
+                fi
+
+                if [ "$rows" -ge 0 ]; then
+                    omf_list+=( "$cols" "$rows" )
+                fi
+            else
+                omf_intro+=( "$line" )
+            fi
+        fi
+    done < "$file_name"
+
+    lui_list_init "$list_name"
+}
+
 
 # Display line function for manlinks
 #
@@ -82,10 +274,11 @@ manlinks_execute_line()
     local -i row_ndx="$3"
 
     local -i list_ndx
-    lui_list_ndx_from_row_cell_nameref "list_ndx" "Man_Menu" "$row_ndx" 2
+    lui_list_ndx_from_row_cell_nameref "list_ndx" "$list_name" "$row_ndx" 2
 
-    local cmd="${Man_Menu[$list_ndx]}"
-    local packed_args="${Man_Menu[$((list_ndx+1))]}"
+    local -n mel_menu="$list_name"
+    local cmd="${mel_menu[$list_ndx]}"
+    local packed_args="${mel_menu[$((list_ndx+1))]}"
 
     local delimiter="${packed_args:0:1}"
     packed_args="${packed_args:1}"
@@ -96,8 +289,64 @@ manlinks_execute_line()
     local -a args=( $packed_args )
     IFS="$OIFS"
 
-    "$cmd" "${args[@]}"
+    if [ "$cmd" == "manlinks" ]; then
+        local -a submenu
+        local -a mel_paras
+        open_manlinks_file "submenu" "mel_paras" "${args[0]}"
+        manlinks_start_interaction "submenu" "mel_paras"
+    else
+        "$cmd" "${args[@]}"
+    fi
 }
+
+# Packaged initialization of a lui_list_generic given a lui_list
+# and an optional paragraphs array.
+#
+# Args
+#    (name):   name of initialized manlinks lui_list from which
+#              the interaction will be built
+#    (name):   optional name of an array bound paragraphs.
+manlinks_start_interaction()
+{
+    local lui_list_name="$1"
+    local paras_name="$2"
+
+    local -a args=(
+        ""
+        "$lui_list_name"
+        0 0
+        20 80         # limits of rows and columns
+        "manlinks_display_line"
+        "Man_Keys_List"
+        "$paras_name"
+    )
+
+    reset_screen
+
+    lui_list_generic "${args[@]}"
+}
+
+# Collect manfiles from invocation directory as well as the manlinks
+# application directory.  This allows for project-specific manlinks files
+# that won't be included outside of that project's directory.
+show_manlinks_files()
+{
+    local -a manlinks_list
+    if [ "$PWD" != "$AFOLDER" ]; then
+        identify_manlinks_files "manlinks_list" "$PWD"
+    fi
+
+    identify_manlinks_files "manlinks_list" "$AFOLDER"
+
+    local -a smf_paras
+    bind_paragraphs "smf_paras" <<EOF
+This is a list of available manlinks files.  Select one of these
+files to see the links included in the file.
+EOF
+
+    manlinks_start_interaction "manlinks_list" "smf_paras"
+}
+
 
 #########################
 #         Main          #
@@ -113,66 +362,9 @@ manlinks_execute_line()
 # Since the same IFS character may not be appropriate for
 # all argument lists, the first character of the packed-array
 # is the IFS character to use to split the array.
-Man_Menu=(
-    4 0
-
-    "Man Pager Directions"
-    "man can issue pager directions, including options passed directly to the pager."
-    "man"
-    "|-P|less -p '^\ +-P pager'|man"
-
-    "Bash Here documents"
-    "Read about Bash handling of here documents."
-    "man"
-    "|-P|less -p Here\ Documents|bash"
-
-    "ANSI-C quoting"
-    "Quoting formulae for placing control characters"
-    "man"
-    # "|-P|less -p Words\ of\ the\ form\ \$\'string|bash"
-    "|-P|less -pANSI\ C\ standard|bash"
-
-    "Bash Parameter Expansion"
-    "\$-prefixed variable manipulation syntax"
-    "man"
-    "|-P|less -p ^\ +Parameter\ Expansion|bash"
-
-    "Bash Conditional Expressions"
-    "List of options executing different tests"
-    "man"
-    "|-P|less -p ^CONDITIONAL\ EXPRESSIONS|bash"
-
-    "Bash Signal Handling"
-    "Signals that can be trapped in a Bash script"
-    "man"
-    "|-P|less -p ^SIGNALS|bash"
-
-    "Bash Regular Expression [[ ]]"
-    "Notation for applying regular expression searches"
-    "man"
-    # Need triple-backslash to escape the [
-    '|-P|less -p^\ +\\\[\\\[\ expression|bash'
-
-    "Bash Regular Expression flavor"
-    "Bash regular expressions are of the POSIX extended flavor"
-    "man"
-    "|7|regex"
-)
-lui_list_init "Man_Menu"
-
-declare -a Man_Keys_List=(
+Man_Keys_List=(
     $'\e|q:LUI_ABORT'
     $'\n:manlinks_execute_line'
-)
-
-declare -a Man_Menu_Args=(
-    ""                      # ignoring selection
-    "Man_Menu"              # guiding lui_list
-    0 0                     # row and column values to trigger centering
-    20                      # limit of lines to be displayed at once
-    80                      # character-count limit for each line
-    "manlinks_display_line" # custom line displayer
-    "Man_Keys_List"         # name of keylist array
 )
 
 # Setup for unexpected termination
@@ -182,6 +374,14 @@ trap restore_console_state_show_cursor EXIT
 
 reset_screen
 
-lui_list_generic "${Man_Menu_Args[@]}"
+if [ "$#" -gt 0 ]; then
+    declare file_name_arg="$1"
+    declare -a links_list
+    declare -a file_paras
+    open_manlinks_file "links_list" "file_paras" "$file_name_arg"
+    manlinks_start_interaction "links_list" "file_paras"
+else
+    show_manlinks_files
+fi
 
 reset_screen
