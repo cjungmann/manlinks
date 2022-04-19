@@ -9,7 +9,15 @@ source "$SFOLDER"/include
 declare -a Man_Keys_List
 declare -a Man_Menu
 declare COL_EMP=$'\e[36;1m'
+
+declare COL_BOLD="$LESS_TERMCAP_md"
+declare COL_ITAL="$LESS_TERMCAP_us"
+declare COL_END="$LESS_TERMCAP_me"
+
+declare COL_BOLD=$'\e[32;1m'
+declare COL_ITAL=$'\e[36;1m'
 declare COL_OFF=$'\e[m'
+
 
 to_continue() { read -n1 -p Press\ any\ key; }
 
@@ -37,8 +45,8 @@ to_continue() { read -n1 -p Press\ any\ key; }
 # The manlinks line can be followed by a file variables line like:
 # # -*- mode: sh -*-
 #
-# Like shell scripts, a line that begins with '#' are considered to
-# be comments and will be ignored, though unlike shell scripts, a
+# Like shell scripts, a line that begins with '#' is considered to
+# be a comment and will be ignored, though unlike shell scripts, a
 # '#' elsewhere in the line will NOT introduce a comment.  Empty
 # lines will also be ignored.
 #
@@ -176,6 +184,7 @@ open_manlinks_file()
             if [[ "$line" =~ ^([[:digit:]]+)(\ +([[:digit:]]+))?$ ]]; then
                 if ! past_intro; then
                     bind_array_to_paragraphs "$paras_name" "omf_intro"
+                    # colorize_array "$paras_name"
                     (( ++intro_progress ))
                 fi
 
