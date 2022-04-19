@@ -1,0 +1,18 @@
+#!manlinks
+# -*- mode: sh -*-
+
+Bashisms
+
+This is a demonstration of opening web pages from manlinks page.
+
+4 0
+
+Integer test
+Ideas for testing for integer value before bombing out of script
+chromium
+|--new-window|https://stackoverflow.com/questions/2210349/test-whether-string-is-a-valid-integer
+
+Bash Cheat Sheet
+Reasonably comprehensive summary of Bash constructions
+xdg-open
+|https://devhints.io/bash

@@ -1,0 +1,24 @@
+#!manlinks
+# -*- mode: sh -*-
+
+Man and Info Navigation
+
+This reference is intended to help recall keybindings in the
+*man* and *info* system reference tools.  Note that *man* documents
+use a pager, usually *less*, to navigate, thus *man* navigation takes
+you to the *less* man page.
+
+4
+0
+
+Searching in an *info* Document
+Reference to unique info page keybindings
+info
+|--node=Searching Commands|info
+
+Searching with *less* keybindings in a *man* document
+Reference to unique info page keybindings
+man
+|-P|less -p/pattern|less
+
+
