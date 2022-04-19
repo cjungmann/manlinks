@@ -226,8 +226,11 @@ manlinks_display_line()
    local title="$3"
    local desc="$4"
 
+   local col_title="$COL_EMP"
+
    if [ "$hilite" -ne 0 ]; then
-       echo -n $'\e[44m'
+       echo -n $'\e[46m'
+       col_title=$'\e[37;1m'
    fi
 
    # allowance for abandoning description after title
@@ -238,7 +241,7 @@ manlinks_display_line()
    local -i trim
    (( trim = len_title - padding ))
 
-   echo -n "${COL_EMP}"
+   echo -n "${col_title}"
 
    if (( trim > 0 )); then
        echo -n "${title:0: -$trim}"
