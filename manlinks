@@ -21,6 +21,16 @@ declare COL_OFF=$'\e[m'
 
 to_continue() { read -n1 -p Press\ any\ key; }
 
+# Package the condition identifying ignored lines for open_manlinks_file()
+#
+# Args
+#    (string):   contents of a line of a manlinks file
+manlinks_skip_line()
+{
+    local nospaces="${1// /}"
+    [ "${1:0:1}" == "#" ] || [ "${#nospaces}" -eq 0 ]
+}
+
 # @def Manlink lui_list
 #
 # This list is a 4 field list, each record has the following fields:
@@ -93,34 +103,43 @@ identify_manlinks_files()
 
     local -a raw=( "${path}/"* )
 
-    local file line title
+    local file line title desc
     local -i is_manlinks
     for file in "${raw[@]}"; do
         is_manlinks=0
         if [ -f "$file" ]; then
             title=
-            while [ "${#title}" -eq 0 ] && IFS= read line; do
+            desc=
+            while IFS= read line; do
                 if [ "$is_manlinks" -eq 0 ]; then
                     if [ "$line" == '#!manlinks' ]; then
                         is_manlinks=1
                     else
-                        break;
+                        break
                     fi
+                elif manlinks_skip_line "$line"; then
+                    continue
+                elif [[ "$line" =~ ^[[:digit:]]+(\ +[[:digit:]]+)? ]]; then
+                    # Encountering lui_list dimensions means file descriptive text is done
+                    # Improvise descriptive info:
+                    if [ -z "$title" ]; then
+                        title="$file"
+                    fi
+                    break
                 elif [ -z "$title" ]; then
-                    if [ "${#line}" -gt 0 ]; then
-                        if [ "${line:0:1}" != '#' ]; then
-                            if [[ "$line" =~ [[:digit:]]+\(\ +[[:digit:]]+\) ]]; then
-                                title="$file"
-                            else
-                                title="$line"
-                            fi
-                        fi
+                    if [[ "$line" =~ ^![*_]{1,2}(.*) ]]; then
+                        title="${BASH_REMATCH[1]}"
+                    else
+                        title="$line"
                     fi
+                elif [ -z "$desc" ]; then
+                    desc="$line"
+                    break
                 fi
             done< "$file"
 
             if [ -n "$title" ]; then
-                fl_links+=( "$title" "$title" "manlinks" "|$file" )
+                fl_links+=( "$title" "$desc" "manlinks" "|$file" )
             fi
         fi
     done
@@ -128,16 +147,6 @@ identify_manlinks_files()
     lui_list_init "$list_name"
 
     return 0
-}
-
-# Package the condition identifying ignored lines for open_manlinks_file()
-#
-# Args
-#    (string):   contents of a line of a manlinks file
-manlinks_skip_line()
-{
-    local nospaces="${1// /}"
-    [ "${1:0:1}" == "#" ] || [ "${#nospaces}" -eq 0 ]
 }
 
 # Create a lui_list object from the contents of a named manlinks file.
