@@ -1,35 +1,38 @@
 #!manlinks
 # -*- mode: sh -*-
 
-Regular Expressions
+!**Regular Expressions
 
-The following items open resources about Regular Expressions.
+Offline Regular Expression resources
 
-There are two major flavors of regular expressions, Posix and Perl-compatible (PCRE).
+Regular expressions are a powerful and widely-used syntax for
+character string operations.  They are used in command-line tools
+like *awk*, *grep*, and *sed*.  They are built into many scripting
+languages like *Bash* and *Javascript*.  Libraries are available to
+add regular expressions to most other general-purpose programming
+languages.
 
-Bash regular expressions (using the =~ operator within [[...]]) use Posix syntax.
+There are many *flavors* of regular expressions throughout all the
+offerings.  In the *nix world, the main flavors are Posix, basic *BRE*
+and extended *ERE*, and Perl-compatible *PCRE*, with Posix ERE
+being the most prevalent.
 
-*pcregrep* uses PCRE expressions, and common Linux tools like *grep*, *awk*
+Bash enables ERE regular expressions in the *[[* *=~* *]]* notation as
+well as some parameter substitutions.
+
+PCRE regular expressions are mainly available in *grep* with the -P
+option, and *pcregrep*.
+
 
 4
 0
-
-Bash Regular Expression [[ ]]
-Bash syntax for evaluating regular expressions
-man
-|-P|less -p^\ +\\\[\\\[\ expression|bash
 
 Posix Regular Expressions
 Posix flavor of regular expressions
 man
 |7|regex
 
-Awk Regular Expressions
-Awk uses its own flavor of regular expressions
-info
-|awk|--node=Regular Expressions
-
-PCRE syntax
+PCRE Syntax
 Syntax guide for Perl-compatible regular expressions (PCRE)
 man
 |pcresyntax
@@ -39,9 +42,34 @@ Patterns guide for Perl-compatible regular expressions (PCRE)
 man
 |pcrepattern
 
+PCRE Look around
+Guide to uncaptured matches
+man
+|-P|less -p^\ *Lookahead\ assertions|pcrepattern
+
+PCRE Look around cheats
+Syntax reference for lookaround
+man
+|-P|less -p^LOOKAHEAD\ AND|pcresyntax
+
 PCRE Grep
 Grep program using Perl-compatible regular expressions (PCRE)
 man
 |pcregrep
+
+Bash Regular Expression [[ ]]
+Bash syntax for evaluating regular expressions
+man
+|-P|less -p^\ +\\\[\\\[\ expression|bash
+
+Awk Regular Expressions
+Info page exhaustive reference
+info
+|awk|--node=Regexp
+
+Awk Regular Expressions
+Man page quick reference
+man
+|-P|less -p^\ *Regular\ Expressions|awk
 
 
