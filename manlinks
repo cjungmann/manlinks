@@ -31,6 +31,10 @@ manlinks_skip_line()
     [ "${1:0:1}" == "#" ] || [ "${#nospaces}" -eq 0 ]
 }
 
+# Wrapper around default URL displayer that hides error messages.
+#
+# Args
+#    (string):   URL to webpage
 browser()
 {
     local URL="$1"
@@ -133,11 +137,7 @@ identify_manlinks_files()
                     fi
                     break
                 elif [ -z "$title" ]; then
-                    if [[ "$line" =~ ^![*_]{1,2}(.*) ]]; then
-                        title="${BASH_REMATCH[1]}"
-                    else
-                        title="$line"
-                    fi
+                    title="$line"
                 elif [ -z "$desc" ]; then
                     desc="$line"
                     break
