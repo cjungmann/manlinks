@@ -162,7 +162,9 @@ identify_manlinks_files()
 # Args
 #    (name-out): name of array variable in which the lui_list will be
 #                created.
-#    (name-in):  optional name of array of bound paragraphs.
+#    (name-out)  (optional) name of array of descriptive text collected
+#                from manlinks file.  Attempt to fill made only if a
+#                name is provided.
 #    (string):   path to manlinks file
 open_manlinks_file()
 {
@@ -319,8 +321,13 @@ manlinks_execute_line()
     if [ "$cmd" == "manlinks" ]; then
         local -a submenu
         local -a mel_paras
-        open_manlinks_file "submenu" "mel_paras" "${args[0]}"
+        local filepath="${args[0]}"
+
+        open_manlinks_file "submenu" "mel_paras" "$filepath"
+
+        pushd "${filepath%/.*}"
         manlinks_start_interaction "submenu" "mel_paras"
+        popd
     else
         "$cmd" "${args[@]}"
     fi
@@ -372,7 +379,9 @@ This is a list of available manlinks files.  Select one of these
 files to see the links included in the file.
 EOF
 
+    pushd "$AFOLDER"
     manlinks_start_interaction "manlinks_list" "smf_paras"
+    popd
 }
 
 
@@ -406,8 +415,12 @@ if [ "$#" -gt 0 ]; then
     declare file_name_arg="$1"
     declare -a links_list
     declare -a file_paras
+
     open_manlinks_file "links_list" "file_paras" "$file_name_arg"
+
+    pushd "${file_name_arg%/.*}"
     manlinks_start_interaction "links_list" "file_paras"
+    popd
 else
     show_manlinks_files
 fi
