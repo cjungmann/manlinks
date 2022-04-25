@@ -98,8 +98,8 @@ browser()
 # indicated directory.
 #
 # Args
-#    (name):   name of array in which manlinks file are added
-#    (string): path to search
+#    (name-out):  name of array in which manlinks file are added
+#    (string):    path to search
 identify_manlinks_files()
 {
     local list_name="$1"
@@ -160,10 +160,10 @@ identify_manlinks_files()
 # The lui_list will be initialized after the contents are read in.
 #
 # Args
-#    (name):   name of array variable in which the lui_list will be
-#              created.
-#    (name):   optional name of array of bound paragraphs.
-#    (string): path to manlinks file
+#    (name-out): name of array variable in which the lui_list will be
+#                created.
+#    (name-in):  optional name of array of bound paragraphs.
+#    (string):   path to manlinks file
 open_manlinks_file()
 {
     local list_name="$1"
@@ -288,7 +288,7 @@ manlinks_display_line()
 # Args
 #    (string)      A character string representing the keypress that
 #                  triggers this action
-#    (name)        name of the current lui_list
+#    (name-in)     name of the current lui_list
 #    (integer)     row number of the currently indicated lui_list row
 #    (various...)  optional extra parameters passed to lui_list_generic()
 #                  following the first five parameters.
@@ -330,9 +330,9 @@ manlinks_execute_line()
 # and an optional paragraphs array.
 #
 # Args
-#    (name):   name of initialized manlinks lui_list from which
-#              the interaction will be built
-#    (name):   optional name of an array bound paragraphs.
+#    (name-out):  name of initialized manlinks lui_list from which
+#                 the interaction will be built
+#    (name-in):   optional name of an array bound paragraphs.
 manlinks_start_interaction()
 {
     local lui_list_name="$1"
