@@ -1,0 +1,22 @@
+#!manlinks
+# -*- mode: sh -*-
+
+Man Page Creation
+
+Man-page writing language
+
+Collection of links to groff documentation to aid in writing *man* pages
+
+4 0
+
+Man-writing Groff Macros
+Summary of man-page writing groff macros
+man
+|7|groff_man
+
+Function Documentation
+Use function synopsis macros to function documentation
+man
+|-P|less -p^\ *Command\ synopsis\ macros|groff_man.7
+
+

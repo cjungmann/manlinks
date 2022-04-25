@@ -1,0 +1,28 @@
+#!manlinks
+# -*- mode: sh -*-
+
+Git
+
+Find documentation of rarely-used features
+
+4 0
+
+Guides
+List of man page guides to git
+man
+|-P|less -p^GUIDES|git
+
+Find Bug
+Found where you made that foolish mistake
+man
+|1|git-bisect
+
+Find code occurences
+Using grep to find invocations of functions or other code
+man
+|1|git-grep
+
+Bespoke Git Cheatsheet
+Experiment with groff-formatted content for console
+man
+|-l|gitcs.7
