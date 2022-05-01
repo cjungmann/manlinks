@@ -1,0 +1,58 @@
+#!manlinks
+# -*- mode: sh -*-
+
+Bash&Dox
+
+Quick reference to bash_patterns sources
+
+I created a interface to scan and read specially-formatted
+documentation of Bash scripts.
+
+4 0
+
+small_stuff
+random uncategorized Bash functions
+bd
+|sources/small_stuff
+
+list_ui
+list-based interaction support
+bd
+|sources/list_ui
+
+auto_menu
+full-featured quick menu with some useful utilities
+bd
+|sources/auto_menu
+
+block_text
+functions to help plotting justified text
+bd
+|sources/block_text
+
+colorize
+minimalist highlighting functions mimic markdown bold and italics
+bd
+|sources/colorize
+
+columnize
+efficiently break a large array of strings into columns
+bd
+|sources/columnize
+
+csv_file
+parsing CSV data
+bd
+|sources/csv_file
+
+keypress
+detect keypresses like a real language
+bd
+|sources/keypress
+
+timer
+high-accuracy timer for speed-testing
+bd
+|sources/timer
+
+
