@@ -10,13 +10,30 @@ declare -a Man_Keys_List
 declare -a Man_Menu
 declare COL_EMP=$'\e[36;1m'
 
-declare COL_BOLD="$LESS_TERMCAP_md"
-declare COL_ITAL="$LESS_TERMCAP_us"
-declare COL_END="$LESS_TERMCAP_me"
+declare COL_BOLD COL_ITAL COL_LETTER_HI COL_TITLE COL_TITLE_HI COL_OFF
 
-declare COL_BOLD=$'\e[32;1m'
-declare COL_ITAL=$'\e[36;1m'
-declare COL_OFF=$'\e[m'
+col_name_set()
+{
+    local -n colvar="$1"
+    local ltc_name="LESS_TERMCAP_$2"
+    local ltc_val="${!ltc_name}"
+    local altval="$3"
+
+    if [ -n "${ltc_val}" ]; then
+        colvar="${ltc_val}"
+    else
+        colvar="$altval"
+    fi
+}
+
+col_name_set "COL_BOLD"      "md" $'\e[32;1m'
+col_name_set "COL_ITAL"      "us" $'\e[36;1m'
+
+col_name_set "COL_LETTER_HI" ""   $'\e[38;5;208m'
+col_name_set "COL_TITLE"     "vb" $'\e[44;37;1m'
+col_name_set "COL_TITLE_HI"  ""   $'\e[33;1m'
+col_name_set "COL_OFF"       "me" $'\e[m'
+
 
 
 to_continue() { read -n1 -p Press\ any\ key; }
@@ -40,6 +57,39 @@ browser()
     local URL="$1"
     xdg-open "$1" 2>/dev/null 1>&2
 }
+
+# Hilight active key for each menu item
+#
+# Args
+#    (name-io):  name of paragraph array
+#    (string):   color of hilight
+#    (string):   color of non-hilight color
+massage_title_line()
+{
+    local -n utl_paras="$1"
+
+    if [ "${#utl_paras[@]}" -gt 0 ]; then
+        local line="${utl_paras[0]}"
+        line="${line/&/}"
+        utl_paras[0]="${COL_TITLE}  $line  ${COL_OFF}"
+    fi
+}
+
+# Hilight active key for each menu item
+#
+# Args
+#    (name-io):  name of paragraph array
+#    (string):   color of hilight
+#    (string):   color of non-hilight color
+massage_menu_name()
+{
+    local -n utl_str="$1"
+    local str="$utl_str"
+    if [ -n "$str" ]; then
+        hilite_ampersand_nameref "$1" "$str" "$2" "$3"
+    fi
+}
+
 
 # @def Manlink lui_list
 #
@@ -116,6 +166,7 @@ identify_manlinks_files()
     local file line title desc
     local -i is_manlinks
     for file in "${raw[@]}"; do
+        local dir
         is_manlinks=0
         if [ -f "$file" ]; then
             title=
@@ -196,11 +247,12 @@ open_manlinks_file()
             omf_list+=( "$line" )
         elif is_pre_intro && manlinks_skip_line "$line"; then
             continue
-        elif ! past_dims; then
+        else
             pre_intro=0
             if [[ "$line" =~ ^([[:digit:]]+)(\ +([[:digit:]]+))?$ ]]; then
                 if ! past_intro; then
                     bind_array_to_paragraphs "$paras_name" "omf_intro"
+                    massage_title_line "$paras_name" "$COL_TITLE_HI" "$COL_TITLE"
                     # colorize_array "$paras_name"
                     (( ++intro_progress ))
                 fi
@@ -243,13 +295,6 @@ manlinks_display_line()
    local title="$3"
    local desc="$4"
 
-   local col_title="$COL_EMP"
-
-   if [ "$hilite" -ne 0 ]; then
-       echo -n $'\e[46m'
-       col_title=$'\e[37;1m'
-   fi
-
    # allowance for abandoning description after title
    local -i gutter=3
 
@@ -257,16 +302,23 @@ manlinks_display_line()
    local -i len_title="${#title}"
    local -i trim
    (( trim = len_title - padding ))
-
-   echo -n "${col_title}"
-
    if (( trim > 0 )); then
-       echo -n "${title:0: -$trim}"
-   else
-       echo -n "$title"
+       title="${title:0: -$trim}"
    fi
 
-   echo -n "${COL_OFF}"
+   local col_title=$'\e[37;1m'
+   # local col_title=$'\e[48;5;24m\e[37;1m'
+   local col_hilite=$'\e[48;5;25m'
+   local col_letter="$COL_LETTER_HI"
+
+   if [ "$hilite" -ne 0 ]; then
+       col_title="${col_title}${col_hilite}"
+   fi
+
+   # defer coloring title until possible trim is made:
+   massage_menu_name "title" "$col_letter" "$col_title"
+
+   echo -n "$title${COL_OFF}"
 
    # print description if enough room
    if (( trim < -gutter )); then
@@ -313,10 +365,8 @@ manlinks_execute_line()
     packed_args="${packed_args:1}"
 
     # Only change IFS until the array is initialized
-    local OIFS="$IFS"
-    local IFS="$delimiter"
-    local -a args=( $packed_args )
-    IFS="$OIFS"
+    local -a args
+    array_from_string "args" "$packed_args" "$delimiter"
 
     if [ "$cmd" == "manlinks" ]; then
         local -a submenu
@@ -325,11 +375,12 @@ manlinks_execute_line()
 
         open_manlinks_file "submenu" "mel_paras" "$filepath"
 
-        pushd "${filepath%/.*}"
+        pushd "${filepath%/.*}" >/dev/null
         manlinks_start_interaction "submenu" "mel_paras"
-        popd
+        popd >/dev/null
     else
         "$cmd" "${args[@]}"
+        reset_screen
     fi
 }
 
@@ -345,13 +396,35 @@ manlinks_start_interaction()
     local lui_list_name="$1"
     local paras_name="$2"
 
+    local -a msi_letters=()
+    auto_menu_get_letter_array "msi_letters" "$lui_list_name"
+    local msi_keys_string msi_packed_keys
+    concat_array "msi_keys_string" "msi_letters"
+    concat_array "msi_packed_keys" "msi_letters" "|"
+
+    msi_key_action()
+    {
+        local keyp="$1"
+        local -i line_ndx
+        if line_ndx=$( strstrndx "$msi_keys_string" "$keyp" ); then
+            manlinks_execute_line "$keyp" "$lui_list_name" "$line_ndx"
+        fi
+
+        return 0
+    }
+
+    local -a msi_keys_list=(
+        "${Man_Keys_List[@]}"
+        "${msi_packed_keys}:msi_key_action:View topic"
+    )
+
     local -a args=(
         ""
         "$lui_list_name"
         0 0
         20 80         # limits of rows and columns
         "manlinks_display_line"
-        "Man_Keys_List"
+        "msi_keys_list"
         "$paras_name"
     )
 
@@ -360,6 +433,7 @@ manlinks_start_interaction()
     lui_list_generic "${args[@]}"
     reset_screen
 }
+
 
 # Collect manfiles from invocation directory as well as the manlinks
 # application directory.  This allows for project-specific manlinks files
@@ -379,9 +453,9 @@ This is a list of available manlinks files.  Select one of these
 files to see the links included in the file.
 EOF
 
-    pushd "$AFOLDER"
+    pushd "$AFOLDER" >/dev/null
     manlinks_start_interaction "manlinks_list" "smf_paras"
-    popd
+    popd >/dev/null
 }
 
 
@@ -400,9 +474,15 @@ EOF
 # all argument lists, the first character of the packed-array
 # is the IFS character to use to split the array.
 Man_Keys_List=(
-    $'\e|q:LUI_ABORT'
-    $'\n:manlinks_execute_line'
+    $'\e|q:LUI_ABORT:Up one level'
+    $'\n:manlinks_execute_line:View topic'
 )
+
+debug_restore()
+{
+    read -n1 -p "Press any key"
+    restore_console_state_show_cursor
+}
 
 # Setup for unexpected termination
 save_console_state_hide_cursor
@@ -418,9 +498,9 @@ if [ "$#" -gt 0 ]; then
 
     open_manlinks_file "links_list" "file_paras" "$file_name_arg"
 
-    pushd "${file_name_arg%/.*}"
+    pushd "${file_name_arg%/.*}" >/dev/null
     manlinks_start_interaction "links_list" "file_paras"
-    popd
+    popd >/dev/null
 else
     show_manlinks_files
 fi
