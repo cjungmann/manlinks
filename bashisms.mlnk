@@ -7,12 +7,12 @@ Webpages with useful Bash info
 
 4 0
 
-Integer test
+&Integer test
 Ideas for testing for integer value before bombing out of script
 browser
 |https://stackoverflow.com/questions/2210349/test-whether-string-is-a-valid-integer
 
-Bash Cheat Sheet
+Bash &Cheat Sheet
 Reasonably comprehensive summary of Bash constructions
 browser
 |https://devhints.io/bash

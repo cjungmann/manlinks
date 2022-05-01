@@ -27,47 +27,47 @@ option, and *pcregrep*.
 4
 0
 
-Posix Regular Expressions
+&Posix Regular Expressions
 Posix flavor of regular expressions
 man
 |7|regex
 
-PCRE Syntax
+PCRE &Syntax
 Syntax guide for Perl-compatible regular expressions (PCRE)
 man
 |pcresyntax
 
-PCRE Pattern
+PC&RE Pattern
 Patterns guide for Perl-compatible regular expressions (PCRE)
 man
 |pcrepattern
 
-PCRE Look around
+PCRE &Look around
 Guide to uncaptured matches
 man
 |-P|less -p^\ *Lookahead\ assertions|pcrepattern
 
-PCRE Look around cheats
+PCRE Look around &cheats
 Syntax reference for lookaround
 man
 |-P|less -p^LOOKAHEAD\ AND|pcresyntax
 
-PCRE Grep
+PCRE &Grep
 Grep program using Perl-compatible regular expressions (PCRE)
 man
 |pcregrep
 
-Bash Regular Expression [[ ]]
+&Bash Regular Expression [[ ]]
 Bash syntax for evaluating regular expressions
 man
 |-P|less -p^\ +\\\[\\\[\ expression|bash
 
-Awk Regular Expressions
+&Awk Regular Expressions
 Info page exhaustive reference
 info
 |awk|--node=Regexp
 
-Awk Regular Expressions
+A&wk Regular Expressions
 Man page quick reference
 man
 |-P|less -p^\ *Regular\ Expressions|awk

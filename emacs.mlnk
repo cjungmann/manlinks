@@ -9,17 +9,17 @@ Collection of occasionally-needed documentation
 
 4 0
 
-Highlighting
+&Highlighting
 Change the syntax-highlighting face colors
 info
 |emacs|--node=Editing Format Info
 
-Default Background Color
+Default &Background Color
 For times when colors are hard to distinguish
 info
 |emacs|RGB Triplet
 
-Search
+&Search
 String or regular expression; search and replace
 info
 |emacs|--node=Search

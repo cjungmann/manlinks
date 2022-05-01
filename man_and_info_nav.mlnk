@@ -11,13 +11,13 @@ covered by the *less* man page.
 4
 0
 
-Searching in an *info* Document
+&info searches
 Reference to unique info page keybindings
 info
 |--node=Searching Commands|info
 
-Searching with *less* keybindings in a *man* document
-Reference to unique info page keybindings
+&man searches
+Using *less* keybindings to search a *man* document
 man
 |-P|less -p/pattern|less
 
