@@ -1,0 +1,78 @@
+.TH Man-page Tables
+.SH NAME
+.B table-hints
+\-\- Advice and Warnings about table-building
+.\" ==========================================================
+.SH SYNOPSIS
+.\" ==========================================================
+Examples in table-building
+.SH DESCRIPTION
+.PP
+Tables are a clear and compact presentation of relational data.
+.PP
+This page will demonstrate some simple tables, but the more
+important objective is to point the way to useful documentation
+on how to build tables for manpages.
+.PP
+.B NOTE
+that table commands are part of a
+.BR "groff preprocessor " called " tbl."
+.SH EXAMPLES
+.PP
+Let's see a simple example:
+
+.TS
+l	l	l	l
+----
+l	l	l	l .
+Color	index	48\fB;\fR5\fB;\fRx	48\fB;\fR2\fB;\fRx\fB;\fRx\fB;\fRx
+red	31	48\fB;\fR5\fB;\fR196	48\fB;\fR2\fB;\fR255\fB;\fR0\fB;\fR0
+green	32	48\fB;\fR5\fB;\fR46	48\fB;\fR2\fB;\fR0\fB;\fR255\fB;\fR0
+brown	33	48\fB;\fR5\fB;\fR214	48\fB;\fR2\fB;\fR255\fB;\fR128\fB;\fR0
+blue	34	48\fB;\fR5\fB;\fR21	48\fB;\fR2\fB;\fR0\fB;\fR0\fB;\fR255
+magenta	35	48\fB;\fR5\fB;\fR201	48\fB;\fR2\fB;\fR255\fB;\fR0\fB;\fR255
+cyan	36	48\fB;\fR5\fB;\fR51	48.2\fB;\fR0\fB;\fR255\fB;\fR255
+white	37	48\fB;\fR5\fB;\fR231	48.2.255\fB;\fR255\fB;\fR255
+.TE
+
+.PP
+If you look at the source code for this table, you'll see empty
+spaces between the column values.  You may not be able to tell that
+there is a single
+.B tab
+character for each space.
+.B Emacs
+provides the Ctrl-Q keystroke to enter escaped characters, so a
+tab can be entered either as
+.IR "Ctrl-Q Ctrl-I " or " Ctrl-Q TAB" .
+.PP
+Another option is to temporarily define a different delimiter,
+a single character like the pipe ("\fI|\fR") character.
+
+.PP
+\&.TS
+.br
+tab(|);
+.br
+l|l|l|l
+.br
+
+
+
+.SH SEE ALSO
+.PP
+.BR tbl (1)
+is the definitive table-building manpage resource.
+.PP
+.BR groff_man (7)
+Is a useful resource for writing manpages that includes a
+demonstrative table.
+.PP
+Note that
+.B emacs
+can easily read the source code of compressed manpages.  To
+see how your predecessors built manpage tables, view the
+.B groff_man
+source code type simply typing:
+.br
+.BI "emacs " /usr/share/man/man7/groff_man.7.gz

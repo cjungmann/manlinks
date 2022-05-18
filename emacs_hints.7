@@ -1,0 +1,54 @@
+.TH Emacs Hints 7 2022-05-06
+.
+.ds Nm \fIEmacs\fP
+.
+.\" ==========================================================
+.SH NAME
+.\" ==========================================================
+.B emacs_hints
+\(em Detailed instructions for useful Emacs features
+.
+.\" ==========================================================
+.SH SYNOPSIS
+.\" ==========================================================
+While it's not too hard to learn \*(Nm features, if you don't know
+what's available, you may never know what you are missing.
+.
+.\" ==========================================================
+.SH DESCRIPTION
+.\" ==========================================================
+.SS Using Modes
+.PP
+\*(Nm provides a bounty of editing
+.B modes
+that empower users to do their best work.  Most of the time,
+\*(Nm enables the appropriate mode according to the file being
+edited, and the user doesn't have to think much about it.
+.PP
+However, sometimes \*(Nm can't identify the file type, and other
+times the \*(Nm mode omits something a user would like.  In these
+times, a more thorough understanding of \*(Nm modes can be very
+helpful
+.TP
+.B Show details about the current mode
+.br
+This is probably the most useful command for discovering features
+about a given mode.
+.EX
+.B C-h m
+.EE
+.TP
+.B Get a list of modes
+This is a bit crude, but it works.
+.br
+\(bu Use auto-completion to get a list of items that end in
+.IR -mode .
+.br
+\(bu Use
+.I C-x o
+to select the completion window.
+.br
+\(bu Look around to modes appropriate for your work.
+
+
+

@@ -1,0 +1,36 @@
+#!manlinks
+# -*- mode: sh -*-
+
+
+&Bash
+
+Quick jumps to useful manpage content
+
+4 0
+
+&Redirection
+Manipulate input and output streams in bash scripts
+man
+|-P|less -p^REDIRECTION|bash
+
+&Parameter Expansion
+Arcane value manipulation syntax
+man
+|-P|less -p^\ *Parameter\ Expansion|bash
+
+Process &Substitution
+Apply process stdout as a filename
+man
+|-P|less -p^\ *Process\ Substitution|bash
+
+Runtime Set &Options
+Set and unset many Bash options during runtime
+man
+|-P|less -p^\ *set\ \\[|bash
+
+&Conditional Syntax
+Reference for querying various conditions
+man
+|-P|less -p^CONDITIONAL\ EXPRESSIONS|bash
+
+

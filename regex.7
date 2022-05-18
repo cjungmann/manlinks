@@ -1,0 +1,48 @@
+.ig
+This text should not show up anywhere except the source file.
+..
+.\" $File mdoc cheat sheet
+.de CmdName
+.  Em \\$1 \\$2
+..
+.Dd May 3, 2022
+.Dt REGULAR EXPRESSIONS INTRODUCTION
+.Nm Regular\ Expressions
+.Pp
+.Nm
+are a powerful and widely-available syntax for conducting text searches.
+They are used in
+.CmdName awk ,
+.CmdName grep ,
+and
+.CmdName sed .
+They are built into many scripting languages like
+.CmdName Bash
+and
+.CmdName Javascript.
+Libraries are avialble to add regular expressions to most other general-purpose
+programming languages.
+.Pp
+There are many
+.Em flavors
+of regular expressions throughout all the offerings.  In the *nix world, the main
+flavors are Posix (basic
+.Em BRE
+and extended
+.Em ERE )
+being the most prevalant.
+.Pp
+.CmdName Bash
+enables ERE regular expression in the
+.Em "[[ =~ ]]"
+notation as well as some parameter substitutions.
+.Pp
+.CmdName PCRE
+regular expressions are mainly available in
+.CmdName grep
+with the
+.EM -P
+option, and
+.CmdName pcregrep
+and, of course,
+.CmdName Perl .

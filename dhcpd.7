@@ -1,0 +1,42 @@
+.TH DHCPD 7 2022-05-13
+.
+.\" ==========================================================
+.SH NAME
+.\" ==========================================================
+.B dhcpd
+-- DHCPD setup hints
+.
+.\" ==========================================================
+.SH SYNOPSIS
+.\" ==========================================================
+Checklist of tasks for successful isc-dhcp-server deployment
+.
+.\" ==========================================================
+.SH DESCRIPTION
+.\" ==========================================================
+.SS Files to work
+.PP
+Consider restarting
+.B isc-dhcp-server
+when you change anything below.
+.TP
+.B /etc/dhcp/dhcpd.conf
+.br
+is where the
+.B isc-dhcp-server
+configuration file is located.
+.TP
+.B /etc/defaults/isc-dhcpd
+.br
+Edit this file to indicate which interfaces to monitor for
+dhcp requests.
+.TP
+.B /var/lib/dhcpd/dhcpcd.leases
+.br
+Supposedly (at this writing, I can't see evidence that this
+works), just creating this file enables
+.B isc-dhcp-server
+to store dhcpd leases to the file.  Simply create the file
+with the
+.B touch
+command.

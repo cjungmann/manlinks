@@ -1,0 +1,25 @@
+#!manlinks
+# -*- mode:sh -*-
+
+Adding &Tables to **man** or **groffer**
+
+Tables are a nice feature to organize information on
+a **man** page.  Use the following links to help you get
+started.
+
+4 2
+
+Table E&xamples
+ROFF tbl Preprocessor Examples
+man
+|-P|less -p"^SIMPLE EXAMPLES"|tbl.1
+
+&Hints
+Clarification of confusing syntax
+man
+|-l|hints.7
+
+&Writing Macros
+(webpage) O\'Reilly\'s comprehensive macro tutorial
+browser
+|https://www.oreilly.com/library/view/unix-text-processing/9780810462915/Chapter14.html

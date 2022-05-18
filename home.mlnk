@@ -1,0 +1,59 @@
+#!manlinks
+# -*- mode:sh -*-
+
+&Manlinks Home Page
+
+Curated list of manlinks
+
+4 8
+
+&Bash
+Quick jumps to useful manpage content
+manlinks
+|/home/chuck/work/manlinks/bash.mlnk
+
+&Emacs
+Shortcuts into Emacs documentation
+manlinks
+|/home/chuck/work/manlinks/emacs.mlnk
+
+&Git
+Find documentation of rarely-used features
+manlinks
+|/home/chuck/work/manlinks/git.mlnk
+
+&Regular Expressions
+Offline Regular Expression resources
+manlinks
+|/home/chuck/work/manlinks/regex.mlnk
+
+Groff and &Man
+References to using and writing *man* pages and using *info*
+manlinks
+|groff/groff.mlnk
+
+Bash&Dox
+Quick reference to bash_patterns sources
+manlinks
+|/home/chuck/work/manlinks/bashdox.mlnk
+
+Bash &Webpages
+Webpages with useful Bash info
+manlinks
+|bashisms.mlnk
+
+&Firewall files
+Small guide which files are needed and why
+man
+|-l|firewall_hints.7
+
+M&iscellaneous Stuff
+Random topics not big enough for their own pages
+manlinks
+|misc/home.mlnk
+
+&Sample Links
+A collection of links to useful man and info documentation.
+manlinks
+|sample.mlnk
+

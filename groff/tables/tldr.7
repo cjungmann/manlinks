@@ -1,0 +1,56 @@
+.TH NAME 7 2022-05-06
+.SH NAME
+.B tldr
+-- Single line description of command/topic
+.SH SYNOPSIS (command-line)
+.SY tldr
+.OP \-k argument
+.OP \-\-long_name argument
+.OP \-\-help
+.I filename
+.OP ...
+.YS
+.SH SYNOPSIS (library)
+.B #include <tldr.h>
+.br
+.BI int " tldr\fR(" int " count\fR);"
+.br
+.BI int " tldr\fR(" "const char** " result\fR,
+.BI "const char* " filename\fR,
+.BI "int " type\fR,
+.BI "int " process\fR);
+.SH DESCRIPTION
+.PP
+This is the third of three
+.I required
+sections of a
+.B man
+page.
+I should be providing much wisdom and guidance for manpage
+writing, but I'm too tired from making good templates for
+.IR man " and " mdoc
+macroset examples.
+.PP
+I should note here that, in my humble opinion, the
+.I man
+macro set is superior because it allows the author to
+more closely follow the conventions for function prototypes,
+where the constant string values are in
+.B bold
+and the variable string values are in
+.IR italic .
+.PP
+Note that in the C-style function parameter above, the data types
+and function names are in
+.B bold
+because they are not variable, the parameter names are in
+.I italic
+because the represent positions that will be replaced with
+argument values.  The punctuation, open and close parentheses
+and commas between parameters, are in the roman type because
+they are not part of the constant nor variable strings.
+.PP
+Note that, while convenient for consistency, the
+.B mdoc
+macros more crudely render the arguments, making them
+entirely in bold.

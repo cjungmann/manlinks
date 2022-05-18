@@ -1,0 +1,34 @@
+#!manlinks
+# -*- mode: sh -*-
+
+Groff E&xamples
+
+Access custom *man* page source documents
+
+4 0
+
+m&doc Example
+Man page from *mdoc* macros
+man
+|-l|regex.7
+
+m&an Example
+Man page from *man* macros
+man
+|-l|gitcs.7
+
+&raw Example
+What about no packaged macros?
+groffer
+|-m| ms|--tty|groff_raw.7
+
+&groffer for man
+Check if groffer can display man with color
+groffer
+|-m|man|--tty|gitcs.7
+
+Macro-set m&e
+Using a simple, general-purpose roff macro set
+groffer
+|-m|me|--tty|test.me
+

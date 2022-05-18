@@ -1,0 +1,70 @@
+.TH groff_hints 7 2022-05-06
+.
+.\" ==========================================================
+.SH NAME
+.\" ==========================================================
+.B Groff Hints
+-- Little things that make writing roff documents easier
+.
+.\" ==========================================================
+.SH SYNOPSIS
+.\" ==========================================================
+.PP
+Writing
+.B man
+pages, in particular, is not so much hard as it is enigmatic.
+There are some tools and processes that can make it much easier.
+This document hopes to provide a useful collection of these
+hints.
+.
+.\" ==========================================================
+.SH DESCRIPTION
+.\" ==========================================================
+.SS Editing Hints
+.PP
+I write code primarily the
+.B Emacs
+editor.
+.B Emacs is well-suited for creating
+.B man
+and other roff pages.  Here are some things that have helped me.
+.\" ============
+.TP
+.BR "Use Emacs major-mode nroff" :
+.br
+.B Emacs
+may not recognize your document as a roff document, resulting in
+your editing being done in
+.I Fundamental
+mode.  Explicitely call for
+.B man
+page editing mode with:
+.EX
+.BI "M-x " nroff-mode
+.EE
+
+.\" ============
+.TP
+.B View nroff-mode help
+.br
+This advice applies to any
+.Emacs
+major mode, once you're in the appropriate mode, learn or review
+the mode's features by looking at its help page:
+.EX
+.B C-h m
+.EE
+.\" ============
+.TP
+.B Activate \*(lqnroff\*(rq mode
+.br
+Get a previous of how your man page will be formatted by opening a
+.BR nroff-view .
+.EX
+.B C-c C-c
+.EE
+
+
+
+
+.RE
