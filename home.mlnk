@@ -10,22 +10,22 @@ Curated list of manlinks
 &Bash
 Quick jumps to useful manpage content
 manlinks
-|/home/chuck/work/manlinks/bash.mlnk
+|bash.mlnk
 
 &Emacs
 Shortcuts into Emacs documentation
 manlinks
-|/home/chuck/work/manlinks/emacs.mlnk
+|emacs.mlnk
 
 &Git
 Find documentation of rarely-used features
 manlinks
-|/home/chuck/work/manlinks/git.mlnk
+|git.mlnk
 
 &Regular Expressions
 Offline Regular Expression resources
 manlinks
-|/home/chuck/work/manlinks/regex.mlnk
+|regex.mlnk
 
 Groff and &Man
 References to using and writing *man* pages and using *info*
@@ -35,7 +35,7 @@ manlinks
 Bash&Dox
 Quick reference to bash_patterns sources
 manlinks
-|/home/chuck/work/manlinks/bashdox.mlnk
+|bashdox.mlnk
 
 Bash &Webpages
 Webpages with useful Bash info
