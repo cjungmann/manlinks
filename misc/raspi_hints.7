@@ -1,0 +1,74 @@
+.TH Raspberry\ Pi\ Hints 7 2022-05-17
+.
+.ds Nm \fIRaspberry\ Pi\fP
+.
+.\" ==========================================================
+.SH NAME
+.\" ==========================================================
+.PP
+.B emacs_hints
+\(em Short, but growing list of useful \*(Nm advice
+.
+.\" ==========================================================
+.SH SYNOPSIS
+.\" ==========================================================
+.PP
+I have a few \*(Nm units laying around my house.  Since I don't
+bother with them very often, I forget basic utilities.  This
+page will grow to fit simple advice as I remember old stuff and
+learn new stuff.
+.\" ==========================================================
+.SH DESCRIPTION
+.\" ==========================================================
+.PP
+There are \*(Nm man pages, but they are only available if you're
+on a \*(Nm.  This document will tell you names of some \*(Nm
+man pages, but don't be disappointed if they're not available
+where you're reading this page.
+.SS USEFUL COMMANDS
+.TP
+.B raspi-config
+This is the TUI (text user-interface) general system configuration
+program.  It must be run as root.
+.TP
+.B vcgencmd
+.br
+This versatile command reports system information like
+temperature, memory size, etc. Be sure to checkout the
+man pages if you're on a \*(Nm .
+.PP
+.\" Start relative indent #1
+.RS
+Here is an incomplete list of reports that
+.B vcgencmd
+can provide:
+.\" ----------
+.TP
+.B commands
+.br
+returns a list of available command.
+.\" ----------
+.TP
+.B measure_temp
+.br
+returns the current CPU temperature.
+.\" ----------
+.TP
+.B get_throttled
+Reports CPU state, which may be throttled (i.e. slowed down) as
+a result of several running situations.  The result of this
+command will be a bitmap, which will be hard to interpret without
+the man page, but a result of
+.I throttled=0x0
+means that the CPU is not throttled.
+.\" ----------
+.PP
+.B "get_mem"
+.RI [ arm | gpu ]
+.br
+.RS
+The man page says that these reports are inaccurate for boards
+with more than 1GB.
+.RE
+.RE
+.\" End relative indent #1

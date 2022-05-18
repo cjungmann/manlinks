@@ -1,0 +1,37 @@
+.TH ISO\ Copy 7 2022-05-17
+.
+.\" ==========================================================
+.SH NAME
+.\" ==========================================================
+.PP
+.B copy_iso
+\(em Pathetic reminder of simple steps
+.
+.\" ==========================================================
+.SH SYNOPSIS
+.\" ==========================================================
+.PP
+I always have to look these steps up, so here you go.
+
+.\" ==========================================================
+.SH DESCRIPTION
+.\" ==========================================================
+.SS Steps to Copy
+.PP
+.EX
+declare image="iso_path"
+declare target="/dev/sdx"
+
+sudo wipefs -a "$target"
+
+local -a args=(
+   bs=10M
+   if="${image}"
+   of="${target}"
+   status=progress
+   conv=fsync
+)
+
+dd "${args[@]}"
+.EE
+

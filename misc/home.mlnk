@@ -1,0 +1,19 @@
+#!manlinks
+# -*- mode:sh -*-
+
+&Miscellaneous Information
+
+These random topics are not big enough to merit their own
+manlinks page, but are useful nonetheless.
+
+4 0
+
+&Raspberry Pi
+Reminders of useful commands
+man
+|-l|raspi_hints.7
+
+&ISO copy
+Pathetic reminder of steps I can\'t remember
+man
+|-l|copy_iso.7
