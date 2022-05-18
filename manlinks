@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
 # Load appropriate sources even if script is a symlink:
-declare AFOLDER=$( readlink -f "$0" )   # App's true location
+declare AFOLDER SFOLDER SourcePath CmdPath
+AFOLDER=$( readlink -f "$0" )n   # App's true location
 AFOLDER="${AFOLDER%/*}"
 SFOLDER="${AFOLDER}/sources"
 source "$SFOLDER"/include
+HomePath="${AFOLDER}/home.mlnk"
+HomeCmd="${AFOLDER}/manlinks"
+
 
 declare -a Man_Keys_List
 declare -a Man_Menu
@@ -12,6 +16,12 @@ declare COL_EMP=$'\e[36;1m'
 
 declare COL_BOLD COL_ITAL COL_LETTER_HI COL_TITLE COL_TITLE_HI COL_OFF
 
+# Set color variables from LESS_TERMCAPs with hard-coded fallback
+#
+# Args
+#    (name-out):  variable in which the color value will be returned
+#    (string):    two-letter suffix of intended LESS_TERMCAP_ variable
+#    (string):    optional color string to use if LESS_TERMCAP_ empty or not found
 col_name_set()
 {
     local -n colvar="$1"
@@ -37,6 +47,111 @@ col_name_set "COL_OFF"       "me" $'\e[m'
 
 
 to_continue() { read -n1 -p Press\ any\ key; }
+
+# Searchs for a letter in a string, returning the index if found.
+#
+# If the string contains multiple instances of the letter, it
+# will cycle between the instances.
+#
+# Args
+#    (name-io):  starting index upon entry, found index on exit
+#    (string):   haystack, string in which letters will be sought
+#    (string):   char, actually.  The character to be sought.
+#
+# Unusual Return:
+#   *true*  (0)  if letter found and it's a singleton, immediately open item
+#   *false* (1)  if letter found, but there's another, OR
+#                the letter was not found
+get_letter_index()
+{
+    local -n gli_index="$1"
+    local gli_haystack="$2"
+    local gli_needle="$3"
+
+    local current="${gli_haystack:$gli_index:1}"
+    local right="${gli_haystack:$(( gli_index+1 ))}"
+    local left="${gli_haystack:0:$gli_index}"
+    local search="${right}${left}${current}"
+
+    local -i ndx
+    if strstrndx_nameref "ndx" "$search" "$gli_needle"; then
+        local -i hcount="${#gli_haystack}"
+        local -i lcount="${#left}"
+        (( gli_index = ( ndx + lcount + 1 ) % hcount ))
+
+        if ! strstrndx_nameref "ndx" "${search:$(( ndx+1 ))}" "$gli_needle"; then
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+# Check if command ultimately resolves to this manlinks script
+#
+# Args
+#    (string):  command name
+is_manlinks_cmd()
+{
+    local cmd="$1"
+    local path=$( which "$1" | xargs -I{} readlink {} )
+    [ "$path" == "${HomeCmd}" ]
+}
+
+# Spit-out a representation of the running lui_list
+#
+# Args
+#   (name-in):  name of lui_list to serialize
+#   (string):   name of file to which the lui_list will be written
+serialize()
+{
+    local -n s_lui_list="$1"
+    local target="$2"
+
+    if : || ! [ -e "$target" ]; then
+        local OIFS="$IFS"
+        local IFS=$'\n'
+
+        # clear file, if already there
+        echo -n > "$target"
+
+        local -a entry=()
+        local -i cols=0 rows=0
+        local el
+        for el in "${s_lui_list[@]}"; do
+            if (( rows == 0 )); then
+                if (( cols == 0 )); then
+                    cols="$el"
+                else
+                    rows="$el"
+                    echo "#!generated-manlinks" >> "$target"
+                    echo "# -*- mode:sh -*-" >> "$target"
+                    echo >> "$target"
+                    echo "&Title" >> "$target"
+                    echo >> "$target"
+                    echo "Generated manlinks file" >> "$target"
+                    echo >> "$target"
+                    echo "Description text.  Replace these lines with moreappropriate" >> "$target"
+                    echo "copy describing the contents of this generated manlinks file." >> "$target"
+                    echo >> "$target"
+                    echo "You will also want to change the 'Title' text above." >> "$target"
+                    echo >> "$target"
+                    echo "$cols $rows" >> "$target"
+                    echo >> "$target"
+                fi
+            else
+                entry+=( "$el" )
+                if [ "${#entry[*]}" -eq "$cols" ]; then
+                   echo "${entry[*]}" >> "$target"
+                   echo >> "$target"
+                   entry=()
+                fi
+            fi
+        done
+
+        IFS="$OIFS"
+    fi
+}
 
 # Package the condition identifying ignored lines for open_manlinks_file()
 #
@@ -146,6 +261,14 @@ massage_menu_name()
 #
 # This function returns the list of manlinks files found in the
 # indicated directory.
+#
+# The result will be a lui_list of 4-field rows:
+#   - title
+#   - description
+#   - command used to view contents
+#   - delimited list of arguments to viewer command.   The first
+#     character will be used as the delimiter that separates the
+#     arguments.
 #
 # Args
 #    (name-out):  name of array in which manlinks file are added
@@ -278,67 +401,114 @@ open_manlinks_file()
     lui_list_init "$list_name"
 }
 
+# Reads and open a **manlinks** file.
+#
+# Args
+#    (string):   path to **manlinks** file
+run_manlinks_file()
+{
+    local rmf_path="$1"
+    local -a rmf_submenu
+    local -a rmf_paras
+    open_manlinks_file "rmf_submenu" "rmf_paras" "$1"
+    pushd "${rmf_path%/*}" >/dev/null
+    manlinks_start_interaction "rmf_submenu" "rmf_paras"
+    popd >/dev/null
+}
+
+# Opens default manlinks file in the directory hosting **manlinks** file.
+#
+# The default **manlinks** file will be named *home*, with or without a *mlnk*
+# extension.  Files are identified as **manlinks** by a inoperative *shebang*,
+# #!manlinks
+#
+# No Args
+open_default_manlinks_file()
+{
+    local -a odmf_links=()
+    local -i odmf_ndx=0
+
+    local -i odmf_found=0
+
+    # Get manlinks files in ultimate directory
+    identify_manlinks_files "odmf_links" "$AFOLDER"
+
+    odmf_check()
+    {
+        local fpath="${5:1}"
+        local fname="${fpath##*/}"
+        local froot="${fname%.*}"
+
+        if [ "$froot" == "home" ]; then
+            odmf_found=1
+            run_manlinks_file "$fpath"
+            return 1
+        fi
+
+        (( ++odmf_ndx ))
+        return 0
+    }
+
+    lui_list_iterate "odmf_links" odmf_check
+    [ "$odmf_found" -eq 1 ]
+}
+
 
 # Display line function for manlinks
 #
-# Hilight the title part to set it off from the description
+# Hilight the title part to set it off from the description.  This
+# function is not meant to be a *lui_list_display_line* function, but
+# rather to be called by one with the additional maximum title length
+# parameter.
 #
 # Args
-#    (integer):    flag (1 for true, 0 for false) if line is target
-#    (integer):    width of characters to print
-#    (various):    elements of selected row start here
+#    (integer):   flag (1 for true, 0 for false) if line is target
+#    (integer):   width of characters to print
+#    (string):    line title
+#    (string):    line description
+#    (integer):   max title length
 manlinks_display_line()
 {
    local -i hilite="$1"
    local -i padding="$2"
-
    local title="$3"
    local desc="$4"
+   local -i title_padding="$5"
 
    # allowance for abandoning description after title
    local -i gutter=3
 
-   # print emphasized title
-   local -i len_title="${#title}"
-   local -i trim
-   (( trim = len_title - padding ))
-   if (( trim > 0 )); then
-       title="${title:0: -$trim}"
-   fi
-
+   # Prepare appropriate colors
    local col_title=$'\e[37;1m'
    # local col_title=$'\e[48;5;24m\e[37;1m'
-   local col_hilite=$'\e[48;5;25m'
+   # local col_hilite=$'\e[48;5;25m'
+   local col_hilite=$'\e[48;2;0;64;96m'
    local col_letter="$COL_LETTER_HI"
-
    if [ "$hilite" -ne 0 ]; then
        col_title="${col_title}${col_hilite}"
    fi
 
-   # defer coloring title until possible trim is made:
+   # calculate title length before adding colors:
+   local trimmed_title="${title/&/}"
+   local -i len_title="${#trimmed_title}"
+
    massage_menu_name "title" "$col_letter" "$col_title"
 
+   dupchar $(( title_padding - len_title )) ' '
    echo -n "$title${COL_OFF}"
 
    # print description if enough room
-   if (( trim < -gutter )); then
+   local -i max_desc_len=$(( padding - gutter - title_padding ))
+   if (( max_desc_len > 0 )); then
        echo -n ": "
-       (( padding -= ( len_title + 2 ) ))
-
-       local -i len_desc="${#desc}"
-
-       if (( len_desc < padding )); then
-           echo -n "${desc}"
-       else
-           (( trim = len_desc - padding ))
-           echo -n "${desc:0: -$trim}"
-       fi
+       echo -n "${desc:0:$max_desc_len}"
    fi
 
    echo $'\e[m'
 }
 
-# Key action function invoked with item selection
+# Key action function invoked with item selection.
+#
 # Args
 #    (string)      A character string representing the keypress that
 #                  triggers this action
@@ -369,15 +539,7 @@ manlinks_execute_line()
     array_from_string "args" "$packed_args" "$delimiter"
 
     if [ "$cmd" == "manlinks" ]; then
-        local -a submenu
-        local -a mel_paras
-        local filepath="${args[0]}"
-
-        open_manlinks_file "submenu" "mel_paras" "$filepath"
-
-        pushd "${filepath%/.*}" >/dev/null
-        manlinks_start_interaction "submenu" "mel_paras"
-        popd >/dev/null
+        run_manlinks_file "${args[0]}"
     else
         "$cmd" "${args[@]}"
         reset_screen
@@ -402,28 +564,47 @@ manlinks_start_interaction()
     concat_array "msi_keys_string" "msi_letters"
     concat_array "msi_packed_keys" "msi_letters" "|"
 
+    local -i msi_selected=0
+
+    local -i msi_item_padding=$( lui_list_max_len "$lui_list_name" )
+
+    msi_display_line()
+    {
+        manlinks_display_line "$1" "$2" "$3" "$4" "$msi_item_padding"
+    }
+
     msi_key_action()
     {
         local keyp="$1"
-        local -i line_ndx
-        if line_ndx=$( strstrndx "$msi_keys_string" "$keyp" ); then
-            manlinks_execute_line "$keyp" "$lui_list_name" "$line_ndx"
-        fi
+        local -i mka_line_ndx="$msi_selected"
 
+        if get_letter_index "msi_selected" "$msi_keys_string" "$keyp"; then
+            manlinks_execute_line "$keyp" "$lui_list_name" "$msi_selected"
+            return 1
+        fi
+        return 0
+    }
+
+    msi_serialize()
+    {
+        local path="$PWD/generated.mlnk"
+        echo "Now serializing to '$path', buddy"
+        serialize "$lui_list_name" "$path"
         return 0
     }
 
     local -a msi_keys_list=(
         "${Man_Keys_List[@]}"
         "${msi_packed_keys}:msi_key_action:View topic"
+        '^P:msi_serialize:Save list to .mlnk file'
     )
 
     local -a args=(
-        ""
+        "msi_selected"
         "$lui_list_name"
         0 0
         20 80         # limits of rows and columns
-        "manlinks_display_line"
+        "msi_display_line"
         "msi_keys_list"
         "$paras_name"
     )
@@ -489,20 +670,20 @@ save_console_state_hide_cursor
 trap restore_console_state_show_cursor SIGINT
 trap restore_console_state_show_cursor EXIT
 
-reset_screen
 
-if [ "$#" -gt 0 ]; then
-    declare file_name_arg="$1"
-    declare -a links_list
-    declare -a file_paras
+ml_main()
+{
+    reset_screen
+    if [ "$#" -gt 0 ]; then
+        run_manlinks_file "$1"
+    else
+        if ! open_default_manlinks_file; then
+            identify_manlinks_files "links_list" "$AFOLDER"
+            show_manlinks_files
+        fi
+    fi
 
-    open_manlinks_file "links_list" "file_paras" "$file_name_arg"
+    reset_screen
+}
 
-    pushd "${file_name_arg%/.*}" >/dev/null
-    manlinks_start_interaction "links_list" "file_paras"
-    popd >/dev/null
-else
-    show_manlinks_files
-fi
-
-reset_screen
+ml_main "$@"
