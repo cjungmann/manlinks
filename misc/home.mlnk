@@ -17,3 +17,8 @@ man
 Pathetic reminder of steps I can\'t remember
 man
 |-l|copy_iso.7
+
+&Systemd
+Small collection of hints
+man
+|-l|systemd_hints.7
