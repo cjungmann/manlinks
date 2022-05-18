@@ -1,15 +1,22 @@
 #!manlinks
 # -*- mode: sh -*-
 
-&Man and Info Navigation
+&Man Pages and Info
 
-This reference is intended to help recall keybindings in the *man*
-and *info* system reference tools.  Note that *man* documents use a
-pager, usually *less*, to navigate, so the *man* navigation is
-covered by the *less* man page.
+Using and writing *man* pages
 
 4
 0
+
+&Groff Documentation
+Learn about the utility that moderates *man* pages
+manlinks
+|groff.mlnk
+
+Groff &Examples
+View groff-generated pages
+manlinks
+|groff_custom.mlnk
 
 &info searches
 Reference to unique info page keybindings

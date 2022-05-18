@@ -5,27 +5,13 @@
 
 Offline Regular Expression resources
 
-Regular expressions are a powerful and widely-used syntax for
-character string operations.  They are used in command-line tools
-like *awk*, *grep*, and *sed*.  They are built into many scripting
-languages like *Bash* and *Javascript*.  Libraries are available to
-add regular expressions to most other general-purpose programming
-languages.
-
-There are many *flavors* of regular expressions throughout all the
-offerings.  In the *nix world, the main flavors are Posix, basic *BRE*
-and extended *ERE*, and Perl-compatible *PCRE*, with Posix ERE
-being the most prevalent.
-
-Bash enables ERE regular expressions in the *[[* *=~* *]]* notation as
-well as some parameter substitutions.
-
-PCRE regular expressions are mainly available in *grep* with the -P
-option, and *pcregrep*.
-
-
 4
 0
+
+&Introduction
+Short introduction to regular expressions
+man
+|-l|regex.7
 
 &Posix Regular Expressions
 Posix flavor of regular expressions

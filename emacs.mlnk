@@ -7,9 +7,14 @@ Shortcuts into Emacs documentation
 
 Collection of occasionally-needed documentation
 
-4 0
+4 4
 
-&Highlighting
+Emacs &Hints
+A collection of small hints that make editing easier
+man
+|-l|emacs_hints.7
+
+H&ighlighting
 Change the syntax-highlighting face colors
 info
 |emacs|--node=Editing Format Info
