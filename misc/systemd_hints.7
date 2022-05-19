@@ -20,7 +20,84 @@ This document only tries to direct the reader towards the
 locations of certain important files and
 .B man
 pages.
-.SS THE HINTS
+.\" ================================
+.SS LOCATION
 .TP
 .B SystemD Script Files location
 /usr/lib/systemd/system
+.\" ================================
+.SS USING SYSTEMCTL COMMAND
+.PP
+For these examples, we will be working with the file,
+.IR iptables_fw.service .
+.PP
+The proper command to interact with the
+.B systemd
+services is
+.BR systemctl .
+I was tempted to check my service's status using
+.BR "service --status_all" ,
+but my service was not included in the that apparently curated list.
+Furthermore, using
+.B systemctl
+also offered more information for the services than
+.B service
+command, even for the services on which it reports.
+Just use
+.BR systemctl .
+.PP
+Please note that when invoking a service, do not include the
+.RI . service
+extension.  That is when invoking the file
+.IR iptables_fw.service ,
+refer to it with the argument,
+.IR iptables_fw .
+.\" ------------------------
+.TP
+.BI "systemctl enable " iptables_fw
+will add the service to the list of enabled services.  That will
+immediately start the service and mark it to be started with each
+system boot.
+.\" ------------------------
+.TP
+.BI "systemctl disable " iptables_fw
+Will immediately terminate the service and remove it from the
+list of enabled services so that it will 
+immediately start the service and mark it to be started with each
+system boot.
+.\" ------------------------
+.TP
+.BI "systemctl status " iptables_fw
+will display the status of the named service.
+.\" ================================
+.SS DEBUGGING SYSTEMD SERVICES
+.PP
+I am not an expert on this.  I probably \(lqonly know enough
+to be dangerous.\(rq.  With that disclaimer, there may be some
+value in considering some of the following ideas.
+.\" ------------------------
+.TP
+.BI journalctl " -xe"
+will show the results of the attempts to initialize the services
+under the control of
+.BR systemctl .
+.IP
+The contents will be displayed in a pager,
+.BR less ,
+so you can use the searching features of the pager to find messages
+pertaining to the service you may be debugging.
+.\" ==========================================================
+.SH SEE ALSO
+.\" ==========================================================
+.PP
+.BR systemd (1)
+for general information.
+.PP
+.BR systemctl "(1), " journalctl (1)
+for setting and checking on services.
+.PP
+.BR systemd.unit "(5), " systemd.service (5)
+as a start on writing
+.I systemd
+services.
+
