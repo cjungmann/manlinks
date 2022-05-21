@@ -9,35 +9,40 @@ Collection of links to groff documentation to aid in writing *man* pages
 
 4 0
 
-&mdoc Macros
-Preferred, newer groff macro set for man pages
-man
-|7|groff_mdoc
-
 Man-writing Groff &Macros
 Summary of man-page writing groff macros
 man
 |7|groff_man
-
-C&ustom Groff Macros
-Add your own macros for consistency and saving time
-info
-|--node=Writing Macros|groff
-
-&Synopsis support
-Use function synopsis macros to function documentation
-man
-|-P|less -p^\ *Command\ synopsis\ macros|groff_man.7
 
 Man Page &Conventions
 Follow the wisdom of your predecessors
 man
 |7|man-pages
 
+Man Page &Stylesheet
+Fonts, capitalization, formatting, words and spelling
+man
+|-P|less -p^STYLE\ GUIDE|man-pages.7
+
+C&ustom Groff Macros
+Add your own macros for consistency and saving time
+info
+|--node=Writing Macros|groff
+
 Groff e&xamples
 Look at outcome of various macro packages
 manlinks
 |groff_custom.mlnk
+
+&Synopsis support
+Use function synopsis macros to function documentation
+man
+|-P|less -p^\ *Command\ synopsis\ macros|groff_man.7
+
+&mdoc Macros
+Occasionally recommended, newer groff macro set for man pages
+man
+|7|groff_mdoc
 
 M&E macro set
 (**webpage warning**) simple tutorial
