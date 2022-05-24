@@ -1,0 +1,52 @@
+.TH Gnome\ Extensions\ CLI 7 2022-05-20
+.\" ==========================================================
+.SH NAME
+.\" ==========================================================
+.PP
+.B gnome_extensions
+\(em Brief list of commands to get you starting with CLI access
+.
+.\" ==========================================================
+.SH DESCRIPTION
+.\" ==========================================================
+.PP
+When I something up with Gnome Extensions, I'm locked out of my
+desktop.
+When that happens, I try to remedy the problem in a TTY
+(accessed by type Ctrl-Alt-F2, F3, etc).
+.\" ==========================================================
+.SH EXAMPLES
+.\" ==========================================================
+.PP
+Here are some useful commands:
+.TP
+.B gsettings set org.gnome.shell disable-user-extensions true
+will disable Gnome Extensions so you can log into your desktop.
+.TP
+.B gnome-extensions
+is a small program that helps you enable or disable specific
+extensions.
+For example, enabling
+.B material-shell
+on my 
+.B Manjaro
+workstation locks me out of the desktop.
+Things happen, but you can't see them nor interact with them.
+.TP
+.B GTK Inspector
+For the times that an update illegibly changes your screen colors,
+.B GTK Inspector
+can be a valuable help.
+This is not a CLI program, but it is a unique and useful tool for
+debugging Gnome shell issues.
+.RS
+.TP
+.B invoking GTK Inspector
+Go to an empty desktop and type
+.IR Shift-Ctrl-I .
+The
+.I Shift-Ctrl-I
+often triggers actions in other programs, particularly in a browser,
+where the key-combination launches a debugging pane.
+Performing the key-combination on the desktop bypasses this problem.
+.RE
