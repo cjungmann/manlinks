@@ -1,0 +1,235 @@
+.TH NAME 7 2022-05-13
+.
+.\" ==========================================================
+.SH NAME
+.\" ==========================================================
+.B Firewall Hints
+-- Hints to help you past unexpected, obscurely-documented firewall setup
+.
+.\" ==========================================================
+.SH SYNOPSIS
+.\" ==========================================================
+.PP
+This is a guide to building a gateway router, combining a
+dhcp server using
+.B isc-dhcp-server
+and a firewall using
+.B iptables
+.PP
+The functions of
+.IR dhcp " and " firewall
+are related.   The dhcp server identifies users by MAC address and
+host names, and the firewall grants or denies access according to
+users' identities as defined by their IP address.
+.
+.\" ==========================================================
+.SH DESCRIPTION
+.\" ==========================================================
+.SS GATEWAY CONFIGURATION
+.\"
+.\" ---------------------
+.TP
+.B HARDWARE CONFIGURATION
+.br
+Any type of router requires at least two network interfaces.  A
+firewall router should have interfaces that are at least as fast
+as the data delivery speed of the network to which they are attached.
+.\"
+.\" ---------------------
+.TP
+.B SOFTWARE CONFIGURATION
+.br
+This is not a complete installation and configuration guide, but rather
+a checklist of the names and locations of files that must be created
+and/or modifie to successfully implement a gateway router, and a short
+explanation of what is required for the file.
+.\" Relative indent level #1 START
+.RS
+.TP
+.B NETWORK INTERFACES SETUP
+.br
+The requirements of both the DHCP server and the firewall function
+dictate the configuration of the network interfaces.
+of the multiple network interfaces.  Typically, the internet-facing
+network interface will set its parameters according to a DHCP server
+provided by the ISP (internet service provider), and the LAN
+(local-area network)-facing.
+.IP
+.B /etc/network/interfaces
+.br
+.B /etc/network/interfaces.d
+.br
+Either directly in the file
+.B interfaces
+or in configuration files created in the directory
+.BR interfaces.d ,
+the various network interfaces can be defined.
+.RE
+.\" Relative indent level #2 END
+.
+.\" Relative indent level #1 START
+.RS
+.TP
+.B DHCP SERVER SETUP
+.br
+These are some of the important files that require attention in order
+to run a DHCP server:
+.
+.\" Relative indent level #2 START
+.RS
+.PP
+.B /etc/dhcp/dhcpd.conf
+.br
+The script that defines how IP addresses are distributed
+.PP
+.B /var/lib/dhcp/dhcpd.leases
+.br
+The inventory of internet settings for users that requested
+access.
+.PP
+.B /etc/default/isc-dhcp-server
+.br
+This is the file that defines default resources that are
+not covered in the
+.B dhcpd.conf
+script.  This is where you will need to tell
+.B isc-dhcp-server
+which network interface will service DHCP requests.
+.RE
+.\" Relative indent level #2 END
+.TP
+.B FIREWALL SETUP
+.br
+There is no defined filename or location for iptables configuration,
+but some sort of script must be provided to define the rules that
+the firewall will follow to protect the LAN will still giving the
+LAN access to the internet.
+.\" Relative indent level #2 START
+.RS
+.TP
+.B
+Firewall Logging
+.br
+By default, iptable logged messages will be written to the main
+.I /var/log/syslog
+log file.  When designing and debugging a firewall, there will likely
+be a large number of messages.  In these cases, it may be more
+convenient to segregate the iptables messages to its own logfile.
+This hint works on systems using
+.BR rsyslog ,
+systems using the older
+.B syslog-ng
+will need to look for a redirect guide online.
+.IP
+.B /etc/rsyslog.d/10-iptables.conf
+.br
+can be created to sort and redirect logged messages to another file.
+An example of a working log-detour configuration would be:
+.EX
+    :msg, contains, "iptables: " -/var/log/iptables.log
+.EE
+Refer to
+.IR rsyslog (5)
+and search for
+.I Property-Based Filters
+for more information about filtering.
+
+
+.RE
+.\" Relative indent level #2 END
+
+
+.SS BSD DIFFERENCES
+.PP
+While the basics are simiar, BSD has different file names, locations,
+and procedures.
+
+.TP
+.B dhcpd.conf
+is found at
+.I /usr/local/etc/dhcpd.conf
+on FreeBSD.
+
+.TP
+.B Identifying the DHCP interface
+.br
+This is done in the
+.B /etc/rc.conf
+file with the following two lines:
+.EX
+    dhcp_enable="YES"
+    dhcp_ifaces="eth0"
+.EE
+.TP
+.B 
+
+
+
+
+
+
+
+.SS Iptables
+.PP
+This is the firewall program...I'll add copy to this later
+.TP
+.B iptables Installation
+.br
+Install
+.BR iptables .
+.TP
+.B iptables Setup Files
+.br
+There are a few files to note, some are required, others can
+make tracking iptables activity easier.
+.\" -----------------------
+.\" Relative Indent level 1
+.RS
+.TP
+.B iptables.sh
+.br
+This file has the iptables instructions.  It should be run at
+boot time, so ensure it's accessible during the boot sequence.
+.TP
+.B /var/log/iptables.log
+.br
+This is not a required file, but it is a convenience for the
+iptables messages are separate from other system messages.  The
+use of this file is made possible by the following
+.I rsyslog
+facility.
+.TP
+.B /etc/rsyslog.d/10-iptables.conf
+.br
+Configure logging according to a identified message prefix.
+.RE
+.\" End relative indent level 1
+.\" ---------------------------
+.SS Changing Hardware
+.PP
+When you replace the hardware of the local network interface,
+you will have to make several changes in the firewall/dhcp
+configuration files:
+.TP
+.B iptables.sh
+.br
+The iptables script identifies both the IP address of the network
+and, importantly for this topic, the name of the interface.  Make
+sure that you change the value used with the
+.B -i
+iptables parameter to the new interface name.
+.TP
+.B /etc/default/isc-dhcp-server
+.br
+This file also refers to the network interface name, rather than
+its IP address.  Change it accordingly.
+
+
+
+
+
+
+.
+.\" ==========================================================
+.SH SEE ALSO
+.\" ==========================================================
