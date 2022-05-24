@@ -22,3 +22,14 @@ man
 Small collection of hints
 man
 |-l|systemd_hints.7
+
+&Gnome Extensions
+A few useful Command Line solutions to enable or disable extensions
+man
+|-l|gnome_extensions.7
+
+&List UI
+Quick reference for List User Interface from Bash_patterns
+man
+|-l|../sources/sources.7
+
