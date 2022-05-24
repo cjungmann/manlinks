@@ -1,0 +1,184 @@
+#!/usr/bin/env bash
+
+# @def Manlinks files
+#
+# Manlinks files are identified by a shebank on the first line:
+# #!manlinks
+# The manlinks line can be followed by a file variables line like:
+# # -*- mode: sh -*-
+#
+# Like shell scripts, a line that begins with '#' is considered to
+# be a comment and will be ignored, though unlike shell scripts, a
+# '#' elsewhere in the line will NOT introduce a comment.  Empty
+# lines will also be ignored.
+#
+# The first non-ignored line of characters will be used as an
+# introduction to the interaction.  This may change in order to
+# allow multi-paragraph introductions, but for now it is only a
+# single paragraph that might extend multiple lines.
+#
+# The first numeral or pair of numerals will be interpreted as the
+# columns and rows values in a lui_list definition.  The initial
+# design is for four (4) fields per row.
+#
+# When reading the remainder of the manlinks file, the program will
+# simply append each following non-ignored line as an element in the
+# array, but the data should be organized according to the columns
+# value.
+#
+# It would be reasonable to use extra columns, just use an appropriate
+# columns value along with a matching organization of fields.
+#
+# There are a few manlinks sample files along with the script.  The
+# files are recognized by their shebangs rather than their extensions,
+# but for ease of reference here, the sample manlinks files have an
+# extension '.mlnk'.
+
+
+# @def Manlink lui_list
+#
+# This list is a 4 field list, each record has the following fields:
+# - title
+# - short description
+# - command name (usually 'man', but could be 'info' or something else)
+# - arguments for the command
+#
+# The fourth field, the packed arguments array, needs some explanation.
+# The arguments field is a packed array, indicating a delimiter
+# character that will be used as the IFS value to split the string into
+# an array.
+#
+# The first character of the fourth field is the delimiter, which allows
+# flexibility if another delimiter is included in the data.  The delimiter
+# is required (for now) even for single-argument packed arrays.
+
+
+
+# Write-out a representation of the running lui_list.
+#
+# Args
+#   (name-in):  name of lui_list to serialize
+#   (string):   name of file to which the lui_list will be written.
+#               Use */dev/stdout* to write to **stdout**.
+serialize()
+{
+    local -n s_lui_list="$1"
+    local target="$2"
+
+    if : || ! [ -e "$target" ]; then
+        local OIFS="$IFS"
+        local IFS=$'\n'
+
+        # clear file, if already there
+        echo -n > "$target"
+
+        local -a entry=()
+        local -i cols=0 rows=0
+        local el
+        for el in "${s_lui_list[@]}"; do
+            if (( rows == 0 )); then
+                if (( cols == 0 )); then
+                    cols="$el"
+                else
+                    rows="$el"
+                    echo "#!generated-manlinks"    >> "$target"
+                    echo "# -*- mode:sh -*-"       >> "$target"
+                    echo                           >> "$target"
+                    echo "&Title"                  >> "$target"
+                    echo                           >> "$target"
+                    echo "Generated manlinks file" >> "$target"
+                    echo                           >> "$target"
+                    echo "Description text.  Replace these lines with more appropriate"   >> "$target"
+                    echo "copy describing the contents of this generated manlinks file."  >> "$target"
+                    echo                           >> "$target"
+                    echo "You will also want to change the 'Title' text above."           >> "$target"
+                    echo                           >> "$target"
+                    echo "$cols $rows"             >> "$target"
+                    echo                           >> "$target"
+                fi
+            else
+                entry+=( "$el" )
+                if [ "${#entry[*]}" -eq "$cols" ]; then
+                   echo "${entry[*]}" >> "$target"
+                   echo >> "$target"
+                   entry=()
+                fi
+            fi
+        done
+
+        IFS="$OIFS"
+    fi
+}
+
+# Create a lui_list object from the contents of a named manlinks file.
+#
+# The lui_list will be initialized after the contents are read in.
+#
+# Args
+#    (name-out): name of array variable in which the lui_list will be
+#                created.
+#    (name-out)  (optional) name of array of descriptive text collected
+#                from manlinks file.  Attempt to fill made only if a
+#                name is provided.
+#    (string):   path to manlinks file
+open_manlinks_file()
+{
+    local list_name="$1"
+    local paras_name="$2"
+    local file_name="$3"
+
+    local -n omf_list="$list_name"
+    omf_list=()
+
+    local -i pre_intro=1
+    is_pre_intro() { [ "$pre_intro" -gt 0 ]; }
+
+    local -i rows=-1 cols=0
+    past_dims() { [ "$rows" -ge 0 ]; }
+
+    local -a omf_intro=()
+    local -i intro_progress=0
+    past_intro() { [ "$intro_progress" -gt 0 ]; }
+
+    local line
+    while IFS= read -r line; do
+        if past_dims; then
+            if manlinks_skip_line "$line"; then continue; fi
+
+            if [[ "$line" =~ ^\"(.*)\"$ ]] || [[ ^"$line" =~ \"(.*)\"$ ]]; then
+                line="${BASH_REMATCH[1]}"
+            fi
+            omf_list+=( "$line" )
+        elif is_pre_intro && manlinks_skip_line "$line"; then
+            continue
+        else
+            pre_intro=0
+            if [[ "$line" =~ ^([[:digit:]]+)(\ +([[:digit:]]+))?$ ]]; then
+                if ! past_intro; then
+                    bind_array_to_paragraphs "$paras_name" "omf_intro"
+                    massage_title_line "$paras_name" "$COL_TITLE_HI" "$COL_TITLE"
+                    # colorize_array "$paras_name"
+                    (( ++intro_progress ))
+                fi
+
+                if [ "$cols" -eq 0 ]; then
+                    cols="${BASH_REMATCH[1]}"
+                    if [ "${#BASH_REMATCH[3]}" -gt 0 ] && value_is_int "${BASH_REMATCH[3]}"; then
+                        rows="${BASH_REMATCH[3]}"
+                    fi
+                else
+                    rows="${BASH_REMATCH[1]}"
+                fi
+
+                if [ "$rows" -ge 0 ]; then
+                    omf_list+=( "$cols" "$rows" )
+                fi
+            else
+                omf_intro+=( "$line" )
+            fi
+        fi
+    done < "$file_name"
+
+    lui_list_init "$list_name"
+}
+
