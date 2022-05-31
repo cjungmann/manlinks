@@ -215,27 +215,50 @@ diagnose other problems.
 This subsection demonstrates how to configure a system to save
 iptables log messages to a separate file.
 .PP
-This demonstration uses the
-.B rsyslog
-feature.
+This is a two-step process.
+The first step is to prepare a filter, using
+.BR rsyslog ,
+based on a log message, and the second step is to include that
+filter string in iptable log messages.
 .TP 4
-.B Filtering Rule
+.B Filtering iptables Messages
 In directory
 .BR /etc/rsyslog.d ,
-create a file with one rule:
+create a file, something like
+.hy 0
+.BR 10\-iptables.conf ,
+with one rule:
+.hy 1
+.RS 4
 .RS 4
 .PP
 .EX
-:msg, contains, "iptables: " -/var/log/iptables.log
+:msg, contains, \(dqiptables: \(dq -/var/log/iptables.log
 .EE
 .RE
 .PP
 See
 .BR rsyslog (5)
 and search for
-.I Property-Based Filters
+.RI \(lq "Property-Based Filters" \(rq
 for more information about filtering.
+.RE
+.TP
+.B Using --log-prefix to add filter string
+Make sure that all iptables log messages include the filter
+string.  The easiest thing is to use the
+.B --log-prefix \(dqiptables: \(dq
+option for the
+.B iptables
+command.
+.RS 4
+.PP
+If you prefer a different identifying tag, make sure that
+the filter in the rsyslog.d file matches the --log-prefix
+option value.
+.PP
+See
+.BR iptables "(8) and " iptables-extensions (8)
+for information about logging iptables actions.
+.RE
 
-.\" ==========================================================
-.SH SEE ALSO
-.\" ==========================================================
