@@ -34,6 +34,11 @@ Look at outcome of various macro packages
 manlinks
 |groff_custom.mlnk
 
+Authoring &Hints
+Personal collection of man-page authoring hints
+man
+|-l|groff_hints.7
+
 &Synopsis support
 Use function synopsis macros to function documentation
 man
