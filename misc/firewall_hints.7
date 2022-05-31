@@ -1,5 +1,9 @@
-.TH NAME 7 2022-05-13
+.TH FIREWALL\ HINTS 7 2022-05-13
 .
+.\" ---------------- this about-to-start section, up high for editing, goes below when done:
+.\" ---------------- this just-finished sectiongoes below when done:
+
+
 .\" ==========================================================
 .SH NAME
 .\" ==========================================================
@@ -7,7 +11,7 @@
 -- Hints to help you past unexpected, obscurely-documented firewall setup
 .
 .\" ==========================================================
-.SH SYNOPSIS
+.SH DESCRIPTION
 .\" ==========================================================
 .PP
 This is a guide to building a gateway router, combining a
@@ -23,213 +27,215 @@ host names, and the firewall grants or denies access according to
 users' identities as defined by their IP address.
 .
 .\" ==========================================================
-.SH DESCRIPTION
+.SH SETUP
 .\" ==========================================================
-.SS GATEWAY CONFIGURATION
+.NP
+This guide assumes that both
+.IR isc-dhcp-server " and " iptables
+software are installed.
 .\"
 .\" ---------------------
-.TP
-.B HARDWARE CONFIGURATION
-.br
-Any type of router requires at least two network interfaces.  A
-firewall router should have interfaces that are at least as fast
+.SS HARDWARE REQUIREMENTS
+.PP
+Any type of router requires at least two network interface cards
+.RI ( NIC ).
+A firewall router should have interfaces that are at least as fast
 as the data delivery speed of the network to which they are attached.
 .\"
 .\" ---------------------
-.TP
-.B SOFTWARE CONFIGURATION
-.br
-This is not a complete installation and configuration guide, but rather
-a checklist of the names and locations of files that must be created
-and/or modifie to successfully implement a gateway router, and a short
-explanation of what is required for the file.
-.\" Relative indent level #1 START
-.RS
-.TP
-.B NETWORK INTERFACES SETUP
-.br
-The requirements of both the DHCP server and the firewall function
-dictate the configuration of the network interfaces.
-of the multiple network interfaces.  Typically, the internet-facing
-network interface will set its parameters according to a DHCP server
-provided by the ISP (internet service provider), and the LAN
-(local-area network)-facing.
-.IP
-.B /etc/network/interfaces
-.br
-.B /etc/network/interfaces.d
-.br
-Either directly in the file
-.B interfaces
-or in configuration files created in the directory
-.BR interfaces.d ,
-the various network interfaces can be defined.
-.RE
-.\" Relative indent level #2 END
-.
-.\" Relative indent level #1 START
-.RS
-.TP
-.B DHCP SERVER SETUP
-.br
-These are some of the important files that require attention in order
-to run a DHCP server:
-.
-.\" Relative indent level #2 START
-.RS
+.SS SOFTWARE CONFIGURATION
 .PP
+These are the steps for successfully implementing a simple firewall/
+dhcp server:
+.PP
+.B \(bu NIC CONFIGURATION
+.RS 4
+.PP
+The internet facing NIC is often configured by an internet service
+provider
+.RI ( ISP ).
+The LAN-facing NIC needs to have a static IP address.
+See the
+.B NIC CONFIGURATION DISCUSSION
+below to learn about some of the ways this can be done.
+.RE
+.PP
+.B \(bu DHCP SETUP
+.RS 4
+.PP
+The DHCP server provides various IP addresses to enable clients to
+configure their NICs without network conflicts.  There are a few files
+that require attention to enable the DHCP service.
+.TP 4
 .B /etc/dhcp/dhcpd.conf
-.br
-The script that defines how IP addresses are distributed
-.PP
+to configure how the dhpc server provides network access values.
+.BR dhcpd.conf (5)
+.TP 4
 .B /var/lib/dhcp/dhcpd.leases
-.br
-The inventory of internet settings for users that requested
-access.
-.PP
+to keep track of to whom certain IP resources are allocated.
+This
+file must be created (use
+.BR touch )
+if it the dhcp-server setup hasn't already created it.
+.BR dhcpd.leases (5)
+.TP 4
 .B /etc/default/isc-dhcp-server
-.br
-This is the file that defines default resources that are
-not covered in the
-.B dhcpd.conf
-script.  This is where you will need to tell
+must be edited to inform the dhcp-server which NIC to monitor for
+DHCP-requests.
+Installing
 .B isc-dhcp-server
-which network interface will service DHCP requests.
+installs this configuration file.  The file contains information on
+how to modify it.
 .RE
-.\" Relative indent level #2 END
-.TP
-.B FIREWALL SETUP
-.br
-There is no defined filename or location for iptables configuration,
-but some sort of script must be provided to define the rules that
-the firewall will follow to protect the LAN will still giving the
-LAN access to the internet.
-.\" Relative indent level #2 START
-.RS
-.TP
-.B
-Firewall Logging
-.br
-By default, iptable logged messages will be written to the main
-.I /var/log/syslog
-log file.  When designing and debugging a firewall, there will likely
-be a large number of messages.  In these cases, it may be more
-convenient to segregate the iptables messages to its own logfile.
-This hint works on systems using
-.BR rsyslog ,
-systems using the older
-.B syslog-ng
-will need to look for a redirect guide online.
-.IP
-.B /etc/rsyslog.d/10-iptables.conf
-.br
-can be created to sort and redirect logged messages to another file.
-An example of a working log-detour configuration would be:
+.PP
+.B \(bu FIREWALL SETUP
+.RS 4
+.PP
+Write an
+.B iptables
+script to define rules for network address translation
+.RB ( NAT )
+and blocking potentially unfriendly access from the internet.
+.PP
+Configure
+.B iptables
+logging to redirect messages to an iptables-specific file.
+.PP
+See
+.B BREAK-OUT FIREWALL LOG MESSAGES
+below.
+.RE
+.\"=============================
+.SS NIC CONFIGURATION DISCUSSION
+.PP
+At least one of the NICs must be configured as a static address for
+a successful gateway computer.
+Unfortunately, different platforms use
+different methods, and sometimes change them from version to version.
+This discussion will show three different methods, two relatively recent
+styles using SystemD, and a legacy style using /etc/init.d.
+.\" ----------------------------
+.TP 4
+.B SystemD.netplan
+Internet interfaces are configured using netplan under
+systemd.
+The following listing is a very simple but complete netplan
+configuration file, with
+.B eth0
+facing the internet and
+.B eth0
+facing the LAN:
+.PP
+.RS 4
+.RS 4
 .EX
-    :msg, contains, "iptables: " -/var/log/iptables.log
+# /etc/netplan/00-installer-config.yaml
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: true
+    eth1:
+      addresses:
+      - 192.168.0.32
 .EE
-Refer to
-.IR rsyslog (5)
+.RE
+.PP
+ See man page
+.BR netplan (5).
+.RE
+.\" ----------------------------
+.TP 4
+.B SystemD.network
+Using the
+.B network
+service under the control of
+.B systemd
+uses files under the directory
+.B /etc/systemd/network
+that use the INI-style configuration, with sections in square braces
+followed by lines of key-value pairs separated with an equals
+character.
+.RS 4
+.RS 4
+.PP
+.EX
+# /etc/systemd/network/50-local.network
+[Match]
+Name=eth0
+[Network]
+DHCP=yes
+
+[Match]
+Name=eth1
+[Network]
+Address=192.168.0.32/24
+Gateway=192.168.0.32
+.EE
+.RE
+See man page
+.BR systemd.network (5).
+.RE
+.\" ----------------------------
+.TP 4
+.B Legacy SystemV
+Despite systemd running some things on a RaspberryPi, the network
+configuration is done with SystemV /etc/network/interfaces.
+An administrator can enter the code directly into
+/etc/network/interfaces, or create per-NIC configuration files in the
+/etc/network/interfaces.d directory.
+.RS 4
+.PP
+The following listing would be in /etc/network/interfaces to show
+both the dhcp and static versions:
+.RS 4
+.PP
+.EX
+# /etc/network/interfaces
+auto eth0
+iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet static
+  address 192.168.0.32
+  netmask 255.255.255.0
+  broadcast 192.168.0.255
+.EE
+.RE
+.PP
+See also man page
+.IR interfaces (5).
+.RE
+.\"================================
+.SS BREAK-OUT FIREWALL LOG MESSAGES
+.PP
+Sometimes iptables will log a large volume of messages.
+It can overwhelm regular system messages, making it hard to
+diagnose other problems.
+This subsection demonstrates how to configure a system to save
+iptables log messages to a separate file.
+.PP
+This demonstration uses the
+.B rsyslog
+feature.
+.TP 4
+.B Filtering Rule
+In directory
+.BR /etc/rsyslog.d ,
+create a file with one rule:
+.RS 4
+.PP
+.EX
+:msg, contains, "iptables: " -/var/log/iptables.log
+.EE
+.RE
+.PP
+See
+.BR rsyslog (5)
 and search for
 .I Property-Based Filters
 for more information about filtering.
 
-
-.RE
-.\" Relative indent level #2 END
-
-
-.SS BSD DIFFERENCES
-.PP
-While the basics are simiar, BSD has different file names, locations,
-and procedures.
-
-.TP
-.B dhcpd.conf
-is found at
-.I /usr/local/etc/dhcpd.conf
-on FreeBSD.
-
-.TP
-.B Identifying the DHCP interface
-.br
-This is done in the
-.B /etc/rc.conf
-file with the following two lines:
-.EX
-    dhcp_enable="YES"
-    dhcp_ifaces="eth0"
-.EE
-.TP
-.B 
-
-
-
-
-
-
-
-.SS Iptables
-.PP
-This is the firewall program...I'll add copy to this later
-.TP
-.B iptables Installation
-.br
-Install
-.BR iptables .
-.TP
-.B iptables Setup Files
-.br
-There are a few files to note, some are required, others can
-make tracking iptables activity easier.
-.\" -----------------------
-.\" Relative Indent level 1
-.RS
-.TP
-.B iptables.sh
-.br
-This file has the iptables instructions.  It should be run at
-boot time, so ensure it's accessible during the boot sequence.
-.TP
-.B /var/log/iptables.log
-.br
-This is not a required file, but it is a convenience for the
-iptables messages are separate from other system messages.  The
-use of this file is made possible by the following
-.I rsyslog
-facility.
-.TP
-.B /etc/rsyslog.d/10-iptables.conf
-.br
-Configure logging according to a identified message prefix.
-.RE
-.\" End relative indent level 1
-.\" ---------------------------
-.SS Changing Hardware
-.PP
-When you replace the hardware of the local network interface,
-you will have to make several changes in the firewall/dhcp
-configuration files:
-.TP
-.B iptables.sh
-.br
-The iptables script identifies both the IP address of the network
-and, importantly for this topic, the name of the interface.  Make
-sure that you change the value used with the
-.B -i
-iptables parameter to the new interface name.
-.TP
-.B /etc/default/isc-dhcp-server
-.br
-This file also refers to the network interface name, rather than
-its IP address.  Change it accordingly.
-
-
-
-
-
-
-.
 .\" ==========================================================
 .SH SEE ALSO
 .\" ==========================================================
