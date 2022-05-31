@@ -54,7 +54,7 @@ the mode's features by looking at its help page:
 .EX
 .B C-h m
 .EE
-.\" ============
+.\" --------------------------
 .TP
 .B Activate \*(lqnroff\*(rq mode
 .br
@@ -63,8 +63,44 @@ Get a previous of how your man page will be formatted by opening a
 .EX
 .B C-c C-c
 .EE
-
-
-
-
 .RE
+.\" ===============================
+.SS Markup Hints
+.PP
+There is a modest collection of
+.B man page
+macros, not enough to do everything an author might want.
+It is useful to become familiar with the
+.I groff language
+and its references,
+.BR groff "(7) and " "info groff" .
+.PP
+This subsection will present
+.I groff language
+solutions to a few formatting challenges to demonstrate how
+one might do their own search.
+.\"-------------------
+.TP
+.B Non-breaking words
+I find it pretty ugly when a command word is hyphenated on a
+.IR "man page" .
+An online search was no help for avoiding it, so I looked to
+.BR groff (7),
+searching for \(lqhyphenation\(rq.
+.PP
+.RS
+It turns out that there are hyphenation levels, with hyphenation
+level 1 being the default.
+I choose to exploit this feature to prevent a word break by
+temporarily disabling hyphenation.
+Look at the following code to prevent the hyphenation of
+.IR iptables :
+.PP
+.EX
+    .hy 0
+    iptables
+    .hy 1
+.EE
+.RE
+
+
