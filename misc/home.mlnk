@@ -43,3 +43,7 @@ A couple of URL bookmarks to useful HTTPs setup information
 man
 |-l|https_setup.7
 
+&Certbot Hints
+Clarification of confusing certbot services
+man
+|-l|certbot_hints.7

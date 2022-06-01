@@ -1,0 +1,50 @@
+.TH certbot\ HINTS 7 2022-06-01
+.SH NAME
+.B certbot hints
+\(em  Some non-obvious information learned the hard way
+.SH DESCRIPTION
+.PP
+I don't know much about this topic, though I once successfully used
+the
+.B certbot
+service to enable https:// access to a website.
+.SH HINTS
+.PP
+Again, I don't know much.  I do know that there is minimal offline
+references, and that the online reference was sometimes wrong or
+missing context.  This document may only contain a single hint, but
+I don't know where else to record the solution than under
+.BR manlinks .
+.SS certbot.timer
+.PP
+The
+.B certbot
+timer regularly checks for and automatically renews
+certificates that are due to expire in the next 30 days.  This
+timer service is automatically installed and enabled.
+.PP
+To test for proper timer installation, the documentation I read
+(perhaps it's changed by the time you read this) said that one
+can confirm the operation of the timer by entering:
+.RS 4
+.PP
+.EX
+$ sudo systemctl status certbot.timer
+.EE
+.RE
+.PP
+In fact, the service name was different, as shown in the following
+correct invocation:
+.RS 4
+.PP
+.EX
+$ sudo systemctl status snap.certbot.renew.timer
+.EE
+.RE
+.PP
+It's possible that the first command works when
+.B certbot
+is directly installed, instead of having been installed under
+.BR snap .
+In other words, don't just take my word for this, simply
+be informed of possible alternate invocations.
