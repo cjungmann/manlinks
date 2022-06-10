@@ -49,6 +49,65 @@ This is a bit crude, but it works.
 to select the completion window.
 .br
 \(bu Look around to modes appropriate for your work.
+.SS Installing New Modes
+.PP
+.B Emacs
+has a package manager that makes it easy to customize your
+browser.
+New editing modes are available in some of these packages.
+Use the following short list of commands to learn how to
+find and install packages.
+.TP
+.B m-x list-packages
+.RS 7
+.PP
+Use this command to see what the package manager has available
+for installation.
+Ise familiar search commands to find packages of interest.
+When you find a package to install, press
+.PP
+.RB \(lq i \(rq
+for each package you want to select (a little
+.RI \(lq i \(rq
+will appear next to selected packages),
+.PP
+.RB \(lq u \(rq
+to unmark a package, or
+.PP
+.RB \(lq x \(rq
+to install your selected packages when you are done.
+.RE
+.TP
+.B Adding a Package Source
+There may be times when you know a package exists, but it cannot
+be found in your package manager.
+You may be able to add another packages source to your package
+manager.
+For example, I wanted to use
+.BR php-mode ,
+but it wasn't available in the default packages.
+I needed to add the
+.B MELPA
+packages.
+.RS 7
+.PP
+Add the following lines to your
+.I ~/.emacs.d/init.el
+file:
+.RS 4
+.PP
+.EX
+(require 'package)
+(add-to-list 'package-archives
+    '("melpa-stable" . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives
+    '("melpa" . "https://melpa.org/packages/"))
+.EE
+.RE
+.PP
+.RB "Then restart " Emacs .
+.RE
+
 
 
 
