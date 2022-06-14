@@ -372,9 +372,9 @@ manlinks_execute_line()
 
     if [ "$cmd" == "manlinks" ]; then
         run_manlinks_file "${args[0]}"
+        return "$?"
     else
         "$cmd" "${args[@]}"
-        reset_screen
     fi
 
     return 0;
@@ -414,7 +414,7 @@ manlinks_start_interaction()
 
         if get_letter_index "msi_selected" "$msi_keys_string" "$keyp"; then
             manlinks_execute_line "$keyp" "$lui_list_name" "$msi_selected"
-            return 1
+            return "$?"
         fi
         return 0
     }
