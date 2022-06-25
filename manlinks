@@ -571,14 +571,16 @@ parse_args_for_path_and_file()
 
     if [ -n "$file" ]; then
         if [ -z "$path" ]; then
-            path="$PWD"
+            pafpaf_path="$PWD"
         fi
         if [ -e "${path}/$file" ]; then
             pafpaf_path="$path"
             pafpaf_file="${path}/$file"
         fi
     elif [ -z "$path" ]; then
-        pafpaf_path="$AFOLDER"
+        pafpaf_path="${AFOLDER}/manlinks.d"
+    else
+        pafpaf_path="$path"
     fi
 
     return 0
@@ -614,32 +616,22 @@ save_console_state_hide_cursor
 trap restore_console_state_show_cursor SIGINT
 trap restore_console_state_show_cursor EXIT
 
-
-# Locations from which Manlinks can run:
-declare AppLinks HomeLinks CWDLinks
-AppLinks="$AFOLDER"
-HomeLinks="~/manlinks.d"
-CWDLinks="$PWD"
-
 ml_main()
 {
     local mpath mfile
 
     if parse_args_for_path_and_file "mpath" "mfile" "$@"; then
-        echo "mpath is '$mpath'"
-        echo "mfile is '$mfile'"
-        read -n1 -p "Press any key to exit"
-        exit 0
-
         reset_screen
 
-        if [ "$#" -gt 0 ]; then
-            run_manlinks_file "$1"
+        if [ -n "$mfile" ]; then
+            run_manlinks_file "$mfile"
         else
+            pushd "$mpath" >/dev/null
             if ! open_default_manlinks_file; then
                 identify_manlinks_files "links_list" "$AFOLDER"
                 show_manlinks_files
             fi
+            popd >/dev/null
         fi
 
         reset_screen
