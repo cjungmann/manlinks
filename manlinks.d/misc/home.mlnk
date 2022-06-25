@@ -1,0 +1,49 @@
+#!manlinks
+# -*- mode:sh -*-
+
+&Miscellaneous Information
+
+These random topics are not big enough to merit their own
+manlinks page, but are useful nonetheless.
+
+4 0
+
+&Raspberry Pi
+Reminders of useful commands
+man
+|-l|raspi_hints.7
+
+&Firewall files
+Small guide which files are needed and why
+man
+|-l|firewall_hints.7
+
+&ISO copy
+Pathetic reminder of steps I can\'t remember
+man
+|-l|copy_iso.7
+
+&Systemd
+Small collection of hints
+man
+|-l|systemd_hints.7
+
+&Gnome Extensions
+A few useful Command Line solutions to enable or disable extensions
+man
+|-l|gnome_extensions.7
+
+&Bash_patterns sources
+Quick reference for List User Interface from Bash_patterns
+manlinks
+|../../sources/home.mlnk
+
+&HTTPs Setup
+A couple of URL bookmarks to useful HTTPs setup information
+man
+|-l|https_setup.7
+
+&Certbot Hints
+Clarification of confusing certbot services
+man
+|-l|certbot_hints.7
