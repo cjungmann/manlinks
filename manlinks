@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
 # Load appropriate sources even if script is a symlink:
-declare AFOLDER SFOLDER HomePath HomeCmd
+declare AFOLDER SFOLDER AppPath
 AFOLDER=$( readlink -f "$0" )n   # App's true location
 AFOLDER="${AFOLDER%/*}"
 SFOLDER="${AFOLDER}/sources"
 source "$SFOLDER"/include
 source "${AFOLDER}/manlinks_file"
-HomePath="${AFOLDER}/home.mlnk"
-HomeCmd="${AFOLDER}/manlinks"
+AppPath="${AFOLDER}/manlinks"
 
 
 declare -a Man_Keys_List
@@ -96,7 +95,7 @@ is_manlinks_cmd()
 {
     local cmd="$1"
     local path=$( which "$1" | xargs -I{} readlink {} )
-    [ "$path" == "${HomeCmd}" ]
+    [ "$path" == "${AppPath}" ]
 }
 
 # Package the condition identifying ignored lines for open_manlinks_file()
@@ -222,6 +221,28 @@ identify_manlinks_files()
     lui_list_init "$list_name"
 
     return 0
+}
+
+# Confirms that manlinks files exist in specificed directory.
+#
+# Args
+#   (string):    path to search
+#
+# Returns
+#   0 (true)    if any manlinks files found
+#   1 (false)   if no manlinks files found
+contains_manlinks_files()
+{
+    local cmf_path="$1"
+    local -a cmf_list
+
+    if identify_manlinks_files "cmf_list" "$cmf_path"; then
+        if [ "${#cmf_list[@]}" -gt 0 ]; then
+            return 0
+        fi
+    fi
+
+    return 1
 }
 
 # Reads and open a **manlinks** file.
@@ -473,6 +494,95 @@ EOF
     popd >/dev/null
 }
 
+show_usage()
+{
+    local B="$COL_BOLD"
+    local I="$COL_ITAL"
+    local O="$COL_OFF"
+
+    local using_name="$1"
+    cat <<EOF
+
+Use ${B}manlinks${O} (${B}$using_name${O}) for a console-based, curated help resource.
+
+${B}${using_name}${O} [${I}OPTION${O}] [${I}FILENAME${O}]
+
+${B}OPTIONS${O}
+   ${B}-h${O}  for this help page.
+   ${B}-p${O}  for personal manlinks hosted in ${I}~/manlinks.d${O}.
+   ${B}-l${O}  for manlinks in the current working directory.
+   ${B}-m${O}  for manlinks files residing in the ${B}manlinks${O} application
+       directory.  This is the default search directory, so this
+       option can be omitted.
+
+If a ${I}FILENAME${O} is provided, that file will be opened in the
+current working directory.  If another path is specified with one
+of the options above, that directory will be searched for ${I}FILENAME${O}.
+
+EOF
+    }
+
+parse_args_for_path_and_file()
+{
+    local -i linkscount=0
+    local using_name="${0##*/}"
+
+    local -n pafpaf_path="$1"
+    local -n pafpaf_file="$2"
+    shift 2
+
+    local path file
+
+    local arg
+    for arg in "$@"; do
+        if [ "${arg:0:1}" == '-' ]; then
+            case "$arg" in
+                '-m') path="$AFOLDER" ;;
+                '-h')
+                    show_usage "$using_name"
+                    return 1
+                    ;;
+                '-l')
+                    if contains_manlinks_files "$PWD"; then
+                        path="$PWD"
+                    else
+                        echo "Current directory contains no links." >&2
+                        return 1
+                    fi
+                    ;;
+                '-p')
+                    if [ -d "${HOME}/manlinks.d" ]; then
+                        if contains_manlinks_files "${HOME}/manlinks.d"; then
+                            path="${HOME}/manlinks.d"
+                        else
+                            echo "Personal Manlinks files not found." >&2
+                            return 1
+                        fi
+                    else
+                        echo "Home-based links not found." >&2
+                        return 1
+                    fi
+                    ;;
+            esac
+        else
+            file="$arg"
+        fi
+    done
+
+    if [ -n "$file" ]; then
+        if [ -z "$path" ]; then
+            path="$PWD"
+        fi
+        if [ -e "${path}/$file" ]; then
+            pafpaf_path="$path"
+            pafpaf_file="${path}/$file"
+        fi
+    elif [ -z "$path" ]; then
+        pafpaf_path="$AFOLDER"
+    fi
+
+    return 0
+}
 
 #########################
 #         Main          #
@@ -505,19 +615,35 @@ trap restore_console_state_show_cursor SIGINT
 trap restore_console_state_show_cursor EXIT
 
 
+# Locations from which Manlinks can run:
+declare AppLinks HomeLinks CWDLinks
+AppLinks="$AFOLDER"
+HomeLinks="~/manlinks.d"
+CWDLinks="$PWD"
+
 ml_main()
 {
-    reset_screen
-    if [ "$#" -gt 0 ]; then
-        run_manlinks_file "$1"
-    else
-        if ! open_default_manlinks_file; then
-            identify_manlinks_files "links_list" "$AFOLDER"
-            show_manlinks_files
-        fi
-    fi
+    local mpath mfile
 
-    reset_screen
+    if parse_args_for_path_and_file "mpath" "mfile" "$@"; then
+        echo "mpath is '$mpath'"
+        echo "mfile is '$mfile'"
+        read -n1 -p "Press any key to exit"
+        exit 0
+
+        reset_screen
+
+        if [ "$#" -gt 0 ]; then
+            run_manlinks_file "$1"
+        else
+            if ! open_default_manlinks_file; then
+                identify_manlinks_files "links_list" "$AFOLDER"
+                show_manlinks_files
+            fi
+        fi
+
+        reset_screen
+    fi
 }
 
 ml_main "$@"
