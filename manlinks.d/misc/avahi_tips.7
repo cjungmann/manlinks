@@ -1,0 +1,137 @@
+.TH AVAHI\ TIPS 7 2022-06-25
+\". ==================================
+.SH NAME
+.B avahi_tips
+\(em Setup summary to help you get started
+\". ==================================
+.SH DESCRIPTION
+.PP
+Connecting to various hosts on a local area network can be complicated.
+It's usually necessary to know the IP address of the host in order to
+use
+.I ssh
+or other services.
+.PP
+For years I have maintained the
+.I /etc/hosts
+file with the IP addresses and host names of computers on my local
+network in order to access them by name.
+.PP
+There is an easier way.
+A headless RaspberryPi computer can be found on a network using its
+host name with a 
+.I .local
+suffix.
+This service is provided by the
+.B avahi-daemon
+service.
+This guide will step you through installing
+.B avahi-daemon
+so hosts on your network can be found without memorizing IP addresses
+or synchronizing
+.I /etc/hosts
+files on all the computers on your network.
+\". ==================================
+.SH INSTALLING avahi-daemon
+.PP
+Ideally, this is available as a package on your system.  For Debian-based
+systems, type:
+.RS 4
+.PP
+.EX
+$ sudo apt-get install -y avahi-daemon
+.EE
+$ sudo service avahi-daemon start
+.EE
+.RE
+.TP
+.B Configuring avahi-daemon
+The default
+.I avahi-daemon
+configuration seems to work fine, assuming the hostname is properly
+identified (see below).
+.IP
+The file,
+.IR /etc/avahi/avahi-daemon.conf ,
+is where other service settings can be changed.
+\". ==================================
+.SH HOSTNAME CONFIGURATION
+.PP
+While it might be obvious that you can set a computer's hostname
+in
+.IR /etc/hostname ,
+it is less obvious that the
+.I /etc/hosts
+file must also include a local host address for the same hostname.
+The default IP address of the local hostname is
+.IR 127.0.1.1 .
+.SS EXAMPLE FILES
+.TP
+.B /etc/hostname
+.PP
+.RS 4
+.EX
+bespoke_hostname
+.EE
+.RE
+.TP
+.B /etc/hosts
+.PP
+.RS 4
+.EX
+127.0.0.1    localhost
+127.0.1.1    bespoke_hostname
+ .
+ .
+ .
+.EE
+.RE
+.PP
+The new hostname will not be active until after a reboot, but the
+effective hostname can be temporarily changed using the
+.B hostname
+command:
+.RS 4
+.PP
+.EX
+$ sudo hostname bespoke_hostname
+.EE
+.RE
+.PP
+After using
+.BR hostname ,
+the hostname is immediately effective, and after reboot, the hostname
+will be taken from
+.IR /etc/hostname .
+\". ==================================
+.SH STARTING avahi-daemon
+.PP
+After installing
+.B avahi-daemon 
+and ensuring consistent hostname values, you are ready to start
+the service.
+.RS 4
+.PP
+.EX
+$ sudo service avahi-daemon start
+.EE
+.RE
+.PP
+\". ==================================
+.SH USING avahi-daemon
+.PP
+When
+.I avahi-daemon
+is running, any workstation on a network can access the host by referring
+to
+.IR hostname.local .
+.RS 4
+.PP
+.EX
+$ ssh bespoke_hostname.local
+.EE
+.RE
+
+
+
+

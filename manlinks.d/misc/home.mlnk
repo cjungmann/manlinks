@@ -28,6 +28,11 @@ Small collection of hints
 man
 |-l|systemd_hints.7
 
+&Avahi
+Use **avahi** to prepare LAN workstation discovery.
+man
+|-l|avahi_tips.7
+
 &Gnome Extensions
 A few useful Command Line solutions to enable or disable extensions
 man
