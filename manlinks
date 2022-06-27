@@ -223,6 +223,41 @@ identify_manlinks_files()
     return 0
 }
 
+# Tool to see if a default file exists in the list.
+#
+# Args
+#    (string):     name of file to seek
+#    (string,in):  name of list of files to search
+#
+# Returns:
+#    0 (success) if file name in list
+#    1 (failuer) if file name not in list
+find_file_in_list()
+{
+    local needle="$1"
+    local -n haystack="$2"
+    local OIFS="$IFS"
+    local -i found=1   # error/not found
+
+    lli_callback()
+    {
+        local IFS="|"
+        local -a arr=( $5 )
+        IFS="$OIFS"
+        local path="${arr[@]: -1}"
+        local name="${path##*/}"
+        if [ "$name" == "$needle" ]; then
+            found=0      # no error/found
+            return 1
+        fi
+        return 0
+    }
+
+    lui_list_iterate "$2" lli_callback
+
+    return $found
+}
+
 # Confirms that manlinks files exist in specificed directory.
 #
 # Args
@@ -278,13 +313,15 @@ run_manlinks_file()
 # No Args
 open_default_manlinks_file()
 {
+    local odmf_path="$1"
+
     local -a odmf_links=()
     local -i odmf_ndx=0
 
     local -i odmf_found=0
 
     # Get manlinks files in ultimate directory
-    identify_manlinks_files "odmf_links" "$AFOLDER"
+    identify_manlinks_files "odmf_links" "$odmf_path"
 
     odmf_check()
     {
@@ -476,12 +513,7 @@ manlinks_start_interaction()
 # that won't be included outside of that project's directory.
 show_manlinks_files()
 {
-    local -a manlinks_list
-    if [ "$PWD" != "$AFOLDER" ]; then
-        identify_manlinks_files "manlinks_list" "$PWD"
-    fi
-
-    identify_manlinks_files "manlinks_list" "$AFOLDER"
+    local -n smf_files="$1"
 
     local -a smf_paras
     bind_paragraphs "smf_paras" <<EOF
@@ -489,9 +521,9 @@ This is a list of available manlinks files.  Select one of these
 files to see the links included in the file.
 EOF
 
-    pushd "$AFOLDER" >/dev/null
-    manlinks_start_interaction "manlinks_list" "smf_paras"
-    popd >/dev/null
+    # pushd "$AFOLDER" >/dev/null
+    manlinks_start_interaction "smf_files" "smf_paras"
+    # popd >/dev/null
 }
 
 show_usage()
@@ -531,16 +563,18 @@ parse_args_for_path_and_file()
     local -n pafpaf_file="$2"
     shift 2
 
-    local path file
+    local file path="${AFOLDER}/manlinks.d"
 
     local arg
     for arg in "$@"; do
         if [ "${arg:0:1}" == '-' ]; then
             case "$arg" in
-                '-m') path="$AFOLDER" ;;
                 '-h')
                     show_usage "$using_name"
                     return 1
+                    ;;
+                '-m')
+                    path="${AFOLDER}/manlinks.d"
                     ;;
                 '-l')
                     if contains_manlinks_files "$PWD"; then
@@ -621,17 +655,34 @@ ml_main()
     local mpath mfile
 
     if parse_args_for_path_and_file "mpath" "mfile" "$@"; then
+
         reset_screen
 
         if [ -n "$mfile" ]; then
             run_manlinks_file "$mfile"
-        else
-            pushd "$mpath" >/dev/null
-            if ! open_default_manlinks_file; then
-                identify_manlinks_files "links_list" "$AFOLDER"
-                show_manlinks_files
+        elif [ -n "$mpath" ]; then
+            local -a m_files
+            identify_manlinks_files "m_files" "$mpath"
+
+            if [ "${#m_files[@]}" -eq 0 ]; then
+                echo "No manlinks files found in '$mpath'." >&2
+                exit 1
+            else
+                pushd "$mpath" >/dev/null
+                if [ "${#m_files[@]}" -eq 1 ]; then
+                    run_manlinks_file "${m_files[0]}";
+                elif find_file_in_list "home.mlnk" "m_files"; then
+                    run_manlinks_file "home.mlnk"
+                else
+                    show_manlinks_files "m_files"
+                fi
+                popd >/dev/null
             fi
-            popd >/dev/null
+
+            # if ! open_default_manlinks_file "$mpath"; then
+            #     identify_manlinks_files "links_list" "$AFOLDER"
+            #     show_manlinks_files
+            # fi
         fi
 
         reset_screen
