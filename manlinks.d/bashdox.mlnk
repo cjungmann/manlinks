@@ -13,46 +13,47 @@ documentation of Bash scripts.
 &small_stuff
 random uncategorized Bash functions
 bd
-|sources/small_stuff
+|../sources/small_stuff.sh
 
 &list_ui
 list-based interaction support
 bd
-|sources/list_ui
+|../sources/list_ui.sh
 
 &auto_menu
 full-featured quick menu with some useful utilities
 bd
-|sources/auto_menu
+|../sources/auto_menu.sh
 
 &block_text
 functions to help plotting justified text
 bd
-|sources/block_text
+|../sources/block_text.sh
 
 &colorize
 minimalist highlighting functions mimic markdown bold and italics
 bd
-|sources/colorize
+|../sources/colorize.sh
 
 colu&mnize
 efficiently break a large array of strings into columns
 bd
-|sources/columnize
+|../sources/columnize,sh
 
 cs&v_file
 parsing CSV data
 bd
-|sources/csv_file
+|../sources/csv_file.sh
 
 &keypress
+
 detect keypresses like a real language
 bd
-|sources/keypress
+|../sources/keypress.sh
 
 &timer
 high-accuracy timer for speed-testing
 bd
-|sources/timer
+|../sources/timer.sh
 
 
