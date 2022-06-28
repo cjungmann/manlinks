@@ -546,6 +546,9 @@ ${B}OPTIONS${O}
    ${B}-m${O}  for manlinks files residing in the ${B}manlinks${O} application
        directory.  This is the default search directory, so this
        option can be omitted.
+   ${B}-s${O}  force scan mode: ignore ${B}home.mlnk${O}, if found, to create a
+       alphabetic-ordered generated list that serves as a start
+       to work on a ${B}home.mlnk${O} file.
 
 If a ${I}FILENAME${O} is provided, that file will be opened in the
 current working directory.  If another path is specified with one
@@ -554,6 +557,12 @@ of the options above, that directory will be searched for ${I}FILENAME${O}.
 EOF
     }
 
+# Delegate for parsing arguments into three name-reffed variables
+#
+# Args
+#    (name,out):           name of variable of path where manlinks should run
+#    (name,out):           name of manlinks file to open
+#    (name, integer, out): name of scan flag, to ignore home.mlnk if found
 parse_args_for_path_and_file()
 {
     local -i linkscount=0
@@ -561,7 +570,10 @@ parse_args_for_path_and_file()
 
     local -n pafpaf_path="$1"
     local -n pafpaf_file="$2"
-    shift 2
+    local -n pafpaf_scan="$3"
+    shift 3
+
+    pafpaf_scan=0
 
     local file path="${AFOLDER}/manlinks.d"
 
@@ -596,6 +608,9 @@ parse_args_for_path_and_file()
                         echo "Home-based links not found." >&2
                         return 1
                     fi
+                    ;;
+                '-s')
+                    pafpaf_scan=1
                     ;;
             esac
         else
@@ -653,8 +668,9 @@ trap restore_console_state_show_cursor EXIT
 ml_main()
 {
     local mpath mfile
+    local -i force_scan=0
 
-    if parse_args_for_path_and_file "mpath" "mfile" "$@"; then
+    if parse_args_for_path_and_file "mpath" "mfile" "force_scan" "$@"; then
 
         reset_screen
 
@@ -671,7 +687,7 @@ ml_main()
                 pushd "$mpath" >/dev/null
                 if [ "${#m_files[@]}" -eq 1 ]; then
                     run_manlinks_file "${m_files[0]}";
-                elif find_file_in_list "home.mlnk" "m_files"; then
+                elif [ "$force_scan" -eq 0 ] && find_file_in_list "home.mlnk" "m_files"; then
                     run_manlinks_file "home.mlnk"
                 else
                     show_manlinks_files "m_files"
