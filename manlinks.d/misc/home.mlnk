@@ -11,12 +11,12 @@ manlinks page, but are useful nonetheless.
 &Raspberry Pi
 Reminders of useful commands
 man
-|-l|raspi_hints.7
+|-l|raspi_tips.7
 
 &Firewall files
 Small guide which files are needed and why
 man
-|-l|firewall_hints.7
+|-l|firewall_tips.7
 
 &ISO copy
 Pathetic reminder of steps I can\'t remember
@@ -26,7 +26,7 @@ man
 &Systemd
 Small collection of hints
 man
-|-l|systemd_hints.7
+|-l|systemd_tips.7
 
 &Avahi
 Use **avahi** to prepare LAN workstation discovery.
@@ -48,7 +48,7 @@ A couple of URL bookmarks to useful HTTPs setup information
 man
 |-l|https_setup.7
 
-&Certbot Hints
+&Certbot Tips
 Clarification of confusing certbot services
 man
-|-l|certbot_hints.7
+|-l|certbot_tips.7
