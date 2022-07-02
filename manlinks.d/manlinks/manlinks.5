@@ -1,0 +1,118 @@
+.TH manlinks 5 2022-07-01
+.\" Definitions
+.fp \n[.fp] C MS
+.de C
+.   br
+.   ie n \[char27][38;2;255;255;128m \\$*
+.   el \fC \\$*
+..
+.\"
+.SH NAME
+manlinks
+\- console-based bookmarks to man and info pages
+.SH DESCRIPTION
+.PP
+A
+.I manlinks register
+file is a formatted text file that contains information needed to
+present topics in the
+.B manlinks
+application.
+.PP
+The following are parts of a
+.TP
+.B Pseudo \(lqshebang\(rq
+This line identifies the file type.
+.C #!manlinks
+.TP
+.B Title line
+This line serves two purposes: to be the title of the
+.B manlinks
+display
+.I and
+to be the name of the link on a generated
+.I manlinks register
+that shows the
+.I manlinks registers
+in a directory.
+.IP
+In service to the second purpose, indicating a character in the
+title string by prefixing the character with an ampersand
+.RI ( & )
+causes the character to be highlighted and active for quick
+selection.
+.TP
+.B Message text
+With a blank line separating the this text from the title line,
+this text contains whatever the author wants to convey to the
+user.  It will be displayed, with the title text, above the set
+of manlinks topics.
+.IP
+This section is optional, but ends when the next part is detected.
+.TP
+.B Table dimensions
+This is two numbers, either two lines or on one line separated by
+one or more spaces.
+The first number defines the
+.IR "number of columns" ,
+and the second number is the
+.IR "number of rows" .
+The numbers can be on one or two lines.
+The example below puts the numbers on a single line.
+.IP
+These numbers signal that the introductory part of the register
+is complete and that the remainder of the file consists of link
+records.
+.TP
+.B Manlinks records
+Following the table dimensions, empty or commented lines are ignored
+and each line with content is considered one field of a four-field record.
+The fields are as follows:
+.RS
+.TP
+.B Title
+The title of the link.  Putting an ampersand
+.RI ( & )
+in front of a letter causes the letter be highlighted and to be
+active as an instant-select keypress.
+.TP
+.B Description
+A short description to further explain the title
+.TP
+.B Command
+The command used to display the information
+.TP
+.B Command arguments
+Arguments to open the content at the desired location.
+.IP
+The first character on this line will be used as the delimiter
+between the arguments on this line.  In most cases, the pipe
+character
+.RI ( | )
+will suffice, but other characters can be used if a pipe character
+is contained in one of the arguments.
+.RE
+
+.IR "manlinks register" .
+.PP
+.SH EXAMPLE
+.C #!manlinks
+.C
+.C "&Sample Manlinks Register"
+.C
+.C "4 0"
+.C
+.C "&unlink"
+.C "Removes specified file"
+.C man
+.C "|unlink"
+.C
+.C "Bash &Parameter Expansion"
+.C "Reference to obscure parameter conversions"
+.C man
+.C "|-P|less -p^\ *Parameter\ Expansion|bash"
+.C
+.C "&Info Search"
+.C "Search for content in *info* files"
+.C info
+.C "|--node=Searching Commands|info"

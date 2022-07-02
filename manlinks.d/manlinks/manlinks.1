@@ -1,0 +1,132 @@
+.TH manlinks 1 2022-06-30
+.\" ============================
+.SH NAME
+.B manlinks
+\(em console-based bookmarks to man and info pages
+.\" ============================
+.SH SYNOPSIS
+.PP
+.B manlinks
+.RI [ OPTIONS ]
+.RI [ FILENAME ]
+.br
+.B ml
+.RI [ OPTIONS ]
+.RI [ FILENAME ]
+.\" ============================
+.SH DESCRIPTION
+.PP
+.B manlinks
+is a console-based application that displays a curated list of links
+to content from which the user can access the content.
+.PP
+Orignally targeting
+.B man pages
+for content, thus the name
+.BR manlinks , info
+and any other content that can be opened from the command line can
+be used as a link.
+.PP
+The application reads from a
+.B manlinks register
+to build the page from which the links can be accessed.
+.\" ============================
+.SH OPTIONS
+.TP
+.B -h
+Print a usage message and exit.
+.TP
+.B -l
+Read from any
+.I manlinks registers
+in the current working directory.
+.TP
+.B -p
+Read from any
+.I manlinks registers
+in the
+.I manlinks.d
+directory in the user's
+.I home
+directory.
+.TP
+.B -m
+Read from any
+.I manlinks registers
+in the
+.B manlinks
+application directory.
+.IP
+This is the default behavior, the same as running
+.B manlinks
+without any options.
+.TP
+.B -s
+Scans for
+.I manlinks registers
+in the directory selected by the other options.
+.IP
+This feature facilitates creating a
+.IR register " of " registers
+for cascading
+.IR manlinks .
+.TP
+.B FILENAME
+If
+.B FILENAME
+is of a
+.IR "manlinks register" ,
+.B manlinks
+will open the requested
+.IR register ,
+ignoring other
+.I registers
+that might be in the same directory.
+.\" ============================
+.SH COMMANDS
+.PP
+If you forget everything else, remember that typing
+.I ?
+will display the currently-available keys and what they do.
+.PP
+The user selects a
+.B target
+topic using arrow and page-movement keys, then presses
+.I ENTER
+to view the topic.
+.SS TARGETING
+.PP
+Select a target topic from the list shown on the screen.
+.TP
+.B up-arrow
+.TQ
+.B down-array
+Moves the target up or down one line.
+.TP
+.B PgUp
+.TQ
+.B PgDn
+First move to the top or bottom topic of the displayed topics,
+the move forward or backward by screensful when pressing the
+key subsequent times.
+.SS SELECTING
+.PP
+Open a targetted topic by pressing ENTER.
+Alternatively, for topic titles with a highlighted character,
+clicking the letter will open the topic if the letter is unique,
+or will cycle between topics with the same highlighted letter
+if there are more than on topic so marked.
+.SS EXITING
+.TP
+.B ESCAPE
+.TQ
+.B q
+Pressing either of these keys will exit the current topic or
+list.
+.\" ============================
+.SH SEE ALSO
+.PP
+.BR manlinks (5)
+to see how to create a
+.IR "manlinks register" .
+
