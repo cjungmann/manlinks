@@ -1,0 +1,63 @@
+.TH groff\ debugging 7 2022-07-03
+.SH NAME
+.B groff debugging
+\- Tips and tricks for advanced groff programming
+.SH DESCRIPTION
+.PP
+This document aspires to provide some basic debugging tools to
+aid authors when they step beyond
+.I man page
+writing macros.
+.PP
+The
+.I groff language
+is overwhelming.
+.I Groff
+output is typically generated from files that depend on
+extensive macros to simplify authoring.
+However, using the underlying
+.I groff language
+can significantly improve your documents.
+.PP
+This document starts modestly, but should grow as my experience expands.
+.SH TERMINAL MESSAGE
+.PP
+This simple request sends the text arguments to
+.IR stderr .
+.PP
+.RS
+\&.te Send this text to stderr.
+.RE
+.SH ENVIRONMENT
+.PP
+.I Groff
+incorporates the idea of an
+.BE environment .
+The environment consists of all the current settings with which
+the
+.B groff
+processor is working.
+It includes fonts, indentation, line lengths, spacing, and more.
+.PP
+The
+.B .pev
+request prints, to
+.IR stderr ,
+the contents of the stack of environments, starting with the current
+environment.
+.PP
+To view the output, you should use
+.BR groffer " because" man
+does not respect the
+.B .pev
+request.
+.PP
+Although you might see part of the printed environment with a normal
+document display, you will rarely see all of it.
+To see all of the output, redirect
+.B stdout
+to a file:
+.PP
+.RS
+$ groffer --tty my_man_page.7 2>env_notes.txt
+.RE
