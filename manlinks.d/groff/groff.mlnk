@@ -49,11 +49,6 @@ Occasionally recommended, newer groff macro set for man pages
 man
 |7|groff_mdoc
 
-M&E macro set
-(**webpage warning**) simple tutorial
-xdg-open
-|https://opensource.com/article/18/2/writing-academic-papers-groff-me
-
 Macros &Cheat Sheet
 PDF Cheat sheet from opensource.com
 xdg-open
@@ -64,3 +59,12 @@ Meaning and use of LESS_TERMCAP_xx values
 man
 |-l|less_termcaps.7
 
+M&E macro set
+(**webpage warning**) simple tutorial
+xdg-open
+|https://opensource.com/article/18/2/writing-academic-papers-groff-me
+
+Groff &Resume
+**webpage** Groff resume example illustrates obscure groff points.
+xdg-open
+|https://noxz.tech/guides/groff/writing_a_resume_in_groff/
