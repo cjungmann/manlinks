@@ -1,0 +1,166 @@
+.TH groff_coding 7 "Miscellaneous Information Manual"
+.\"
+.SH NAME
+.B groff_coding
+\- A collection of nroff programming references and examples
+.\"
+.SH DESCRIPTION
+.PP
+The document is a memory aid to more quickly recover competence with
+the practice of using
+.BR nroff ( groff )
+to write manual pages and other
+.B nroff
+documents.
+.SH EXAMPLES
+.ds DRS \\(rs\\(rs
+.PP
+This random list of examples aims to illustrate some programming
+techniques that I want to remember.
+.SS CONDITIONAL STATEMENTS
+.ds cons \fI.if\fP,\ \fI.ie\fP,\ \fI.el\fP,\ or\ \fI.while\fP
+.PP
+There are some peculiarities with
+.B groff
+conditional statements.
+.PP
+A conditional statement consists of a
+.B condition request
+(\*[cons]), a
+.BR condition ,
+and a
+.BR "condition request" .
+.PP
+A
+.B condition
+is an expression that evaluates as
+.IR true " or " false .
+If the condition expression contains spaces, they must either be
+escaped or the condition expression must be enclosed in parentheses.
+The following three conditional statements are equivalent:
+.IP
+.EX
+.TS
+tab(|);
+l l .
+\&.if \*[DRS]n[ndx]<10 .task|\(rs\(dq no spaces
+\&.if \*[DRS]n[ndx]\(rs <\(rs 10 .task|\(rs\(dq escaped spaces
+\&.if (\*[DRS]n[ndx] < 10) .task|\(rs\(dq enclosed with spaces
+.TE
+.EE
+.PP
+A
+.B condition request
+can be a simple request (including the dot), or a compound
+request with several statements enclosed in curly-braces.
+.PP
+The condition examples above show conditions with a simple request.
+The following example shows how to construct a multi-statement
+condition request:
+.IP
+.EX
+\&.while (\*[DRS]n[ndx] < 10 ) \(rs{\(rs
+\&.  as concat \(rs \*[DRS]n[ndx]
+\&.  nr ndx +1
+\&.\(rs}
+.EE
+.PP
+Note that the enclosing curly-braces of a multi-statement request
+must be escaped and the newline that follows the opening curly-brace
+must also be espaced.
+.SS ITERATE PARAMETER LIST
+.PP
+It is common to see a request followed by multiple arguments.
+There are several ways to negotiate multiple arguments:
+.TP
+.B Refer to all arguments at once
+.TS
+tab(|);
+l l .
+\(rs$*|All macro arguments with spaces between
+\(rs$@|All macro arguments, quoted, with spaces between
+\(rs$^|All macro arguments as if \fB.ds\fP arguments
+.TE
+.TP
+.B Insert a bullet character between the arguments of a macro
+.IP
+.EX
+\&.de list_args
+\&.  ds concat \*[DRS]$1
+\&.  shift
+\&.  while \*[DRS][.$] \(rs{\(rs
+\&.    as concat \(rs \*[DRS](bu\(rs \*[DRS]$1
+\&.    shift
+\&.  \(rs}
+\&..
+.EE
+.SH REFERENCES
+.PP
+The primary programming reference is the man page
+.BR groff (7).
+.SS LOCATE THE MACRO FILES
+.PP
+Learn how to code in
+.B nroff
+by reading the code written by its pioneers.
+Find the builtin macro files at:
+.IP
+/usr/share/groff/current/tmac
+.SS MACRO FILE NAME ODDITY
+.PP
+As you may know, a traditional Linux/Unix command-line option is a
+single dash followed be a single character, after which the option
+value follows with 0 or more spaces.
+The pioneers of
+.B nroff
+programming were being cute when they named macro files with this
+feature in mind.
+.PP
+The name of many macro sets begins with \(lqm\(rq.
+Thus, you can often identify the macro file for a named macro set by
+imagining a \(lqm\(rq in front of the file name.
+.PP
+For example, the
+.B man
+macro set will be invoked with the option
+.IR -man ,
+otherwise notated as
+.B -m
+.IR an ,
+which will load the macro file
+.BR an.tmac .
+The file name of the
+.B mandoc
+macro set is
+.BR andoc.tmac .
+The file name of the
+.B me
+macro set is
+.BR e.tmac .
+.PP
+Note that this naming convention is not universal, but knowing about
+the convention may help you avoid frustration when looking for a
+specific macro file.
+.PP
+Note also that some macro files are shells that only contain
+inclusions of other macro files.
+The
+.BR .so " and " .mso
+requests load other macro files.
+.\"""""""""""""""
+.SS MACRO FILES OF INTEREST
+.TP
+.B man Macros (/usr/share/groff/current/tmac/an-old.tmac)
+The most common use of
+.B groff
+is the writing of
+.BR "manual pages" ,
+and the most common macro set for that use is the
+.B man
+macro set.
+Most people who are interested in
+.B groff
+programming should be familiar with the
+.B man
+macro names and their use, which will make it easier to know
+which macros to study.
