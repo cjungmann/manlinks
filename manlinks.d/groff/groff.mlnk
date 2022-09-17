@@ -29,6 +29,11 @@ Add your own macros for consistency and saving time
 info
 |--node=Writing Macros|groff
 
+&Groff Coding Patterns
+Reboot groff programming skills
+groffer
+|--tty|groff_coding.7
+
 Groff e&xamples
 Look at outcome of various macro packages
 manlinks
@@ -68,3 +73,9 @@ Groff &Resume
 **webpage** Groff resume example illustrates obscure groff points.
 xdg-open
 |https://noxz.tech/guides/groff/writing_a_resume_in_groff/
+
+Man testing sandbox
+Experiments with man output
+groffer
+|--tty|tester.7
+
