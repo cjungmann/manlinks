@@ -1,5 +1,4 @@
 .TH groff_coding 7 "Miscellaneous Information Manual"
-.\"
 .SH NAME
 .B groff_coding
 \- A collection of nroff programming references and examples
@@ -68,6 +67,27 @@ condition request:
 Note that the enclosing curly-braces of a multi-statement request
 must be escaped and the newline that follows the opening curly-brace
 must also be espaced.
+.SS MACRO RECURSION
+.PP
+Recursion in programming is when a macro or function calls itself.
+.PP
+Unlike other programming languages, variables (called
+.B registers
+in
+.BR groff )
+are all global.
+This makes recusion more complicated.
+.PP
+Fortunately, macro arguments are local, so
+.B \(rs$1
+is local to a macro and is preserved intact following
+recursive calls.
+.PP
+So my suggested
+.B groff
+programming pattern for recursion is to either calculate
+needed values from an argument, or pass as arguments the values
+that you might otherwise want to declare as local in the macro.
 .SS ITERATE PARAMETER LIST
 .PP
 It is common to see a request followed by multiple arguments.
@@ -164,3 +184,5 @@ programming should be familiar with the
 .B man
 macro names and their use, which will make it easier to know
 which macros to study.
+.SH EXTRA GLYPHS
+.printGlyphs
