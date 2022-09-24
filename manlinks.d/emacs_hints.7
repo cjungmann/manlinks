@@ -1,6 +1,12 @@
 .TH Emacs Hints 7 2022-05-06
 .
-.ds Nm \fIEmacs\fP
+.ds Nm \fBEmacs\fP
+.fp \n[.fp] C MS
+.de C
+.   br
+.   ie n \[char27][38;2;255;255;128m \\$*
+.   el \fC \\$*
+..
 .
 .\" ==========================================================
 .SH NAME
@@ -14,6 +20,74 @@
 While it's not too hard to learn \*(Nm features, if you don't know
 what's available, you may never know what you are missing.
 .
+.SH LOCAL VARIABLES
+.PP
+Syntax highlighting is directed by the current Emacs editing mode.
+Emacs can usually guess the file type to set the correct editing
+mode, considering the file's extension or some of its contents.
+There are times when Emacs cannot guess, and it needs some help to
+set the appropriate editing mode.
+This can be done using
+.BR "local variables" .
+.PP
+Local variables can be set at the top of the file or at the bottom,
+both having a different syntax.
+In both cases, the lines should be marked as comments of the
+language in which the file is written.
+Some modes may have submodes that can also be set in local variables.
+.PP
+Here is a top-of-file example, which should be in one of the top
+two lines of the file:
+.RS 4
+.EX
+# -*- mode: sh; sh-shell: bash -*-
+.EE
+.RE
+.PP
+Here is a bottom-of-file example for roff code:
+.RS 4
+.EX
+\&.\(rs\(dq Local Variables:
+\&.\(rs\(dq mode: nroff
+\&.\(rs\(dq End:
+.EE
+.RE
+.PP
+Beware of top-of-file variables: there is a file size-threshhold beyond
+which Emacs will no longer remember the variables.
+.SH CUSTOM SYNTAX HIGHLIGHTING
+.PP
+Unhighlighted code can feel like a wall of letters.
+I often put a commented line of asterisks, equals-signs, or dashes
+just above function declarations so the red-rendered comment draws
+my eye to the declaration.
+.PP
+\*(Nm offers another way: custom highligting.
+
+.SS EDITING ~/.emacs.d/init.el
+.PP
+What I've done is use Emacs-lisp
+.BR add-hook " and " highlight-regep
+commands.
+.PP
+I will describe my latest effort, to highlight
+.IR .TH ", " .SH ", and " .SS
+requests.  Having these header elements stand out makes it
+easier to find where you're working.
+.PP
+In this case, I created a new font-face to avoid unexpected
+changes that may happen by using a built-in face.
+Look at the following lisp code:
+.PP
+.C "(add-hook 'nroff-mode-hook '(lambda ()"
+.C "         (defface nroff_header"
+.C "           '((t (:background \(dq#336600\(dq)))"
+.C "           \(dqDoc-string\(dq"
+.C "           :group 'my-faces)"
+.C "         (highlight-regexp \(dq^\\.TH.*\(dq 'nroff_header)"
+.C "         (highlight-regexp \(dq^\\.SH.*\(dq 'nroff_header)"
+.C "         (highlight-regexp \(dq^\\.SS.*\(dq 'nroff_header))"
+.C "   )"
 .\" ==========================================================
 .SH DESCRIPTION
 .\" ==========================================================
@@ -107,7 +181,6 @@ file:
 .PP
 .RB "Then restart " Emacs .
 .RE
-
 
 
 
