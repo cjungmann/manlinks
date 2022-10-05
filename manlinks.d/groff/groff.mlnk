@@ -19,6 +19,11 @@ Follow the wisdom of your predecessors
 man
 |7|man-pages
 
+Groff G&lyphs
+Comprehensive list of available glyphs
+man
+|7|groff_char
+
 Man Page &Stylesheet
 Fonts, capitalization, formatting, words and spelling
 man
@@ -38,6 +43,11 @@ Groff e&xamples
 Look at outcome of various macro packages
 manlinks
 |groff_custom.mlnk
+
+Groff G&otcha
+Controlling unexpected groff outcomes
+groffer
+|--tty|groff_gotchas.7
 
 Authoring &Hints
 Personal collection of man-page authoring hints

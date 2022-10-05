@@ -1,0 +1,110 @@
+.TH groff_gotchas 7 "Miscellaneous Manual Page"
+.ds gn \fBgroff\fP
+.de CL
+.  nf
+.  RS 4
+.  nop \\FC\\$*\\F[]
+.  RE
+.  fi
+..
+.SH NAME
+.B groff_gotchas
+-\ A minimally-organized collection of unexpected groff outcomes
+.SH DESCRIPTION
+.PP
+Some parts of \*(gn code is familiar to programmers.
+Other stuff is weird and not intuitive.
+This page is an attempt to document some of these unexpected results.
+A \*(gn programmer can then refer to this page to help recall what may
+be going wrong with their page.
+.SH THE GOTCHAS
+.SS RESENDING SPACE-FILLED ARGUMENTS
+.PP
+When passing arguments to a \*gn macro which passes them
+to another \*gn macro, a quoted argument that contains naked
+(unescaped) spaces will be expanded to multiple arguments when
+it is passed to the second macro.
+.PP
+For example:
+.IP "" 4
+.EX
+\&.de pass2
+\&.  nop pass2 has \(rs\(rsn[.$] arguments.
+\&..
+\&.de pass1
+\&.  nop pass1 has \(rs\(rsn[.$] arguments..
+\&.  pass2 \(rs\(rs$1
+\&..
+.EE
+.PP
+Note the differences:
+.br
+.sp 1v
+Calling
+.RS 0
+.CL \&.pass1 \(dqBetty Sue\(dq
+.RE
+.br
+Will generate the result:
+.br
+.RS 0
+.CL pass1 has 1 arguments.  pass2 has 2 arguments.
+.RE
+Argument
+.BR \(rs$1 " in " pass2
+will be \(dqBetty\(dq.
+.PP
+Escaping the space with a backslash (recommended):
+.RS 0
+.CL \&.pass1 \(dqBetty\(rs Sue\(dq
+.RE
+.br
+Will generate the result:
+.br
+.RS 0
+.CL pass1 has 1 arguments.  pass2 has 1 arguments.
+.RE
+Argument
+.BR \(rs$1 " in " pass2
+will be \(dqBetty Sue\(dq.
+.SH DIVERSION AND MACRO AND STRING EQUIVALENCE
+.PP
+.BR Diversions ", " macros ", and " strings
+all use the same storage space, so the requests that access
+macros will also work to access macros and strings.
+.PP
+For example, using the append-to-macro request can be used to
+append to strings and diversions.
+Likewise, the content of a macro can be displayed if it is
+invoked like a string:
+.CL \(rs*[macroname]
+.SH PRESERVING DIVERSION FORMATTING
+.PP
+The point of a diversion is to eventually write out its
+contents.
+Since the diversion typically contains formatted text,
+it is necessary to preserve the formatting by disabling
+.IR fill-mode .
+.IP "" 4
+.EX
+\&.nf
+\&.diversion
+\&.fi
+.EE
+.SH INDIRECT DIVERSION/MACRO/STRING ACCESS
+.PP
+.PP
+There is a collection of \*(gn macros that access the string space
+\(lqindirectly.\(rq
+This may be misleading to programmers new to \*(gn programming.
+.PP
+In fact, the indirect requests are simple syntactic shortcuts.
+Assuming there is a string containing a macro name:
+.br
+.CL \&.ds macroname \(dqpass1\(dq
+.PP
+The following two append-to-macro requests are equivalent:
+.br
+.CL .ami macroname \(dqBetty Sue\(dq
+.br
+.CL .am \(rs*[macroname] \(dqBetty Sue\(dq
