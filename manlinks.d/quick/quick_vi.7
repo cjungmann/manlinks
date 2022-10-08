@@ -110,3 +110,23 @@ yy|Yank current line
 p,P|Put yanked text after, before cursor
 \fIa\fPP|Put text from buffer \fIa\fP before cursor
 .TE
+.TS
+tab(|);
+cB s
+l l .
+Bookmarks
+m\fIx\fP|Bookmark current position as \fIx\fP
+`\fIx\fP|Move cursor to bookmark \fIx\fP
+``|Move to previous bookmark or context
+'\fIx\fP|Move to beginning of line containing bookmark \fIx\fP
+''|Move to beginning of line containing previous bookmark
+.TE
+.TS
+tab(|);
+cB s
+l l .
+Searching
+/\fIregex\fP|search forward for \fIregex\fP pattern
+?\fIregex\fP|search backward for \fIregex\fP pattern
+n, N|repeat search in same (n) or opposite (N) direction
+.TE
