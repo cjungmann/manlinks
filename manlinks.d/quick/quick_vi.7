@@ -97,7 +97,8 @@ H|top line of screen
 M|middle of screen
 L|last line of screen
 G|last line of document
-1G|first line of document
+gg, 1G|first line of document
+%|move to matching bracket
 .TE
 .TS
 tab(|);
@@ -129,4 +130,5 @@ Searching
 /\fIregex\fP|search forward for \fIregex\fP pattern
 ?\fIregex\fP|search backward for \fIregex\fP pattern
 n, N|repeat search in same (n) or opposite (N) direction
+:%s\(ba\fIregex\fP\(ba\fIreplacement\fP\(bag|replace, like \fBsed\fP
 .TE
