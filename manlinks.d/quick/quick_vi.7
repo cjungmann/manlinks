@@ -1,0 +1,112 @@
+.TH quick_vi 7 "Miscellaneous Information Manual"
+.ds vi \fBvi\fP
+.SH NAME
+.B quick_vi
+\- A quick guide to simple \*(vi commands.
+.SH DESCRIPTION
+Terminal-available cheatsheet for \*(vi.
+.SH CHEATSHEET
+.PP
+There are two modes,
+.BR "command mode" ", and " "input mode" .
+When in
+.BR "command mode" ,
+executing an insert or change mode command will put you in
+.BR "input mode" .
+When in
+.BR "input mode" ,
+pressing the
+.B ESC
+key will return you to
+.BR "command mode" .
+.TS
+tab(|);
+cB s
+l l .
+Saving/Exiting
+ZZ, :x, :wq|Save file and quit \*(vi
+:w, :w!|save file, force save file (override protection)
+:q, :q!|quit, force quit (override protection)
+.TE
+.TS
+tab(|);
+cB s
+l l .
+Undo
+u|undo last edit
+U|restore current line
+.TE
+.TS
+tab(|);
+cB s
+l l .
+Insert Modes
+i, a|insert before cursor, after cursor
+I, A|insert before beginning, after end of line
+o, O|insert new line below cursor, above cursor
+.TE
+.TS
+tab(|);
+cB s
+l l .
+Change Modes
+r|replace character
+cw|change word
+cc|change (current) line
+C|change to end of line
+R|overwrite mode
+s|delete character and insert new text
+S|delete current line and insert new text
+.TE
+.TS
+tab(|);
+cB s
+l l .
+Deleting Content
+x|delete character under cursor
+X|delete character before cursor
+dw|delete word
+dd|delete line
+D|delete to end of line
+p, P|put deleted text after, before cursor
+.TE
+.TS
+tab(|);
+cB s
+l l .
+Movements by Character
+h, l|move left, right one characer
+j, k|move down, up one character
+w, W|move forward one word
+b, B|move backward one word
+e, E|move to end of word
+), (|move to start of next, previous sentence
+}, {|move to start of next, previous paragraph
+]], [[|move to start of next, previous section
+.TE
+.TS
+tab(|);
+cB s
+l l .
+Movements by Line
+RETURN|first non-blank character of next line
+0, $|first, last position of current line
+^|first non-blank character of current line
++, -|first non-blank character of next, previous line
+H|top line of screen
+M|middle of screen
+L|last line of screen
+G|last line of document
+1G|first line of document
+.TE
+.TS
+tab(|);
+cB s
+l l .
+Yank (cut to save buffer)
+yw|Yank word
+yy|Yank current line
+\fIa\fPyy|Yank current line to named buffer (a-z) \fIa\fP
+p,P|Put yanked text after, before cursor
+\fIa\fPP|Put text from buffer \fIa\fP before cursor
+.TE

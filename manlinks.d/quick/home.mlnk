@@ -1,0 +1,21 @@
+#!manlinks
+
+Quick Guides
+
+Simple guides to help learn or recall basic software functions.
+
+4 2
+
+&Groff
+Fundamental groff requests, registers, etc.
+groffer
+|--tty|quick_groff.7
+
+&Vi
+Help with cryptic vi commands
+groffer
+|--tty|quick_vi.7
+
+# Local Variables:
+# mode: sh
+# End:

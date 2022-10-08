@@ -1,0 +1,41 @@
+.TH groff_quick 7 "Miscellaneous Information Manual"
+.SH NAME
+.B groff_quick
+\- Quick guide to groff programming features
+.SH DESCRIPTION
+.PP
+This very old program uses two-letter names for most builtin objects,
+making it difficult to master.
+Furthermore the official documentation does not categorize objects
+to make it easier to navigate.
+.br
+This document attempts to address these issues by providing an
+easy-to-access reference with categories and more accessible.
+.SH GUIDE
+.SS READLING LENGTHS
+.PP
+There are many things to measure in a give document, string character
+length, string printed length.
+.TS
+tab(|);
+l l .
+.\"
+T{
+.B .length
+.I register string
+T}|T{
+Save length of
+.IR string ,
+in characters, to the register named
+.IR register_name .
+T}
+.\"
+T{
+.BR \(rsw '\c
+.IR string '
+T}|T{
+Returns length of
+.I string
+in basic device units.
+T}
+.TE
