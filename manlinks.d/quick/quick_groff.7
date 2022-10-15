@@ -2,6 +2,22 @@
 .SH NAME
 .B groff_quick
 \- Quick guide to groff programming features
+.SH SANDBOX
+.\"""""""""""
+\m[red]\c
+.ds Ts The string
+.nr TSlen \w'\*(Ts'
+.nr TSOne \w'A'
+We are showing \*(Ts, and it is \n[TSlen] units long, each
+character being \n[TSOne] device units.
+.br
+\Z'\l'\n[TSlen]u''\c
+\*(Ts
+.br
+\Z'\D't 2p'\v'1n'\D'l\n[TSlen]u 0''\c
+\*(Ts
+\m[]
+.\"""""""""""
 .SH DESCRIPTION
 .PP
 This very old program uses two-letter names for most builtin objects,
@@ -12,30 +28,132 @@ to make it easier to navigate.
 This document attempts to address these issues by providing an
 easy-to-access reference with categories and more accessible.
 .SH GUIDE
-.SS READLING LENGTHS
+.SS READING LENGTHS
 .PP
 There are many things to measure in a give document, string character
 length, string printed length.
 .TS
 tab(|);
-l l .
+l lx .
+.\"
 .\"
 T{
-.B .length
-.I register string
-T}|T{
-Save length of
-.IR string ,
-in characters, to the register named
-.IR register_name .
-T}
-.\"
-T{
-.BR \(rsw '\c
-.IR string '
+.BI \(rsw' string ' 
 T}|T{
 Returns length of
 .I string
 in basic device units.
 T}
+
+T{
+.RB \(rsn( st " or \(rsn[" rst ]
+T}|T{
+After
+.BR \(rsw ,
+string size above baseline
+T}
+
+T{
+.RB \(rsn( sb " or \(rsn[" rsb]
+T}|T{
+After
+.BR \(rsw ,
+string size below baseline
+T}
+
+T{
+.RB \(rsn[ .n ]
+T}|T{
+Length of text in previous line (device units).  You may need
+.B .br
+to terminate the previous line.
+T}
+
+T{
+.RB \(rsn[ .k ]
+T}|T{
+current horizontal position, relative to indentation
+T}
+.T&
+cB s
+l l.
+Character count only
+T{
+.B .length
+.I name value
+T}|T{
+Save length of
+.IR value ,
+in characters, to the register named
+.IR name .
+T}
 .TE
+
+
+.br
+this is some text \n[.l]
+.br
+The previous line was \n[.n]
+.br
+this is longer string of text \n[.ll]
+.br
+The previous line was \n[.n]
+.br
+.in 16
+.br
+this is some text \n[.l]
+.br
+The previous line was \n[.n]
+.br
+.in
+Let's underline some text, using \(rs[.k].
+.br
+Underline
+this text
+.nr len \n[.k]
+\Z'\D'l -\n[len]u 0'
+(\n[len])
+What do ya think?
+.br
+Let's underline some text using \(rsw'\fIanything\fP:
+This is a line with
+.nr len \w'some text'
+
+\Z'\D'l \n[len]u 0''
+some text.  The length of \(lqsome text\(rq is \n[len].
+.SS UNEXPECTED SPACING
+.PP
+Each input line (request or text) adds a space after the input
+line is added to the output line.
+.PP
+Add a backslash (\fB\(rs\fP) or a backslash-c (\fB\(rsc\fP) at
+the end of the input line to skip the trailing space.
+
+
+.SS DRAWING LINES
+.PP
+There are two methods of drawing lines.  One uses a string of glyphs,
+the other uses a drawing escape sequence.
+.TS
+tab(|);
+l lx .
+\(rsl'\fIN\fP\fBc\fP'|horizontal line, \fIN\fP length, optionally using \fBc\fP glyph.
+\(rsL'\fIN\fP\fBc\fP'|vertical line, \fIN\fP length, optionally using \fBc\fP glyph.
+\(rsh'\fIdist\fP'|Without drawing, move \fIdist\fP horizontally.
+\(rsv'\fIdist\fP'|Without drawing, move \fIdist\fP vertically.
+\(rsD'l \fIhlen\fP \fIvlen\fP'|draw line to \fIhlen\fP, \fIvlen\fP.
+\(rsD't \fIthickness\fP'|Set line-drawing thickness to \fIthickness\fP.
+.TE
+.PP
+To color
+.B \(rsD
+lines, use the
+.BI \(rsm[ color ]
+escape sequence.
+.PP
+For more information about using
+.BR \(rsD ,
+see
+.br
+info groff -n\(dqDrawing Requests\(dq
+

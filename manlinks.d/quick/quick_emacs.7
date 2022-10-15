@@ -1,0 +1,169 @@
+.TH quick_emacs 7 "Miscellaneous Information Manual"
+.ds em \fBemacs\fP
+.de KEYP
+.  B \\$1\c
+.  shift
+.  while \\n[.$] \{\
+.  RB ", " "\\$1"\c
+.  shift
+.  \}
+..
+.de KEYBI
+.  B \\$1
+.  I \\$2
+..
+.SH NAME
+.B quick_emacs
+\- A quick guide to basic \*(emacs commands.
+.SH DESCRIPTION
+Terminal-available cheatsheet for \*(em.
+.SH RESEARCH TOPICS
+.PP
+There are some things I'd like to do in \*(em that I'm
+not sure how to do just now.
+The following list is a reminder to look into these ideas,
+either solve them or delete them.
+.TP
+.B Show Variables
+I'd like to see a list of all currently active variables.
+That would help decipher certain settings.
+.SH CHEATSHEET
+.SS STARTING AND EXITING EMACS
+.TS
+tab(|);
+l lx .
+T{
+.KEYP "C-x C-c"
+T}|Exit \*(em
+T{
+.KEYP "C-x C-f"
+T}|Open file for editing
+T{
+.KEYP "C-x C-r"
+T}|Open file for viewing (read-only)
+T{
+.KEYP "C-x C-s"
+T}|Save current buffer
+T{
+.KEYP "C-x C-k"
+T}|Kill (close) current buffer
+.TE
+.SS MOVING AROUND
+.TS
+tab(|);
+l lx .
+T{
+.KEYP C-f C-b
+T}|Move forward, backward one character
+T{
+.KEYP M-f M-b
+T}|Move forward, backward one word
+T{
+.KEYP C-p C-n
+T}|Move up one line, down one line
+T{
+.KEYP M-v
+T}|Move up a screenful
+T{
+.KEYP C-v
+T}|Move down a screenful
+T{
+.KEYP M-< M->
+T}|Move to top, bottom of document
+.TE
+.SS UNDO
+.TS
+tab(|);
+l lx .
+T{
+.KEYP "C-x u"
+T}|Undo edits, most recent first
+T{
+.KEYP "C-g"
+T}|Cancel unexecuted or incomplete command
+.TE
+.SS CUT, COPY, AND PASTE
+.TS
+tab(|);
+cB s
+l lx .
+Yank (otherwise known as Paste)
+T{
+.KEYP C-y
+T}|Insert kill-ring content at cursor
+.T&
+cB s
+l lx .
+Direct Content Cut and Copy
+T{
+.KEYP Backspace
+T}|Move cursor left, deleting character under new position
+T{
+.KEYP DEL
+T}|Delete character under the cursor
+T{
+.KEYP C-DEL
+T}|Save and delete from cursor to end-of-word
+T{
+.KEYP C-k
+T}|Save and delete from cursor to end-of-line
+.T&
+cB s
+l lx .
+Region-oriented
+T{
+.KEYP C-space
+T}|T{
+Mark an end of a new region, move the cursor to enlarge selection area.
+T}
+T{
+.KEYP C-w
+T}|Save and delete region
+T{
+.KEYP M-w
+T}|Save and preserve region
+T{
+.KEYP Backspace
+T}|Delete region without adding to kill-ring
+.TE
+.SS SEARCH AND REPLACE
+.TS
+tab(|);
+cB s
+l lx .
+Search and Replace
+T{
+.KEYP C-s
+T}|Search for string
+T{
+.KEYP C-M-s
+T}|Search for regex pattern
+T{
+.KEYP M-%
+T}|Query replace string, ask before each replacement
+T{
+.KEYP C-M-%
+T}|T{
+Query replace regex matches, with captures, ask before each replacement
+T}
+T{
+.KEYP C-x\ replace-string
+T}|Unprompted replace-string
+T{
+.KEYP C-x\ replace-query
+T}|Unprompted replace regex matches, including captures
+.TE
+.\" MISCELLANEOUS
+.TS
+tab(|);
+cB s
+l lx .
+Miscellaneous
+T{
+.KEYP "C-x C-q"
+T}|Toggle read-only mode.
+T{
+.KEYP M-x\ revert
+T}|Reload file from disk (abandoning changes)
+.TE
+

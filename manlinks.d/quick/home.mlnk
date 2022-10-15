@@ -1,10 +1,15 @@
-#!manlinks
+.#!manlinks
 
 Quick Guides
 
 Simple guides to help learn or recall basic software functions.
 
 4 2
+
+&Emacs
+Basic Emacs commands
+groffer
+|--tty|quick_emacs.7
 
 &Groff
 Fundamental groff requests, registers, etc.
