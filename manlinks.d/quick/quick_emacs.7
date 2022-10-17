@@ -1,5 +1,5 @@
 .TH quick_emacs 7 "Miscellaneous Information Manual"
-.ds em \fBemacs\fP
+.ds em \fBEmacs\fP
 .de KEYP
 .  B \\$1\c
 .  shift
@@ -14,7 +14,7 @@
 ..
 .SH NAME
 .B quick_emacs
-\- A quick guide to basic \*(emacs commands.
+\- A quick guide to basic \*(em commands.
 .SH DESCRIPTION
 Terminal-available cheatsheet for \*(em.
 .SH RESEARCH TOPICS
@@ -129,9 +129,7 @@ T}|Delete region without adding to kill-ring
 .SS SEARCH AND REPLACE
 .TS
 tab(|);
-cB s
 l lx .
-Search and Replace
 T{
 .KEYP C-s
 T}|Search for string
@@ -140,11 +138,11 @@ T{
 T}|Search for regex pattern
 T{
 .KEYP M-%
-T}|Query replace string, ask before each replacement
+T}|Interactive search and replace
 T{
 .KEYP C-M-%
 T}|T{
-Query replace regex matches, with captures, ask before each replacement
+Interactive search and replace using regex patterns.
 T}
 T{
 .KEYP C-x\ replace-string
@@ -153,17 +151,115 @@ T{
 .KEYP C-x\ replace-query
 T}|Unprompted replace regex matches, including captures
 .TE
-.\" MISCELLANEOUS
+.\"" PAGE BREAK HERE or SPLIT SCREEN table gets broken
+.bp
+.\""
+.SS SPLIT SCREEN
 .TS
 tab(|);
-cB s
 l lx .
-Miscellaneous
+T{
+.KEYP "C-x 0"
+T}|Remove active pane from display
+T{
+.KEYP "C-x 1"
+T}|Remove all panes except active pane
+T{
+.KEYP "C-x 2"
+T}|Split screen top-by-bottom
+T{
+.KEYP "C-x 3"
+T}|Split screen side-by-side
+T{
+.KEYP "C-x o"
+T}|Switch to next pane
+.TE
+.SS RECTANGLES
+.PP
+We assume you know how to define a rectangle.
+Learn about rectangles in the \*(em info page.
+.TS
+tab(|);
+l lx .
+T{
+.KEYP "C-x r k"
+T}|T{
+Kill (delete) rectangle.  Remove rectangle contents and close space from right.
+T}
+T{
+.KEYP "C-x r o"
+T}|T{
+Open rectangle area of spaces by shifting existing content right
+T}
+T{
+.KEYP "C-x r y"
+T}|Yank rectangle
+T{
+.KEYP "C-x r c"
+T}|Cut rectangle area out without closing space from right.
+.TE
+.SS MACROS
+.TS
+tab(|);
+l lx .
+T{
+.KEYP F3 "C-x ("
+T}|Start recording a macro
+T{
+.KEYP F4 "C-x )"
+T}|End a macro recording
+T{
+.KEYP F4 "C-x e"
+T}|Run last-defined macro
+T{
+.KEYP "C-x C-k n"
+T}|Assign a name to the last-defined macro.
+T{
+.KEYP "C-x C-k b"
+T}|Assign key sequence to the last-defined macro.
+T{
+.KEYP "C-x C-k SPC"
+T}|Begin macro editing/debugging moode.
+T{
+.KEYBI "M-x " "macro_name"
+T}|Run named macro (if \fImacro_name\fP is valid Lisp symbol).
+.TE
+.SS CUSTOMIZATION
+.TS
+tab(|);
+l lx .
+T{
+.KEYBI "M-x" list-faces-display
+T}|T{
+Display (for editing) faces and color for syntax face names.
+T}
+T{
+.KEYBI "M-x" customize
+T}|Comprehensive customization dialog
+.TE
+.SS MISCELLANEOUS
+.TS
+tab(|);
+l lx .
 T{
 .KEYP "C-x C-q"
 T}|Toggle read-only mode.
 T{
 .KEYP M-x\ revert
 T}|Reload file from disk (abandoning changes)
+T{
+.KEYP "C-h m"
+T}|Get information on current mode and submodes.
 .TE
-
+.SS FUTURE STUFF
+.PP
+The following are some \*(em features that I don't currently
+use but may want to explore in the future.
+.TP
+.B Registers
+Registers can be used to save positions, text, rectangles,
+window configurations, numbers, file names, and keyboard macros.
+.TP
+.B Spell Check
+The macros exist, but a database must be setup.
+If I need to use it, I'll figure it out and document it.
