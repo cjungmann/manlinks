@@ -156,4 +156,48 @@ For more information about using
 see
 .br
 info groff -n\(dqDrawing Requests\(dq
+.SS DEBUGGING
+.PP
+There are several requests that write data to
+.BR stderr ,
+which makes it easy to read status without disturbing the output.
+The following is a list of useful requests (remember, all of the
+requests write to
+.BR stderr ):
+.TS
+tab(|);
+lb l x.
+T{
+\&.tm
+.I anything
+T}|print \fIanything\fP
+T{
+\&.tm1
+.I anything
+T}|print \fIanything\fP, including leading whitespace in quoted text
+T{
+\&.tmc
+.I anything
+T}|T{
+print \fIanything\fP without trailing newline, including leading whitespace in quoted text
+T}
+\&.pnr|print all currently-defined number registers
+\&.pev|print current environment state
+\&.ptr|print name and positions of all traps
+\&.backtrace|print backtrace of input
+.TE
+.TP
+.B Suggestion for reading stderr:
+View the
+.B groff
+document using
+.B groffer
+without the
+.B --tty
+argument.
+The output will be to a PDF file, and the
+.B stderr
+output will be visible on the terminal, including very helpful
+error messages.
+
 
