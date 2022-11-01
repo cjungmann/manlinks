@@ -1,0 +1,24 @@
+.TH bash_script 7 "Miscellaneous Information Manual"
+.SH NAME
+.B bash_script
+\- Bash scripting cheat sheet
+.SH DESCRIPTION
+.PP
+This is not (yet) an organized cheat sheet.
+For now, it is simply a place where I can save simple scripting
+techniques that I don't use frequently enough to memorize.
+.SH STRING MANIPULATIONS
+.TS
+tab(|);
+l lx.
+T{
+Grab file name from path
+T}|T{
+.nf
+declare path="/usr/share/man/man1/grep.1.gz"
+declare file="${path##*/}" # trim longest prefix ending in \(lq/\(rq
+declare root="${file%%.*}" # trim longest suffix beginning with \(lq.\(rq
+.fi
+T}
+.TE
+

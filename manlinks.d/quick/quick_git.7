@@ -1,0 +1,243 @@
+.TH quick_git 7 "Miscellaneous Manual Page"
+.ds git \fBGit\fP
+.SH NAME
+.B quick_git
+\- Cheat sheet for essential \*[git] commands
+.SH DESCRIPTION
+.PP
+The following list of commands can help with effective \*[git] usage.
+.SH COMMANDS
+.TS
+tab(|);
+cB s
+l lx .
+Git-initialize a directory
+_
+T{
+.B git init
+T}|Confgure directory to use \*[git].
+
+.T&
+cB s
+l lx.
+Information Commands
+_
+T{
+.B git status
+T}|Show untracked and uncommitted files, among other things.
+T{
+.B git diff
+.RI [ file ]
+T}|T{
+Show changes between old and current versions.  Only for
+.IR file ,
+if specified, otherwise all changes in repository.
+T}
+
+.T&
+cB s
+l lx.
+Retrieval Commands
+_
+T{
+.BI "git clone " URL
+T}|T{
+Download \*[git] repository from
+.IR URL .
+T}
+T{
+.BI "git fetch " repo
+T}|T{
+Update local repository with changes from
+.IR repo ,
+which can be a repository or a refspec.
+T}
+T{
+.BI "git pull " repo
+T}|T{
+Runs
+.BR "git fetch" ", then either " "git rebase " or " git merge"
+to reconcile differences.
+T}
+
+.T&
+cB s
+l lx.
+Saving Commands
+_
+T{
+.B git add
+T}|T{
+Stage all untracked and changed files to be committed.
+T}
+T{
+.BI "git add " filename
+T}|T{
+Stage
+.I filename
+to be commited.
+T}
+T{
+.B git add -u
+T}|T{
+Stage only files that were updated and previously committed.
+T}
+T{
+.B git commit
+.RI [ file ]
+T}|T{
+Commit to the local repository
+.I file
+(if specified) or all staged files.
+T}
+T{
+.BI "git push " repo
+T}|T{
+Update remote
+.I repo
+with the committed changes of the local repository.
+T}
+
+.T&
+cB s
+l lx.
+Recovery Commands
+_
+T{
+.B git reset HEAD --
+T}|T{
+Unstage all staged files and return to latest commit state.
+T}
+T{
+.BI "git reset HEAD " file
+T}|T{
+Unstage
+.I file
+so it won't be committed with
+.B git commit
+called.
+T}
+T{
+.B git checkout
+.I file
+T}|T{
+Replace current contents of
+.I file
+with the most recently committed contents of that file.
+T}
+T{
+.B git checkout
+.I branch
+T}|T{
+Replace project's content with content from branch
+.IR branch ,
+adding, replacing, and deleting files as needed.
+T}
+T{
+.B git stash
+T}|Save uncommited changes.
+T{
+.B git stash pop
+T}|Restore stashed changes.
+
+.T&
+cB s
+l lx.
+Branches
+_
+T{
+.B git branch
+T}|List branches in the current repository.
+T{
+.BI "git checkout -b " new_branch
+T}|T{
+Create new branch,
+.IR new_branch .
+T}
+T{
+.BI "git checkout " branch
+T}|T{
+Switch to existing branch,
+.IR branch .
+T}
+T{
+.BI "git merge " branch
+T}|T{
+Merge branch
+.I branch
+into the current branch.
+T}
+
+.T&
+cB s
+l lx.
+Tagging Progress
+_
+T{
+.B git tag -l
+T}|List tags on current repository.
+T{
+.BI "git tag " 0.1
+T}|T{
+Create a raw tag,
+.IR 0.1 ,
+in the current repository.
+T}
+T{
+.nf
+.BI "git tag " 0.2 " -m " \(dqdescription\(dq
+.fi
+T}|T{
+Create a tag,
+.IR 0.2 ,
+and assign a string represented by
+.I description
+to the tag.
+T}
+
+.T&
+cB s
+l lx.
+File Management
+_
+T{
+.BI "git rm " file
+T}|T{
+Remove file
+.I file
+from repository.
+T}
+T{
+.B git mv
+.I source destination
+T}|T{
+.RI Move " source " to " destination" .
+T}
+T{
+.B git ls-files
+T}|List repository files.
+.TE
+
+.SH GIT MAN PAGES
+.PP
+One calls a \*[git] function by entering the command
+.BR git ,
+followed by the specific \*[git] command needed.
+The \*[git] command format used to access the \*[git] man pages
+is
+.B git-
+.IR command ,
+where
+.I command
+is the \*[git] command name.
+For example, learn about the \*[git]
+.B commit
+command by typing:
+.IP
+.EX
+.BI "man " git-commit
+.EE
+.PP
+Also consider browsing
+.BR gieveryday (7)
+for an overview of \*[git] usage.
