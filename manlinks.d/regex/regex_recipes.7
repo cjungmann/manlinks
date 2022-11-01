@@ -1,0 +1,49 @@
+.TH regex_recipes 7 "Miscellaneous Manual Page"
+.SH NAME
+.B regex_recipes
+\- Documentation with examples: unexpected patterns that work
+.SH DESCRIPTION
+.PP
+I hate to think about how many hours I've spent (wasted?) wrestling
+with regular expressions.
+I understand the regex syntax, most of my trouble comes from contention
+for significant characters between the environment and the expression.
+Solutions typically come from unintuitive quoting (single or double),
+and escaping certain characters.
+.PP
+This document starts out as a place to save solutions to complicated
+command line regular expressions.
+Command line expressions are complicated by the need to escape certain
+characters that have significance in the shell environment.
+.SH RECIPES
+.SS Grouping
+.PP
+There are many circumstances that require treating multiple strings
+as equal.
+For example, finding
+.B man page
+headings may want to list all
+.BR TH ", " SH ", and " SS
+requests.
+.PP
+I won't show everything that failed, there were many failures.
+Here is a successful expression:
+.IP
+.EX
+zgrep \(aq^\(rs.\(rs(TH\(rs\(baSH\(rs\(baSS\(rs)\(aq /usr/share/man/man1/grep.1.gz
+.EE
+.PP
+.BR Grep " and " zgrep
+use Posix-flavored regular expressions (see
+.BR regex (7)).
+The parentheses
+.RB (' ( '\ and\ ' ) ')
+and bar
+.RB (' \(ba ')
+must be escaped to be treated as grouping and equivalence regex characters.
+The dot
+.RB (' \. ')
+must be escaped to
+.I prevent
+it from being treated as a meta character (ie wildcard).
+In this case, the whole expression must be enclosed in quotes to work.

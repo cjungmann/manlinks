@@ -30,7 +30,7 @@ manlinks
 &Regular Expressions
 Offline Regular Expression resources
 manlinks
-|regex.mlnk
+|regex/home.mlnk
 
 Groff and &Man
 References to using and writing *man* pages and using *info*

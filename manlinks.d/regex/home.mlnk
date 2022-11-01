@@ -13,6 +13,11 @@ Short introduction to regular expressions
 man
 |-l|regex.7
 
+&Recipes
+Solutions for complicated requirements
+groffer
+|--tty|regex_recipes.7
+
 &Posix Regular Expressions
 Posix flavor of regular expressions
 man
