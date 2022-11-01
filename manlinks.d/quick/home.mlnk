@@ -11,7 +11,17 @@ Basic Emacs commands
 groffer
 |--tty|quick_emacs.7
 
-&Groff
+&Git
+Git cheat sheet
+groffer
+|--tty|quick_git.7
+
+&Bash Script
+Bash scripting cheat sheet
+groffer
+|--tty|bash_script.7
+
+G&roff
 Fundamental groff requests, registers, etc.
 groffer
 |--tty|quick_groff.7
