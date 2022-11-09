@@ -15,6 +15,67 @@ This document starts out as a place to save solutions to complicated
 command line regular expressions.
 Command line expressions are complicated by the need to escape certain
 characters that have significance in the shell environment.
+.SH SUGGESTION
+.PP
+For complicated expressions, I find it helpful to break it up
+in an array that can be commented, concatenated and used.
+.PP
+For example, in a Bash script that needs to break out parts of a
+.B man
+page search string like
+.IR printf(3) ,
+the following code shows how to use an array:
+.IP
+.EX
+declare -a re_parts=(
+   '^'
+   '('      # begin group 1
+   '[^(]+'  # characters up until first open parenthesis
+   ')'      # end of group 1
+
+   '('      # begin group 2
+   '\(rs('     # escaped parenthesis to match as character
+
+   '('      # begin group 3
+   '[^)]+'  # characters up until closing parenthesis
+   ')'      # end of group 3
+
+   '\(rs)'     # escape to match parenthesis character
+   ')'      # end of group 2
+
+   '?'      # group 2 is optional
+)
+
+# IFS Save, change to empty for concatenating, then restore
+declare OIFS="$IFS"
+declare IFS=''
+local re_concat="${re_parts[*]}"
+IFS="$OIFS"
+
+# Equivalent expressions.
+declare re2_quoted='^([^(]+)(\(rs(([^)]+)\(rs))?'
+declare re_unquoted=^\(rs([^\(rs(]+\(rs)\(rs(\(rs\(rs\(rs(\(rs([^\(rs)]+\(rs)\(rs\(rs\(rs)(rs\)?
+.EE
+.TP
+.B Escaping Notes
+.RS 7
+.TP 3
+1
+In Bash, to match a parenthesis character, the character must be escaped
+in the expression with a backslash (\(lq\(rs(\(rq).
+.TP 3
+2
+Variable
+.BR re_unquoted ,
+without protection from quote-enclosure, many characters require escaping.
+All parentheses must be escaped to prevent Bash interpretation, and the escaped
+parentheses use to match parentheses characters must have an escaped backslash
+before the escaped parenthesis (\(lq\(rs\(rs\(rs(\(rq).
+
+
+.RE
+
+
 .SH RECIPES
 .SS Grouping
 .PP
