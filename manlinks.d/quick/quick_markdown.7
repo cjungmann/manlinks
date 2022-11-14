@@ -1,0 +1,136 @@
+.TH quick_markdown 7 "Miscellaneous Information Manual"
+.SH NAME
+.B quick_markdown
+-\ Minimal cheatsheet for Markdown
+.SH DESCRIPTION
+.PP
+This document hopes to be a convenient resource for authors of
+simple documents to be written in
+.B markdown
+markup.
+.SH BASIC SYNTAX
+.TS
+tab(|);
+lb lbx
+l lx .
+ELEMENT|SYNTAX
+_
+Headers|T{
+.EX
+# Level 1
+## Level 2
+###### Level 6
+.EE
+T}
+_
+Bold|T{
+.EX
+**text to embolden**  or  __text to embolden__
+.EE
+T}
+_
+Italic|T{
+.EX
+*text to italicize*   or  _text to italicize_
+.EE
+T}
+_
+Monospace|T{
+.EX
+`monospaced text`
+.EE
+T}
+_
+Horizontal Rule|___
+_
+Unordered List|T{
+.EX
+- Item
+- Item
+- Item
+.EE
+T}
+_
+Ordered List|T{
+.EX
+1. First
+2. Second
+2. Third
+2. Fourth
+.EE
+T}
+_
+Nested List|T{
+.EX
+1. First
+   - Item
+   - Item
+2. Second
+   - Item
+   - Item
+.EE
+T}
+_
+Link|T{
+.EX
+[label](http://url.com/page.html)
+.EE
+T}
+_
+Image|T{
+.EX
+![label](http://url.com/image.png)
+.EE
+T}
+_
+Block Quote|T{
+.EX
+> Block of text
+> that should be
+> block quoted.
+.EE
+T}
+_
+Code Block|T{
+.EX
+\(md\(md\(md\(mdvoid function() {
+\(md\(md\(md\(md   printf(\(dqindent 4 spaces or 1 tab.\(rsn\(dq);
+\(md\(md\(md\(md}
+.EE
+T}
+_
+Define Reference Link|T{
+.EX
+[reference]: http://url.com/page.html
+[1]:         http://url.com/one.html
+[intro]:     http://url.com/intro.html
+.EE
+T}
+_
+Use Reference Line|T{
+.EX
+[label for reference][reference]
+[label for numeric][1]
+[label for name][intro]
+.EE
+T}
+.TE
+
+.SH SEE ALSO
+.PP
+There are many internet resources about Markdown.
+Here are a few:
+.PP
+.nf \" 'nofill' to prevent very annoying spacing
+The original description:
+.UR https://daringfireball.net/projects/markdown/syntax
+.UE
+.PP
+Github-flavored Markdown:
+.UR https://github.github.com/gfm/
+.UE
+.PP
+\(lqOfficial\(rq list of variants:
+.UR https://www.iana.org/assignments/markdown-variants/markdown-variants.xhtml
+.UE
+.fi \" cancel 'nofill' with fi(ll)

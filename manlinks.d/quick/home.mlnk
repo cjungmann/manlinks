@@ -21,6 +21,16 @@ Bash scripting cheat sheet
 groffer
 |--tty|bash_script.7
 
+&Regex Escaping
+Guide to escaping regular expression characters
+groffer
+|--tty|quick_regex.7
+
+&Markdown
+Basic cheatsheet for Markdown syntax
+groffer
+|--tty|quick_markdown.7
+
 G&roff
 Fundamental groff requests, registers, etc.
 groffer
@@ -30,6 +40,11 @@ groffer
 Help with cryptic vi commands
 groffer
 |--tty|quick_vi.7
+
+&Lui_list
+Guide to lui_list
+groffer
+|--tty|../../sources/list_ui.7
 
 # Local Variables:
 # mode: sh
