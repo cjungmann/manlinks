@@ -217,7 +217,28 @@ T{
 .B git ls-files
 T}|List repository files.
 .TE
-
+.SH ATTACH TO REMOTE REPOSITORY
+.PP
+After creating a repository on your remote \*[git] host, use the following
+commands to upload your project to the remote repository.  Change
+.IR remote_name ", " branch_name ", and " git@github.com:username/project.git
+to appropriate names in your domain.
+.PP
+Common replacements for
+.IR remote_name " and " branch_name " are " origin " and " main .
+.IP
+.EX
+.BI "git remote add " remote_name " " git@github.com:username/project.git
+.BI "git branch -M " branch_name
+.BI "git push -u " "remote_name branch_name"
+.EE
+.PP
+The following command may be necessary in some cases.
+If it is necessary, \*[git] will prompt you with the necessary command:
+.IP
+.EX
+.BI "git push --set-upstream " "remote_name branch_name"
+.EE
 .SH GIT MAN PAGES
 .PP
 One calls a \*[git] function by entering the command
