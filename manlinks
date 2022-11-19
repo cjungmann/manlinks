@@ -48,45 +48,6 @@ col_name_set "COL_OFF"       "me" $'\e[m'
 
 to_continue() { read -n1 -p Press\ any\ key; }
 
-# Searchs for a letter in a string, returning the index if found.
-#
-# If the string contains multiple instances of the letter, it
-# will cycle between the instances.
-#
-# Args
-#    (name-io):  starting index upon entry, found index on exit
-#    (string):   haystack, string in which letters will be sought
-#    (string):   char, actually.  The character to be sought.
-#
-# Unusual Return:
-#   *true*  (0)  if letter found and it's a singleton, immediately open item
-#   *false* (1)  if letter found, but there's another, OR
-#                the letter was not found
-get_letter_index()
-{
-    local -n gli_index="$1"
-    local gli_haystack="$2"
-    local gli_needle="$3"
-
-    local current="${gli_haystack:$gli_index:1}"
-    local right="${gli_haystack:$(( gli_index+1 ))}"
-    local left="${gli_haystack:0:$gli_index}"
-    local search="${right}${left}${current}"
-
-    local -i ndx
-    if strstrndx_nameref "ndx" "$search" "$gli_needle"; then
-        local -i hcount="${#gli_haystack}"
-        local -i lcount="${#left}"
-        (( gli_index = ( ndx + lcount + 1 ) % hcount ))
-
-        if ! strstrndx_nameref "ndx" "${search:$(( ndx+1 ))}" "$gli_needle"; then
-            return 0
-        fi
-    fi
-
-    return 1
-}
-
 # Check if command ultimately resolves to this manlinks script
 #
 # Args
@@ -470,7 +431,7 @@ manlinks_start_interaction()
         local keyp="$1"
         local -i mka_line_ndx="$msi_selected"
 
-        if get_letter_index "msi_selected" "$msi_keys_string" "$keyp"; then
+        if progressive_letter_search "msi_selected" "$msi_keys_string" "$keyp"; then
             manlinks_execute_line "$keyp" "$lui_list_name" "$msi_selected"
             return "$?"
         fi
