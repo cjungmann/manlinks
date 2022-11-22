@@ -107,7 +107,7 @@ massage_menu_name()
     local -n utl_str="$1"
     local str="$utl_str"
     if [ -n "$str" ]; then
-        hilite_ampersand_nameref "$1" "$str" "$2" "$3"
+        hilite_prefixed_char "$1" "$str" "$2" "$3"
     fi
 }
 
