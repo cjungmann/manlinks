@@ -8,43 +8,43 @@ Simple guides to help learn or recall basic software functions.
 
 &Emacs
 Basic Emacs commands
-groffer
-|--tty|quick_emacs.7
+man
+|-l|quick_emacs.7
 
 &Git
 Git cheat sheet
-groffer
-|--tty|quick_git.7
+man
+|-l|quick_git.7
 
 &Bash Script
 Bash scripting cheat sheet
-groffer
-|--tty|bash_script.7
+man
+|-l|bash_script.7
 
 &Regex Escaping
 Guide to escaping regular expression characters
-groffer
-|--tty|quick_regex.7
+man
+|-l|quick_regex.7
 
 &Markdown
 Basic cheatsheet for Markdown syntax
-groffer
-|--tty|quick_markdown.7
+man
+|-l|quick_markdown.7
 
 G&roff
 Fundamental groff requests, registers, etc.
-groffer
-|--tty|quick_groff.7
+man
+|-l|quick_groff.7
 
 &Vi
 Help with cryptic vi commands
-groffer
-|--tty|quick_vi.7
+man
+|-l|quick_vi.7
 
 &Lui_list
 Guide to lui_list
-groffer
-|--tty|../../sources/list_ui.7
+man
+|-l|../../sources/list_ui.7
 
 # Local Variables:
 # mode: sh
