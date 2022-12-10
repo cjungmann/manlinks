@@ -21,4 +21,82 @@ declare root="${file%%.*}" # trim longest suffix beginning with \(lq.\(rq
 .fi
 T}
 .TE
-
+.SH READ LINES INTO AN ARRAY
+.PP
+Use the
+.B read
+builtin command to read a source line-by-line.
+.SS ARRAY-BUILDING EXAMPLES
+.TP
+.B From a file
+.EX
+while read -r; do
+   array+=( \(dq$REPLY\(dq )
+done < \(dq$filename\(dq
+.TP
+.B From a \(lqprocess substitution\(rq
+.EX
+while read -r; do
+   array+=( \(dq$REPLY\(dq )
+done < <( gzip -dc /usr/share/man/man1/printf.1.gz | groff -tman -Tuft8 )
+.EE
+.TP
+.B From a string
+Don't use
+.BR read ,
+use the
+.B IFS
+variable instead.
+.IP
+.EX
+declare OIFS=\(dq$IFS\(dq
+IFS=$\(cq\(rsn\(cq
+declare -a array=( $string )
+IFS=\(dq$OIFS\(dq
+.EE
+.SS READ PERFORMANCE HINTS
+.TP
+.B Preserving spaces
+By default,
+.B read
+respects the
+.B IFS
+value.
+That means that
+.B read
+will discard leading and trailing spaces, and will compress consecutive
+internal spaces into a single space.
+.IP
+To preserve spaces, set
+.B IFS
+to an empty string.
+.TP
+.B Avoid subshells
+Avoid having the
+.B read
+command operate within a subshell.
+If that happens, the variables in which the contents were
+read will be inaccessible because they will have been discarded
+when the subshell ends.
+Don't forget that piping output creates subshells.
+.IP
+Construct your
+.B read
+like this:
+.RS 12
+.EX
+while read -r; do
+   USE \(dq&REPLY\(dq
+done < <( awk -f script /etc/passwd )
+.EE
+.RE
+.IP
+Don't do this:
+.RS 12
+.EX
+awk -f script /etc/passwd | while read -r; do
+   use \(dq$REPLY\(dq
+done
+.EE
+.RE
+.PP
