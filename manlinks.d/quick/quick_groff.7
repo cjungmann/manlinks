@@ -5,13 +5,66 @@
 .\"""""""""""
 .SH DESCRIPTION
 .PP
-This very old program uses two-letter names for most builtin objects,
-making it difficult to master.
+.B groff
+is a very old text processing program and language that uses two-letter
+names for most builtin macros, making it difficult to master.
 Furthermore the official documentation does not categorize objects
 to make it easier to navigate.
 .br
 This document attempts to address these issues by providing an
 easy-to-access reference with categories and more accessible.
+.SH BASIC STUFF
+.SS REGISTERS
+.PP
+Very basic start, consult
+.BR groff (7)
+for more.
+.PP
+.RS 4
+Setting registers:
+.RS 4
+.EX
+\&.nr myreg 1          \(rs\(dq set (integer) register \(lqmyreg\(rq to \fI1\fP.
+\&.ds mystring \(dqbogus\(dq \(rs\(dq set string \(lqmystring\(rq to \fIbogus\fP.
+.EE
+.RE
+
+Reading registers:
+.RS 4
+.EX
+The value of myreg is \(rsn[myreg].
+The value of mystring is \(rs*[mystring]
+.EE
+.RE
+.RE
+.SS CONDITIONALS
+.PP
+The requests
+.BR .if ", " .ie ", " .el ", and " .while
+introduce conditional statements.
+.RS 4
+A single line conditional can include a dot-prefixed request:
+.RS 4
+.EX
+\&.if ( \(rsn[myreg] == 1 ) .nop myreg is 1
+.EE
+.RE
+
+A multi-line conditional uses curly-braces to enclose result:
+.RS 4
+.EX
+\&.if '\(rs*[bogus]'bogus' \(rs{
+\&.  nop mystring is \fB\(rs(dq\fPbogus\fB\(rs(dq\fP
+\&.\(rs}
+.EE
+.RE
+.RE
+.PP
+Refer to
+.BR groff(7),
+search for
+.IR ^CONDITIONS .
+
 .SH GUIDE
 .SS READING LENGTHS
 .PP
@@ -113,8 +166,6 @@ line is added to the output line.
 .PP
 Add a backslash (\fB\(rs\fP) or a backslash-c (\fB\(rsc\fP) at
 the end of the input line to skip the trailing space.
-
-
 .SS DRAWING LINES
 .PP
 There are two methods of drawing lines.  One uses a string of glyphs,
