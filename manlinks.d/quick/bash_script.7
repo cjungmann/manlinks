@@ -21,39 +21,55 @@ declare root="${file%%.*}" # trim longest suffix beginning with \(lq.\(rq
 .fi
 T}
 .TE
-.SH READ LINES INTO AN ARRAY
+.SH READ BUILTIN SPECIAL CASES
 .PP
-Use the
+Special case hints to get you started.
+.SS READ ALTERNATE SOURCES OF DATA
+.PP
+The
 .B read
-builtin command to read a source line-by-line.
-.SS ARRAY-BUILDING EXAMPLES
-.TP
-.B From a file
+command reads from
+.IR stdin .
+Besides simply reading
+.IR stdin ,
+there are three other ways to provide
+.I stdin
+data:
+.TS
+tab(|);
+lb lb
+l l.
+source|code
+from a file|T{
 .EX
 while read -r; do
-   array+=( \(dq$REPLY\(dq )
-done < \(dq$filename\(dq
-.TP
-.B From a \(lqprocess substitution\(rq
+   use_reply \(dq$REPLY\(dq;
+done \(dq$filename\(dq
+.EE
+T}
+
+from a string|T{
 .EX
 while read -r; do
-   array+=( \(dq$REPLY\(dq )
-done < <( gzip -dc /usr/share/man/man1/printf.1.gz | groff -tman -Tuft8 )
+   use_reply \(dq$REPLY\(dq;
+done <<< \(dq$string\(dq
 .EE
-.TP
-.B From a string
-Don't use
-.BR read ,
-use the
-.B IFS
-variable instead.
-.IP
+T}
+
+T{
+from process output
+.br
+AKA
+.RI \(dq "process substitution" \(dq
+T}|T{
 .EX
-declare OIFS=\(dq$IFS\(dq
-IFS=$\(cq\(rsn\(cq
-declare -a array=( $string )
-IFS=\(dq$OIFS\(dq
+while read -r; do
+   use_reply \(dq$REPLY\(dq;
+done < <( awk -f script.awk ~/data.dat )
 .EE
+T}
+.TE
+
 .SS READ PERFORMANCE HINTS
 .TP
 .B Preserving spaces
@@ -100,3 +116,41 @@ done
 .EE
 .RE
 .PP
+.SH RANDOM QUICK SOLUTIONS
+.PP
+Some things are easy to do, if you know what to do.
+.SS Do-nothing Function
+.PP
+Suitable for a default callback in case a callback function is not
+provided in certain situations:
+.IP
+.EX
+do_nothing() { :; }
+.EE
+.SS Iterate Over Characters of a String
+.PP
+My testing shows this to be the fastest method:
+.IP
+.EX
+# -r     to preserve backslashes
+# -n1    to read one character at a time
+# -d \(aq\(aq  disable end-of-entry delimiter
+while IFS= read -r -n1 -d \(aq\(aq; do
+   use_reply \(dq$REPLY\(dq
+done <<< \(dq$string\(dq
+.EE
+.SS Parse String of Values Into an Array
+.PP
+Rather than parsing quote-enclosed phrases in a string, use
+a system tool to separate the values:
+.IP
+.EX
+# $1 is name of array variable
+# $2 is string of values (ie 3 values in \fB1 \(dqthe best\(dq https://url.com\fP)
+arrayify_string()
+{
+   local -n as_array=\(dq$1\(dq
+   IFS=$\(aq\(rsn\(aq as_array=( $( xargs -n1 <<< \(dq$2\(dq ) )
+}
+.EE
+
