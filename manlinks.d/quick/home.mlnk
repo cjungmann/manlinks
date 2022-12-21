@@ -21,6 +21,11 @@ Bash scripting cheat sheet
 man
 |-l|bash_script.7
 
+&C Development
+C development hints
+man
+|-l|quick_c_dev.7
+
 &Regex Escaping
 Guide to escaping regular expression characters
 man
