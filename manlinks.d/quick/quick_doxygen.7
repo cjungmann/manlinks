@@ -1,0 +1,95 @@
+.TH quick_doxygen 7 "Miscellaneous Manual Page"
+.ds D \fBDoxygen\fP
+.SH NAME
+.B quick_doxygen
+\- Cheat sheet for basic Doxygen syntax
+.SH DESCRIPTION
+.PP
+Just the basics for documenting functions and their arguments.
+.SH SETUP
+.PP
+Before Doxygen can be used, it must be initialized and configured.
+.TP 3
+.BI doxygen " -g"
+Initialize \D for the current directory.
+.TP 3
+.BI emacs " Doxyfile"
+Search for and change the following settings:
+.TS
+tab(|);
+l lx.
+PROJECT_NAME|T{
+Change this to your project name.
+Don't be lame!
+T}
+EXTRACT_ALL = YES|T{
+Set the value to
+.I YES
+to read all files as identified in
+.BR FILE_PATTERNS .
+T}
+RECURSIVE = YES|T{
+Especially if your project puts source files in subdirectories,
+set this tag to
+.B YES
+to enable searching subdirectories for files.
+T}
+.TE
+
+.SH EXAMPLE
+.PP
+Let's just use examples to illustrate usage:
+.SS Function Documentation
+.PP
+.EX
+/**
+ * @brief Short description of function
+ *
+ * Unmarked text in a Doxygen comment block will be used for the
+ * detailed function description.
+ *
+ * The detailed description can span several lines or paragraphs.
+ *
+ * @param Arg1   Integer argument for the function
+ * @param Arg2   String argument for the function
+ * @param Arg3   Struct argument for the function.  The argument
+ *               description can span multiple lines.
+ *
+ * @return The exit value is 0 for success, or an error code
+ *         for failure.  Refer to errno(1) for values.
+ */
+int my_function(int Arg1, const char *Arg2, struct myobj Arg3)
+{
+.EE
+.SS Enum Documentation
+.PP
+An enumeration may document the set of allowed values for an
+integer parameter or return value.
+There is a Doxygen syntax for documenting enums.
+.PP
+.EX
+/** This enum class is da bomb! */
+enum int dabomb {
+   cap,          ///< smallest explosive
+   bang_snap,    ///< once a particular favorite of kids in grade school
+   firecracker,  ///< can seriously injure someone if used carelessly
+   cherry_bomb,  ///< once more dangerous than a firecracker
+   dynamite,     ///< criminals and miners love it
+   hand_grenade, ///< used in war
+   land_mine,    ///< buried explosive
+   missle,       ///< self-propelled lethal explosive
+   bomb,         ///< big booms
+   nuke          ///< the biggest boom
+};
+.EE
+.SS SEE ALSO
+.PP
+This document will likely never be complete.
+The following links will take you to other resources that may
+aid your quest for further understanding:
+.PP
+.nf
+.UR http://opensource.com/sites/default/files/2022-05/OSDC_cheatsheet-doxygen-2022.5.30.pdf
+Open Source cheatsheet
+.UE
+.fi

@@ -26,6 +26,11 @@ C development hints
 man
 |-l|quick_c_dev.7
 
+&Doxgyen
+Basic Doxygen Markup
+man
+|-l|quick_doxygen.7
+
 &Regex Escaping
 Guide to escaping regular expression characters
 man
