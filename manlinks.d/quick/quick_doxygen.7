@@ -85,6 +85,71 @@ enum int dabomb {
    nuke          ///< the biggest boom
 };
 .EE
+.SS CROSS-REFERENCES
+.PP
+Use the
+.BR \(rsref " (" @ref )
+command to call highlight and link to objects that are defined
+elsewehere in the project:
+.RS 4
+.B \(rsref
+.IR reference " [" \(dqlabel\(dq ]
+.RE
+.PP
+If a
+.I label
+argument is included, it will replace the reference name in the same manner
+as an HTML anchor object.
+.B Doxygen
+tries to be intellegent about which words are appropriate or not as labels.
+Enclosing with quotes the text you want to serve as a label makes it clear
+and overrides other considerations.
+.PP
+For example:
+.RS 4
+.EX
+Look at \(rsref MyStruct::member \(dqmember of MyStruct\(dq for more info.
+.EE
+.RE
+.SS WORD MARKUP
+.PP
+.B Doxygen
+includes several several commands that style the following word.
+An HTML coder might be tempted to use them in service of \(lqsemantic\(rq
+markup.
+.PP
+I recommend using
+.B Markdown
+syntax (surrounding words with
+.BR _ ", " * ", or " ` )
+instead for ease of reading in the source code.
+.PP
+If you insist on using
+.B Doxygen
+syntax, the following commands generate italic, bold, or monospaced text:
+.TS
+tab(|);
+l l l.
+\(rsa|emphasis|italic
+\(rsb|strong|bold
+\(rsc|code|monospace (typewriter)
+\(rse|emphasis|italic
+\(rsp|parameter|monospace
+.TE
+.SS WRITING AMBIGUOUS CHARACTERS
+.PP
+There are several characters or character combinations that may be
+misinterpreted in certain situations.  They should be escaped with a
+leading backslash (\(rs).  In particular,
+.BR < ", " > ", and " &
+may be taken to be part of an HTML tag.
+The following link to the official
+.B Doxygen
+site lists these tricky characters.
+.PP
+.UR https://www.doxygen.nl/manual/commands.html#cmdamp
+Doxygen Commands Page
+.UE
 .SS SEE ALSO
 .PP
 This document will likely never be complete.
