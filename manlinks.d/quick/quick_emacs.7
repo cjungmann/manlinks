@@ -225,9 +225,22 @@ T{
 T}|Run named macro (if \fImacro_name\fP is valid Lisp symbol).
 .TE
 .SS CUSTOMIZATION
+.PP
+Change syntax-highlighting colors to your work style.
+Use
+.B describe-face
+to identify the face, then use
+.B list-faces-display
+to find the face and change the color.
 .TS
 tab(|);
 l lx .
+T{
+.BI M-x " describe-face " RET
+T}|Identify the face of the text under the cursor.
+T{
+.B "C-u" " C-x " "="
+T}|Same as \fIdescribe-face\fP
 T{
 .KEYBI "M-x" list-faces-display
 T}|T{
@@ -236,12 +249,6 @@ T}
 T{
 .KEYBI "M-x" customize
 T}|Comprehensive customization dialog
-T{
-.BI M-x " describe-face " RET
-T}|Identify the face of the text under the cursor.
-T{
-.B "C-u" " C-x " "="
-T}|Same as \fIdescribe-face\fP
 .TE
 .SS MISCELLANEOUS
 .TS
