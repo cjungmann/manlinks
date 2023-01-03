@@ -69,7 +69,6 @@ done < <( awk -f script.awk ~/data.dat )
 .EE
 T}
 .TE
-
 .SS READ PERFORMANCE HINTS
 .TP
 .B Preserving spaces
@@ -119,6 +118,35 @@ done
 .SH RANDOM QUICK SOLUTIONS
 .PP
 Some things are easy to do, if you know what to do.
+.SS Heredoc to String
+.PP
+Create a mulitline string variable with a
+.BR heredoc .
+.IP
+.EX
+declare NLString
+read -r -d'' "NLString" << EOF
+abcdefghij
+0123456789
+EOF
+.EE
+.PP
+The heredoc will ignore any single leading TABs from the lines
+when using
+.IR <<- " instead of " << .
+.IP
+.EX
+declare NLString
+read -r -d'' "NLString" <<- EOF
+   abcdefghij
+   0123456789
+EOF
+.EE
+.PP
+The termination string will be recognized with or without the
+leading TAB.
+
+
 .SS Do-nothing Function
 .PP
 Suitable for a default callback in case a callback function is not
