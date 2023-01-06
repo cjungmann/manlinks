@@ -14,6 +14,40 @@ You can find an off-line C language reference with:
 .br
 .B "   info"
 .IR gnu-c-manual .
+.SH MISCELLANEOUS CODING REMINDERS
+.PP
+I often forget subtle but rarely used code techinques.
+This section will serve as a set of notes to help me remember.
+.SS Printing an Unterminated String
+.PP
+This is simple, but not obvious.
+You can find this documented in
+.BR printf (3)
+under the heading
+.IR "Format of the format string" .
+.PP
+In addition to
+.I %d
+consuming an argument,
+.B printf
+will consume an argument to replace any
+.I *
+(asterisk)
+in the format string
+For example,
+.IP
+.EX
+char value[] = "Concerto"
+int plen = strlen(value);
+printf("%.*s", plen, value);
+.EE
+.PP
+Given the format string,
+.IR \(dq%.*s\(dq ,
+the asterisk will be replaced by the value of
+.BR plen " (8)"
+to create the effective format string
+.IR \(dq%.8s\(dq
 .SH EMACS LOCAL VARIABLES
 .PP
 This was not obvious, but for Emacs
