@@ -1,4 +1,11 @@
 .TH groff_quick 7 "Miscellaneous Information Manual"
+.de UNI
+.   fam C
+.   nop \\$1\\c
+.   fam
+.   shift
+.   if \\n[.$]>0 .nop \\$1
+..
 .SH NAME
 .B quick_groff
 \- Quick guide to groff programming features
@@ -10,7 +17,6 @@ is a very old text processing program and language that uses two-letter
 names for most builtin macros, making it difficult to master.
 Furthermore the official documentation does not categorize objects
 to make it easier to navigate.
-.br
 This document attempts to address these issues by providing an
 easy-to-access reference with categories and more accessible.
 .SH BASIC STUFF
@@ -49,7 +55,6 @@ A single line conditional can include a dot-prefixed request:
 \&.if ( \(rsn[myreg] == 1 ) .nop myreg is 1
 .EE
 .RE
-
 A multi-line conditional uses curly-braces to enclose result:
 .RS 4
 .EX
@@ -64,8 +69,71 @@ Refer to
 .BR groff(7),
 search for
 .IR ^CONDITIONS .
-.SH GUIDE
-.SS USING URLS
+.SH USING SPECIAL CHARACTERS
+.PP
+Generally, just typing a character is enough to include it in a text.
+However, there are many untypeable characters that must sometimes be
+included in a text.
+There are several ways to do this.
+.TP
+.B Invoke Character by Name
+Besides directly typing a character, this is the easiest way to insert a
+character into the output stream.
+Invoke a character name following a backslash with the appropriate
+subscripting,
+.B \(rs(aa
+for two letter names,
+.B \(rs[name]
+for a name of any length.
+.IP
+For example, enter a double quote with
+.RB \(lq \(rs(dq \(rq.
+.TP
+.B Invoke Unicode Character
+For special characters not found in the previous resources, the explicit
+unicode value can be used to generate the character.
+For example, the vertical ellipsis character is generated with
+.UNI \(rs[u22EE]  \N'46'
+Take care to use capital letters for the hexadecimal letters.
+.TP
+.B Typeset With Indexed Glyph
+Use the character escape sequence \(rsN'n' to insert an uninterpreted
+glyph in the output stream.
+Generate a period glyph with the
+.UNI \(rsN'46'
+escape sequence.
+.char \[period] \N'46'
+.TP
+.B Name a Character
+Once a character unicode or index code is found, give it a name to make
+it easier to use.
+Let's name the vertical ellipsis and period characters.
+.IP
+.EX
+\[period]char \(rs[vellip] \(rs[u22EE]
+\[period]char \(rs[period] \(rsN\(aq46\(aq
+.EE
+.IP
+Thereafter, we can generate a vertical ellipsis by entering \(rs[vellip] or
+a period with \(rs[period] .
+.RE
+.SS Finding Special Characters
+.TP
+.B Search groff(7)
+This general reference includes a short list of frequently-used
+special characters (search with regular expression
+.nf
+.IR "^\(rs\ +Special Characters" ,
+.fi
+noting the escaped space before the \(aq+\(aq)
+.TP
+.B Search groff_char(7)
+This is the reference for
+.B groff
+characters.
+Look here first when trying to figure out how to include a specific character.
+This resource includes unicode and index values for many of the characters.
+.SH USING URLS
 .PP
 URL links are convenient resources to include in a man page.
 To be recognized as a URL, it must include the
@@ -88,7 +156,7 @@ OpenSource Groff Cheat Sheet
 \&.UE
 \&.fi
 .EE
-.SS READING LENGTHS
+.SH READING LENGTHS
 .PP
 There are many things to measure in a give document, string character
 length, string printed length.
@@ -181,6 +249,7 @@ This is a line with
 
 \Z'\D'l \n[len]u 0''
 some text.  The length of \(lqsome text\(rq is \n[len].
+.SH MISCELLANEOUS SMALL TOPICS
 .SS UNEXPECTED SPACING
 .PP
 Each input line (request or text) adds a space after the input
