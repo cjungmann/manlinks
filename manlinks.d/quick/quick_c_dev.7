@@ -1,5 +1,8 @@
 .\" -*- mode: nroff -*-
 .TH quick_c_dev 7 "Miscellaneous Manual Page"
+.\" 
+.char \[vellip] \[u22EE]
+.\"
 .SH NAME
 .B quick_c_dev
 \- Cheat sheet for C development with GCC
@@ -48,6 +51,42 @@ the asterisk will be replaced by the value of
 .BR plen " (8)"
 to create the effective format string
 .IR \(dq%.8s\(dq
+.SS Function Pointers
+.PP
+A function is an address.  To use a function pointer, you need to describe its
+return and argument types.
+.PP
+The function declaration
+.IP
+.EX
+int my_function(int code, char* string) {
+   \[vellip]
+}
+.EE
+.\"
+.TP
+.B Function pointer variable
+.EX
+int(*fptr)(int,char*) = my_function;       // instantiate
+int result =(*fptr)(1,"Chuck");            // invoke
+.EE
+.\"
+.TP
+.B Typedef of function pointer
+.EX
+typedef int(*fptr_type)(int,char*);        // declare
+fptr_type fptr = my_function;              // instantiate
+int result = (*fptr)(2,"Jess");            // invoke
+.EE
+.\"
+.TP
+.B Array of function pointers
+.EX
+int(*fptr_arr[])(int,char*) = { my_function1, alt1, alt2 };
+                                           // instantiate
+int result = (*fptr_arr[0])(3,"Rachel");   // invoke
+.EE
+
 .SH EMACS LOCAL VARIABLES
 .PP
 This was not obvious, but for Emacs
