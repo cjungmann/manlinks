@@ -224,6 +224,28 @@ T{
 .KEYBI "M-x " "macro_name"
 T}|Run named macro (if \fImacro_name\fP is valid Lisp symbol).
 .TE
+.SS CASE CONVERSION
+.PP
+Sometimes these happen by accident, because of unfamiliar commands.
+.TS
+tab(|);
+l l .
+T{
+.KEYBI "M-l"
+T}|convert following word to lower case
+T{
+.KEYBI "M-u"
+T}|convert following word to upper case
+T{
+.KEYBI "M-c"
+T}|Capitalize following word
+T{
+.KEYBI "C-x C-l"
+T}|Convert region to lower case
+T{
+.KEYBI "C-x C-u"
+T}|Convert region to upper case
+.TE
 .SS CUSTOMIZATION
 .PP
 Change syntax-highlighting colors to your work style.
