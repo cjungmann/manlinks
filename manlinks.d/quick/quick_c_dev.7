@@ -138,4 +138,48 @@ variables in a Makefile.
 If using
 .B GCC
 to compile and link, only one instance of the option is necessary.
+.SH VARIABLE NUMBER OF ARGUMENTS
+.PP
+This is a quick fundamental demonstration of using **va_args**.
+.SS Clarifications
+.TP 4
+.B va_start
+takes the last named argument as the second argument.
+.TP 4
+.B va_arg()
+returns the first argument
+.B after
+the argument used in
+.B va_start()
+to initialize the
+.BR va_list .
+.TP 4
+.B va_end()
+must be called before the function terminates.
+.SS Simple Example:
+.PP
+.EX
+#include <stdarg.h>
+#include <stdio.h>
 
+// Function for first argument of function \fBcollect_reports\fP in main().
+void report(int val) { printf("Received a %d.\n", val); }
+
+void collect_reports(void(*reporter)(int), ...)
+{
+   \fBva_list\fP list_ints;
+   \fBva_start\fP(list_ints, reporter);
+
+   int ival;
+   while ((ival = \fBva_arg\fP(list_ints, int)))
+      (*reporter)(ival);
+
+   \fBva_end\fP(list_ints);
+}
+
+int main(int argc, const char **argv)
+{
+   collect_reports(report, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0);
+   return 0;
+}
+.EE
