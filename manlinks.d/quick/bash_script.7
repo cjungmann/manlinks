@@ -145,7 +145,24 @@ EOF
 .PP
 The termination string will be recognized with or without the
 leading TAB.
+.SS Heredoc to Screen
+.PP
+Use a heredoc rather than a long series of
+.B echo
+commands for user dialogs.  Remember that a heredoc mimics a file,
+so use
+.BR cat " instead of " echo :
+.IP
+.EX
+cat <<EOF
+my_script [-s source] [-t target] [-h]
 
+-s    Name of file to be read
+-t    Name of file to write
+-h    help (this display)
+
+EOF
+.EE
 
 .SS Do-nothing Function
 .PP
