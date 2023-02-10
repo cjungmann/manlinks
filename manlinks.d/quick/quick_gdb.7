@@ -31,6 +31,11 @@ of source file
 Pause execution when function
 .I speical_key_str
 has been called.
+.TP
+.BI break " screen.c:1234 " if " errno!=0"
+Conditionally pause at line. In this case, break when
+.B errno
+indicates an error.
 .SS Breakpoints on the Command Line
 .PP
 If you know the function name or line number of the point where you
