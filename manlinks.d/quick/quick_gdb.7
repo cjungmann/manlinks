@@ -1,0 +1,43 @@
+.TH quick_gdb 7 "Miscellaneous Manual"
+.SH NAME
+.B quick_gdb
+\- Initially-limited cheat sheet for using GDB (Gnu Debugger)
+.SH DESCRIPTION
+.PP
+This manual is a compilation of hints to help me remember useful
+options and methods to help me be more productive using the
+.B GDB
+tool.
+.SH SETTING BREAKPOINTS
+.PP
+IMHO, Breakpoints are the most important feature of a debugger.
+Other very important features, like stepping through code and
+inspecting variables, depend on being able to stop execution at
+critical points.
+.SS Breakpoints While Running GDB
+.TP
+.BI break " 1234"
+Pause execution at line number
+.I 1234
+of the currently executing source code file.
+.TP
+.BI break " screen.c:1234"
+Pause execution at line
+.I 1234
+of source file
+.IR screen.c .
+.TP
+.BI break " special_key_str"
+Pause execution when function
+.I speical_key_str
+has been called.
+.SS Breakpoints on the Command Line
+.PP
+If you know the function name or line number of the point where you
+want to pause execution, enter it with a command line option when
+invoking
+.BR GBD .
+.TP
+.BR "gdb --tui --args -ex " "\(dqbreak screen.c:938\(dq"
+.TQ
+.BR "gdb --tui --args -ex " "\(dqbreak special_key_str\(dq"

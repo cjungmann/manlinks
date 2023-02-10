@@ -56,6 +56,11 @@ Guide to lui_list
 man
 |-l|../../sources/list_ui.7
 
+G&nu Debugger
+Simple hints for using GDB
+man
+|-l|quick_gdb.7
+
 # Local Variables:
 # mode: sh
 # End:
