@@ -41,6 +41,11 @@ Basic cheatsheet for Markdown syntax
 man
 |-l|quick_markdown.7
 
+M&akefile
+Useful tidbits of Makefile information
+man
+|-l|quick_make.7
+
 G&roff
 Fundamental groff requests, registers, etc.
 man

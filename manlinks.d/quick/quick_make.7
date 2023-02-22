@@ -1,0 +1,107 @@
+.TH quick_make 7 "Miscellaneous Information Manual"
+.SH NAME
+.B quick_make
+\- A simple guide to makefile syntax
+.SH DESCRIPTION
+.PP
+This is in no way a complete guide to writing a Makefile.
+It is simply a set of reminders of basic concepts used in writing
+makefiles.
+.SH BASIC STRUCTURE
+.PP
+The primary structure in a makefile is a
+.BR template ,
+which is made up of a
+.BR target " and a " recipe ,
+and usually includes
+.B prerequisites
+that trigger execution of the template if the prerequisite is newer
+than the target.
+.IP
+.EX
+target [ : prereq1 [, prereq2, ...]]
+   recipe
+.EE
+.PP
+.B NOTE
+Using a function to define a prerequisite can be trouble because
+functions are evaluated before patterns like
+.BR $@ " and " @< .
+If there is no alternative to using a function, use the
+.B .SECONDEXPANSION:
+directive and double every
+.B $
+in the expression:
+.IP
+.EX
+\&.SECONDEXPANSION:
+generated_%.c: $$(addsuffix .txt,$$(basename $$@))
+   $(call generator,$<)
+.EE
+.SH AUTOMATIC VARIABLES
+.PP
+There are several context-specific variables.
+.TS
+tab(|);
+r lx.
+'$@'|target filename
+'$%'|target filename if file is an archive
+'$<'|name of first prerequisite
+'$?'|space-separated list of out-of-date prerequisites
+'$^'|space-separated list of all unique prerequisites
+'$+'|space-separated list of all prerequsities, including duplicates
+'$(@D)' or '$(@F)'|directory or file, respectively, of '$@' (target)
+'$(<D)' or '$(<F)'|directory or file, respectively, of '$<' (first prerequisite)
+.TE
+.PP
+Search for
+.I automatic variables
+in
+.BI info " make"
+for more variables and more details.
+
+
+
+.SH FUNCTION CATEGORIES
+.PP
+Look for builtin functions before attempting to parse strings using
+shell commands.
+It is likely that an appropriate builtin function exists that addresses
+your need.
+.PP
+There are several useful groups of functions that can be used to
+manipulate variables.
+Including generic string functions, there are many builtin
+.B make
+functions
+that will please you.  Consider this partial list:
+.TS
+tab(|);
+l lx .
+string functions|T{
+.RB $( subst " ), $(" etc " )"
+T}
+filename functions|T{
+.RB $( suffix " ), $(" basename " ), $(" addsuffix " ), etc"
+T}
+error functions|T{
+.RB $( error " ), $(" warning " ), etc."
+T}
+logic functions|T{
+.RB $( if " ), $(" or " ), and $(" and " )"
+T}
+.TE
+.PP
+Search for specific functions in
+.B info
+by escaping both the
+.BR $ " and the " ( .
+For example, lookup the
+.RB $( if " )"
+function with the following search string:
+.IP
+.EX
+\(rs$\(rs(if
+.EE
+
+
