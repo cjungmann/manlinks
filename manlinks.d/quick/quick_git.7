@@ -239,6 +239,39 @@ If it is necessary, \*[git] will prompt you with the necessary command:
 .EX
 .BI "git push --set-upstream " "remote_name branch_name"
 .EE
+.PP
+If you get a message saing that
+.I your current branch is behind its remote counterpart
+when first invoke
+.B git push
+because of some already existing remote files (like LICENSE or README.md),
+you will need to
+.B pull
+those files down before you can
+.B push
+your project to the new repository.
+.PP
+Assuming the
+.B git remote add
+and the
+.B git branch
+commands were successful, that the remote name is
+.IR origin ,
+the branch name is
+.IR main ,
+and the upstream file that must be pulled is
+.IR LICENSE ,
+invoke the following commands:
+.IP
+.EX
+.BI "git fetch " origin
+.B git checkout \c
+.IR origin / "main LICENSE"
+.BI "git add " LICENSE
+.BI "git commit " LICENSE " -m " \c
+.RI \(dq "pulled commit" \(dq
+.BI "git push " origin
+.EE
 .SH GIT MAN PAGES
 .PP
 One calls a \*[git] function by entering the command
