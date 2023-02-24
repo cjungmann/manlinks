@@ -154,6 +154,22 @@ T}|Unprompted replace regex matches, including captures
 .\"" PAGE BREAK HERE or SPLIT SCREEN table gets broken
 .bp
 .\""
+.PP
+For
+.BR "interactive replace" ,
+there are several possible responses.
+.RB \(aq y "\(aq and \(aq" n \(aq
+are obvious.
+.RB \(aq ! \(aq
+replaces all remaining matches without prompting (as if it were
+an unprompted replace-string).
+.PP
+For other responses to interactive replace, consult
+.IP
+.EX
+.B info -n \c
+.RI \(dq "query replace" \(dq " emacs"
+.EE
 .SS SPLIT SCREEN
 .TS
 tab(|);
@@ -284,6 +300,27 @@ T{
 .KEYBI "M-x" customize
 T}|Comprehensive customization dialog
 .TE
+.SS CASE-INSENSITIVE SEARCH-AND-REPLACE
+.PP
+The common default is for case-insensitive search, which includes replace-string.
+Switch to case-sensitive matching with:
+.IP
+.EX
+.BI M-x " isearch-toggle-case-fold "
+.EE
+.PP
+With that, search
+.RB ( C-s ),
+interactive replace-string
+.RB ( M-% ),
+and unprompted replace-string
+.RB ( "C-x replace-string" )
+will only match if the query case matches the target case.
+.PP
+Invoke
+.I isearch-toggle-case-fold
+again to restore case-sensitive matching (it's a toggle).
+
 .SS MISCELLANEOUS
 .TS
 tab(|);
