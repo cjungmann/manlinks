@@ -10,34 +10,45 @@ makefiles.
 .SH BASIC STRUCTURE
 .PP
 The primary structure in a makefile is a
-.BR template ,
+.BR rule ,
 which is made up of a
 .BR target " and a " recipe ,
 and usually includes
 .B prerequisites
-that trigger execution of the template if the prerequisite is newer
+that trigger execution of the rule if the prerequisite is newer
 than the target.
 .IP
 .EX
 target [ : prereq1 [, prereq2, ...]]
    recipe
 .EE
-.PP
-.B NOTE
-Using a function to define a prerequisite can be trouble because
-functions are evaluated before patterns like
-.BR $@ " and " @< .
-If there is no alternative to using a function, use the
-.B .SECONDEXPANSION:
-directive and double every
-.B $
-in the expression:
-.IP
-.EX
-\&.SECONDEXPANSION:
-generated_%.c: $$(addsuffix .txt,$$(basename $$@))
-   $(call generator,$<)
-.EE
+.TP
+.B Target
+The
+.B target
+is the item that the rule promises to provide.
+The
+.B target
+is typically the name of a file , but it can be a label
+or another abstract item.
+.TP
+.B Prerequisite
+A
+.B prerequisite
+is an item that can be compared with the
+.B target
+to decide of the
+.B target
+must be created or updated.
+.TP
+.B Recipe
+The
+.B recipe
+is a set of commands that are to be executed if the rule is triggered.
+Each rule must be preceeded by a
+.I tab
+character.
+
 .SH AUTOMATIC VARIABLES
 .PP
 There are several context-specific variables.
@@ -59,8 +70,17 @@ Search for
 in
 .BI info " make"
 for more variables and more details.
-
-
+.SH GENERAL VARIABLES
+.PP
+Not having time to cover this right now, please look through the
+offline documentation for variables found by typing:
+.IP
+.EX
+info -n \(dqUsing Variables\(dq make
+.EE
+.PP
+You'll want to consider the different assignment operators that
+dictate how and when assignments are made.
 
 .SH FUNCTION CATEGORIES
 .PP
@@ -104,4 +124,62 @@ function with the following search string:
 \(rs$\(rs(if
 .EE
 
+.SH CONDITIONALS
+.PP
+Conditional syntax is both familiar, using
+.BR if ", " else  ", and " endif ,
+and unorthodox with respect to condition syntax and formatting.
+.PP
+Consider the following rule example:
+.IP
+.EX
+target: prereq
+ifeq ($(CC),gcc)
+   $(call gnu_build,$<)
+else ifndef $(GCC)
+   @echo \(dqThere is no compiler defined.\(dq
+else
+   $(call generic_build,$<)
+endif
+.EE
+.PP
+Note that the conditional statements are
+.BR "not indented" ,
+but the command text
+.B is
+indented (with a TAB, don't forget).
+.PP
+The set of conditional commands are:
+.BR ifeq ", " ifneq ", " ifdef ", and " ifndef .
+.PP
+You can use regular variables in the conditional statements, but
+you
+.B cannot
+use automatic variables.
+.PP
+Refer to offline conditional documentation by typing:
+.IP
+.EX
+info -n Conditionals make
+.EE
 
+
+.SH SPECIAL NOTES
+.PP
+This section documents quirky details regarding make files.
+.TP
+.B Functions as prerequisites
+Using a function to define a prerequisite can be trouble because
+functions are evaluated before patterns like
+.BR $@ " and " @< .
+If there is no alternative to using a function, use the
+.B .SECONDEXPANSION:
+directive and double every
+.B $
+in the expression:
+.IP
+.EX
+\&.SECONDEXPANSION:
+generated_%.c: $$(addsuffix .txt,$$(basename $$@))
+   $(call generator,$<)
+.EE
