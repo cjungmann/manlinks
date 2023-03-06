@@ -37,6 +37,8 @@ Discussions of various topics will follow.
 # Overrideable path with recommended value as default:
 PREFIX ?= /usr/local
 
+TARGET = mylib
+
 # Setup compiling flags:
 CFLAGS = -Wall -Werror -std=c99 -pedantic
 
@@ -50,14 +52,14 @@ LIB_MODULES_DYNAMIC = $(addsuffix .od,$(basename $(wildcard *.c)))
 
 # Easy-to-type targets to be invoked with \(dqmake\(dq
 \&.PHONY: dynamic
-dynamic: libmylib.so
+dynamic: lib$(TARGET).so
 
 \&.PHONY: static
-static: libmylib.a
+static: lib$(TARGET).a
 
 # Rules to make shared-object library after making modules with
 # appropriate settings
-libmylib.so : $(LIB_MODULES_DYNAMIC)
+lib$(TARGET).so : $(LIB_MODULES_DYNAMIC)
    $(CC) $(CFLAGS) --shared -o $@ $(LIB_MODULES_DYNAMIC)
 
 %.od : %.c
@@ -65,7 +67,7 @@ libmylib.so : $(LIB_MODULES_DYNAMIC)
 
 # Rules to make statically-linked library after making modules with
 # appropriate settings
-libmylib.a : $(LIB_MODULES_STATIC)
+lib$(TARGET).a : $(LIB_MODULES_STATIC)
    ar rcs $@ $(LIB_MODULES_STATIC)
 
 %.os : %.c
@@ -73,19 +75,26 @@ libmylib.a : $(LIB_MODULES_STATIC)
 
 \&.PHONY: install
 install:
-   install -D --mode=644 mylib.h $(PREFIX)/include/mylib.h
-   install -D --mode=775 libmylib.so $(PREFIX)/lib/libmylib.so
-   install -D --mode=775 libmylib.a $(PREFIX)/lib/libmylib.a
+   install -D --mode=644 $(TARGET).h $(PREFIX)/include/$(TARGET).h
+   install -D --mode=775 lib$(TARGET).so $(PREFIX)/lib/lib$(TARGET).so
+   install -D --mode=775 lib$(TARGET).a $(PREFIX)/lib/lib$(TARGET).a
    # Necessary final step to add new library to library database:
    ldconfig $(PREFIX)/lib
 
 \&.PHONY: uninstall
 uninstall:
-   rm -f $(PREFIX)/include/mylib.h
-   rm -f $(PREFIX)/lib/libmylib.so
-   rm -f $(PREFIX)/lib/libmylib.a
+   rm -f $(PREFIX)/include/$(TARGET).h
+   rm -f $(PREFIX)/lib/lib$(TARGET).so
+   rm -f $(PREFIX)/lib/lib$(TARGET).a
    # Necessary final step to remove library from library database:
    ldconfig $(PREFIX)/lib
+
+\&.PHONY: clean
+clean:
+	rm -f $(LIB_MODULES_DYNAMIC)
+	rm -f $(LIB_MODULES_STATIC)
+	rm -f lib$(TARGET).so
+	rm -f lib$(TARGET).a
 
 \&.PHONY: help
 help:
