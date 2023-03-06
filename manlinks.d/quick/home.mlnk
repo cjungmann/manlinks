@@ -26,6 +26,11 @@ C development hints
 man
 |-l|quick_c_dev.7
 
+&Libraries
+Developing shared and static libraries
+man
+|-l|quick_libraries.7
+
 &Doxgyen
 Basic Doxygen Markup
 man

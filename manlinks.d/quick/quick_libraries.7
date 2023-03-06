@@ -1,0 +1,227 @@
+.\" -*- mode: nroff -*-
+.TH quick_libraries 7 "Miscellaneous Manual Page"
+.SH NAME
+.B quick_libraries
+\- Basic Library Preparation
+.SH DESCRIPTION
+.PP
+There are several steps needed to create and make a code library
+available for use by other programs.
+This document attempts to summarize the most important steps to make
+it easier to successfully develop, deploy and link to your custom
+world-saving library.
+.SH MAKEFILE NOTES
+.PP
+Entities
+.BR $@ " and " $<
+refer to the rule's target and first prerequisite.
+.PP
+All recipe lines must begin with a
+.B tab
+character, not spaces as shown below.
+.PP
+.B .PHONY:
+is used to indicate that a target is not a file.
+This is to prevent accidental testing against files in the directory.
+.SH BASIC MAKEFILE
+.PP
+The following may suffice as a reminder for experienced developers
+to create an effective and efficient Makefile for your library
+project.
+.PP
+Discussions of various topics will follow.
+.IP "" 4
+.EX
+# @file: Makefile
+
+# Overrideable path with recommended value as default:
+PREFIX ?= /usr/local
+
+# Setup compiling flags:
+CFLAGS = -Wall -Werror -std=c99 -pedantic
+
+# Uncomment if explicitly revealing functions in code with EXPORT macro:
+# CFLAGS += -fvisibility=hidden
+
+# Use Make functions (wildcard, basename, and addsuffx) to
+# generate a list of C source files:
+LIB_MODULES_STATIC = $(addsuffix .os,$(basename $(wildcard *.c)))
+LIB_MODULES_DYNAMIC = $(addsuffix .od,$(basename $(wildcard *.c)))
+
+# Easy-to-type targets to be invoked with \(dqmake\(dq
+\&.PHONY: dynamic
+dynamic: libmylib.so
+
+\&.PHONY: static
+static: libmylib.a
+
+# Rules to make shared-object library after making modules with
+# appropriate settings
+libmylib.so : $(LIB_MODULES_DYNAMIC)
+   $(CC) $(CFLAGS) --shared -o $@ $(LIB_MODULES_DYNAMIC)
+
+%.od : %.c
+   $(CC) $(CFLAGS) -fPIC -c -o $@ $<
+
+# Rules to make statically-linked library after making modules with
+# appropriate settings
+libmylib.a : $(LIB_MODULES_STATIC)
+   ar rcs $@ $(LIB_MODULES_STATIC)
+
+%.os : %.c
+   $(CC) $(CFLAGS) -c -o $@ $<
+
+\&.PHONY: install
+install:
+   install -D --mode=644 mylib.h $(PREFIX)/include/mylib.h
+   install -D --mode=775 libmylib.so $(PREFIX)/lib/libmylib.so
+   install -D --mode=775 libmylib.a $(PREFIX)/lib/libmylib.a
+   # Necessary final step to add new library to library database:
+   ldconfig $(PREFIX)/lib
+
+\&.PHONY: uninstall
+uninstall:
+   rm -f $(PREFIX)/include/mylib.h
+   rm -f $(PREFIX)/lib/libmylib.so
+   rm -f $(PREFIX)/lib/libmylib.a
+   # Necessary final step to remove library from library database:
+   ldconfig $(PREFIX)/lib
+
+\&.PHONY: help
+help:
+   @echo \(dq\(rs\(dqmake dynamic\(rs\(dq     create share-object library\(dq
+   @echo \(dq\(rs\(dqmake static\(rs\(dq      create static library\(dq
+   @echo \(dq\(rs\(dqmake install\(rs\(dq     copy libraries and header files\(dq
+   @echo \(dq\(rs\(dqmake uninstall\(rs\(dq   delete libraries and header files\(dq
+   @echo \(dq\(rs\(dqmake help\(rs\(dq        this display\(dq
+   @echo
+   @echo \(dq\(rs\(dqmake PREFIX=/usr install\(rs\(dq to install in /usr/lib and /usr/include\(dq
+
+.EE
+.SH LINKING THE LIBRARY
+.PP
+Take advantage of compiler option
+.B -Wl,
+to send following options to the linker program,
+.BR ld .
+Refer to
+.BR ld (1)
+for linker options that are different from the compiler options.
+.PP
+Use compiler option
+.BI -l mylib
+to use library
+.BR libmylib.so " or " libmylib.a
+according to your needs.
+.IP "" 4
+.EX
+# Default is to prefer .so libraries first
+\&.PHONY: myprog_shared
+myprog_shared: myprog.o
+   $(CC) -o $@ $< -lmylib
+
+# Notify linker of preference for static library by using the \c
+.B -Wl,
+compiler option.
+\&.PHONY: myprog_static
+myprog_static: myprog.o
+   $(CC) -o $@ $< -Wl, -Bstatic -lmylib
+
+
+.EE
+.SH CODE SUGGESTIONS
+.TP
+.B Function Names
+The library developer must plan to prevent name collisions by using
+function names that are unlikely to be used in hosting programs.
+A common disambiguating strategy is to use a prefix for the library
+functions.
+.TP
+.B Visibility
+To preserve design flexibility, it is often helpful to hide any
+functions that are not part of the interface.
+The
+.b -fvisibility
+compiler option supports hiding functions.
+.IP
+Add the option, as \(dq-fvisibility=hidden\(dq,  to the
+.B CFLAGS
+variable in the project Makefile, and then export specific functions
+with a defined function prefix, as demonstrated below.
+.IP
+This goes into a common library header file (note that the value
+.B default
+makes something visible:
+.RS 4
+.IP
+.EX
+#define EXPORT __attribute__((visibility(\(dqdefault\(dq)))
+.EE
+.RE
+.IP
+Then, in the source files (C or C++), declare public functions with the
+.B EXPORT
+prefix:
+.RS 4
+.IP
+.EX
+EXPORT int do_something(void)
+{
+   return 1;
+}
+.EE
+.RE
+.SH COMPILE MEASURES
+.PP
+Besides the
+.B -fvisibility=hidden
+CFLAGS option mentioned above.
+.TP
+.B -fPIC
+This option, an acronym of \fBP\fPosition \fBI\fPndependent \fBC\fPode,
+must be used for modules destined for shared-object libraries.
+Shared object libraries are dynamically-linked at runtime, so the
+addresses of the functions in the shared object libraries are unknown
+at link time.
+Static-link libraries do not need this option.
+.SH LINK MEASURES
+.PP
+Static- and Dynamic-link libraries follow different procedures:
+.IP
+.EX
+library.so: $(LIB_MODULES)
+\t@echo Building shared-object library
+\t$(CC) $(CFLAGS) --shared -o $@ $(LIB_MODULES)
+
+library.a: $(LIB_MODULES)
+   @echo Building static library
+   ar rcs $@ $(LIB_MODULES)
+.EE
+.PP
+The shared library uses the compiler option
+.B --shared
+to complete the library build, whilc the static library uses the
+archive command
+.B ar
+with options to create the library.
+.SH INSTALLING THE LIBRARY
+.PP
+Now that the library is complete, it must be available when needed.
+.TP
+.B Library residence
+For static-link libraries, it only needs to be available when the
+hosting program is linked.
+Dynamic-link, shared-object libraries must found at run time, which
+usually means they live in one of the directories where they will
+be sought,
+.BR /lib ", " /usr/lib ", or " /usr/local/lib ,
+usually with the last option being the right choice.
+.TP
+.B ldconfig
+must be called to update the database of available libraries.
+.SH INCLUDING A LIBRARY
+.PP
+The library is completed, th
+
+
+
