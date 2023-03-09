@@ -118,6 +118,25 @@ done
 .SH RANDOM QUICK SOLUTIONS
 .PP
 Some things are easy to do, if you know what to do.
+.SS File Contents to String
+.PP
+Read entire contents to a variable in one go.
+.IP
+.EX
+declare file_contents
+file_contents=$(<content.txt)
+.EE
+.SS Process Output to String
+.PP
+Save output of a process (or two, or more) to a variable.
+The example below directs output of two processes,
+.BR cat " and " xsltproc ,
+to a variable.
+.IP
+.EX
+declare process_result
+process_result=$(< <( cat sample.txt; xsltproc basic.xsl basic.xml ) )
+.EE
 .SS Heredoc to String
 .PP
 Create a mulitline string variable with a
