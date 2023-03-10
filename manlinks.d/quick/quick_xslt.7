@@ -1,0 +1,47 @@
+.TH quick_xslt 7 "Miscellaneous Information Manual"
+.SH NAME
+.B quick_xslt
+\- Grossly inadequate guide to XSLT
+.SH DESCRIPTION
+.PP
+An extremely humble beginning of a cheatsheet while I try to
+recall XSLT coding from several years ago.
+The purpose of this document is to record tiny concepts and techinques
+that I recall or rediscover on the way to developing a new XSLT
+stylesheet for parsing Doxygen XML output.
+.SH TRIVIA
+.PP
+This will be haphazard until I collect enough information that it
+make sense to organize it.
+
+.SH USEFUL VARIABLES
+.TS
+tab(|);
+lx l.
+<xsl:variable name=\(dqnl\(dq select\(dq\(aq&#10;\(aq\(dq />|newline character
+.TE
+
+.SH USEFUL FUNCTIONS
+.PP
+The page,
+.UR https://www.w3schools.com/xml/xsl_functions.asp
+.UE ,
+documents many functions.
+The following list is a subset of the ones I find most useful.
+.TS
+tab(|);
+l lx .
+concat(string, string, ...)|concatenate strings in the argument list.
+string-length(string)|returns length of string
+normalize-space(string)|remove leading, trailing spaces, replaces all spaces-strings with a single space
+upper-case(string)|returns string with lower case characters translated to upper-case.
+lower-case(string)|returns string with upper case characters translated to lower-case.
+translate(target,select,replacements)|Translate target by replacing letters in select with a letter at the same offset in replacements
+escape-uri(string, esc-res)|Look this one up yourself
+contains(target, pattern)|True if pattern in target string
+starts-with(target, pattern)|True if target string starts with pattern string
+ends-with(target, pattern)|True if target string ends with pattern string
+matches(target, pattern)|True if pattern found in target
+replace(target, pattern, replace)|Replaces pattern matches in target with contents of replace
+.TE
+
