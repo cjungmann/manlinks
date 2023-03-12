@@ -283,6 +283,54 @@ For more information about using
 see
 .br
 info groff -n\(dqDrawing Requests\(dq
+.SS FORMATTING FOR HORIZONTAL ALIGNMENT
+.PP
+I use this to align arguments of a function.
+.TS
+tab(|);
+l l
+.
+T{
+Output just past opening parenthesis.
+T}|T{
+\&.BR \(dqint foo\(dq \(dq (\(dq
+T}
+_
+T{
+Save the horizontal position value.
+.BI \(rsn[ .k ]
+T}|T{
+\&.nr halign \(rsn[.k]
+T}
+_
+Add the first parameter|T{
+\(rsfBint\(rsfP \(rsfIarg1\(rsfP,
+\&.br
+T}
+_
+T{
+Increase indentation by measured size in basic output device units.
+T}|T{
+\&.in +\(rsn[halign]u
+T}
+_
+Add the rest of the parameters|T{
+\(rsfBint\(rsfP \(rsfIarg2\(rsfP)
+.br
+\&.br
+T}
+_
+Restore previous indentation level|\&.in
+.TE
+.PP
+.BR "int foo" " (" \c
+.nr halign \n[.k]
+\fBint\fP \fIarg1\fP,
+.in +\n[halign]u
+.br
+\fBint\fP \fIarg2\fP);
+.in
+
 .SS DEBUGGING
 .PP
 There are several requests that write data to
