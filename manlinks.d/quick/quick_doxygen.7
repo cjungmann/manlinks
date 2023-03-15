@@ -136,6 +136,33 @@ l l l.
 \(rse|emphasis|italic
 \(rsp|parameter|monospace
 .TE
+.SS HIDE CODE FROM DOXYGEN
+.PP
+Sometimes it is not appropriate to include certain blocks of
+code in the documentation.
+For these sections, create a comment block with
+.B @cond
+before the section starts, and a comment block with
+.B @endcode
+after the end.
+For example,
+.IP
+.EX
+// Hide debugging code from Doxygen
+.B /** @cond */
+#ifdef INCLUDE_MAIN
+
+void test(void) { do_it(); }
+
+int main(int argc, const char **argv)
+{
+   test();
+}
+
+#endif
+.B /** @endcond */
+.EE
+
 .SS WRITING AMBIGUOUS CHARACTERS
 .PP
 There are several characters or character combinations that may be
