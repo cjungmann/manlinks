@@ -283,9 +283,11 @@ For more information about using
 see
 .br
 info groff -n\(dqDrawing Requests\(dq
-.SS FORMATTING FOR HORIZONTAL ALIGNMENT
+.SS FORMATTING FOR VERTICAL ALIGNMENT
 .PP
 I use this to align arguments of a function.
+I prefer to use the Roman font for punctuation, this is
+reflected in the instructions and example.
 .TS
 tab(|);
 l l
@@ -297,38 +299,58 @@ T}|T{
 T}
 _
 T{
-Save the horizontal position value.
+Save the horizontal position to which following lines will be aligned.
 .BI \(rsn[ .k ]
 T}|T{
-\&.nr halign \(rsn[.k]
-T}
-_
-Add the first parameter|T{
-\(rsfBint\(rsfP \(rsfIarg1\(rsfP,
-\&.br
+\&.nr valign \(rsn[.k]
 T}
 _
 T{
 Increase indentation by measured size in basic output device units.
 T}|T{
-\&.in +\(rsn[halign]u
+\&.in +\(rsn[valign]u
 T}
 _
-Add the rest of the parameters|T{
-\(rsfBint\(rsfP \(rsfIarg2\(rsfP)
+T{
+Back-off one vertical space (line) to move the first parameter
+back up with the opening parentheis.
+T}|T{
+\&.sp -1
+T}
+_
+Add the parameters|T{
+\(rsfBint\(rsfP \(rsfIarg1\(rsfP,
+.br
+\&.br
+.br
+\(rsfBint\(rsfP \(rsfIarg2\(rsfP,
+.br
+\&.br
+.br
+T}
+_
+T{
+For final parameter, replace the comma with a close parenthesis
+and semi-colon.
+T}|T{
+\(rsfBint\(rsfP \(rsfIarg3\(rsfP);
 .br
 \&.br
 T}
 _
 Restore previous indentation level|\&.in
+_
 .TE
 .PP
 .BR "int foo" " (" \c
 .nr halign \n[.k]
-\fBint\fP \fIarg1\fP,
 .in +\n[halign]u
+.sp -1
+\fBint\fP \fIarg1\fP,
 .br
-\fBint\fP \fIarg2\fP);
+\fBint\fP \fIarg2\fP,
+.br
+\fBint\fP \fIarg3\fP);
 .in
 
 .SS DEBUGGING
