@@ -396,6 +396,19 @@ The output will be to a PDF file, and the
 .B stderr
 output will be visible on the terminal, including very helpful
 error messages.
+.SH NO-BREAK SECTION
+.PP
+Several requests are needed to toggle a no-break mode.
+.IP
+.EX
+\&.nr ohyph \(rsn[.hy]      \(rs\(dq save hyphenation value
+\&.nf                    \(rs\(dq no-fill request
+\&.nh                    \(rs\(dq turn-off hyphenation
+Output your stuff
+\&.hy \(rsn[ohyph]          \(rs\(dq restore hyphenation
+\&.fi                    \(rs\(dq restore fill mode
+\&.rr ohyph              \(rs\(dq remove \fIohyph\fP register
+.EE
 .SH SEE ALSO
 .PP
 This guide is meant to help you over the tricky stuff.
