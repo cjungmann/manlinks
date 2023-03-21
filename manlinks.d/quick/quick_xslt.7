@@ -22,53 +22,67 @@ lx l.
 .TE
 
 .SH USEFUL FUNCTIONS
+.nr ohyph \n[.hy]
 .PP
 The page,
 .UR https://www.w3schools.com/xml/xsl_functions.asp
 .UE ,
 documents many functions.
 The following list is a subset of the ones I find most useful.
-.TS
-tab(|);
-l lx .
-concat(string, string, ...)|T{
-concatenate strings in the argument list.
-T}
-string-length(string)|T{
-returns length of string
-T}
-substring(string,start,len)|T{
-returns substring of string.  len can be omitted.
-T}
-normalize-space(string)|T{
-remove leading, trailing spaces, replaces all spaces-strings with a single space
-T}
-upper-case(string)|T{
-returns string with lower case characters translated to upper-case.
-T}
-lower-case(string)|T{
-returns string with upper case characters translated to lower-case.
-T}
-translate(target,select,replacements)|T{
+.TP
+.B concat \c
+.RI ( string ", " string ", " ... )
+Concatenate strings in the argument list.
+.TP
+.B string-length \c
+.RI ( string )
+Returns length of string
+.TP
+.B substring \c
+.RI ( string ", " start ", " len )
+Returns substring of string.
+Letter indexing begins at 1.
+The
+.I len
+parameter can be omitted to extract the rest of the string.
+.TP
+.B normalize-space \c
+.RI ( string )
+Remove leading, trailing spaces, replaces all spaces-strings with a single space.
+.TP
+.B upper-case \c
+.RI ( string )
+Returns string with lower case characters translated to upper-case.
+.TP
+.B lower-case \c
+.RI ( string )
+Returns string with upper case characters translated to lower-case.
+.TP
+.B translate \c
+.RI ( target , match , replace )
 Translate target by replacing letters in select with a letter at the same offset in replacements
-T}
-escape-uri(string, esc-res)|T{
+.TP
+.B escape-uri \c
+.RI ( string ", " esc-res )
 Look this one up yourself
-T}
-contains(target, pattern)|T{
+.TP
+.B contains \c
+.RI ( target ", " pattern )
 True if pattern in target string
-T}
-starts-with(target, pattern)|T{
+.TP
+.B starts-with \c
+.RI ( target ", " pattern )
 True if target string starts with pattern string
-T}
-ends-with(target, pattern)|T{
+.TP
+.B ends-with \c
+.RI ( target ", " pattern )
 True if target string ends with pattern string
-T}
-matches(target, pattern)|T{
+.TP
+.B matches \c
+.RI ( target ", " pattern )
 True if pattern found in target
-T}
-replace(target, pattern, replace)|T{
+.TP
+.B replace \c
+.RI ( target ", " pattern ", " replace )
 Replaces pattern matches in target with contents of replace
-T}
-.TE
 
