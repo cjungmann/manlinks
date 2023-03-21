@@ -31,17 +31,44 @@ The following list is a subset of the ones I find most useful.
 .TS
 tab(|);
 l lx .
-concat(string, string, ...)|concatenate strings in the argument list.
-string-length(string)|returns length of string
-normalize-space(string)|remove leading, trailing spaces, replaces all spaces-strings with a single space
-upper-case(string)|returns string with lower case characters translated to upper-case.
-lower-case(string)|returns string with upper case characters translated to lower-case.
-translate(target,select,replacements)|Translate target by replacing letters in select with a letter at the same offset in replacements
-escape-uri(string, esc-res)|Look this one up yourself
-contains(target, pattern)|True if pattern in target string
-starts-with(target, pattern)|True if target string starts with pattern string
-ends-with(target, pattern)|True if target string ends with pattern string
-matches(target, pattern)|True if pattern found in target
-replace(target, pattern, replace)|Replaces pattern matches in target with contents of replace
+concat(string, string, ...)|T{
+concatenate strings in the argument list.
+T}
+string-length(string)|T{
+returns length of string
+T}
+substring(string,start,len)|T{
+returns substring of string.  len can be omitted.
+T}
+normalize-space(string)|T{
+remove leading, trailing spaces, replaces all spaces-strings with a single space
+T}
+upper-case(string)|T{
+returns string with lower case characters translated to upper-case.
+T}
+lower-case(string)|T{
+returns string with upper case characters translated to lower-case.
+T}
+translate(target,select,replacements)|T{
+Translate target by replacing letters in select with a letter at the same offset in replacements
+T}
+escape-uri(string, esc-res)|T{
+Look this one up yourself
+T}
+contains(target, pattern)|T{
+True if pattern in target string
+T}
+starts-with(target, pattern)|T{
+True if target string starts with pattern string
+T}
+ends-with(target, pattern)|T{
+True if target string ends with pattern string
+T}
+matches(target, pattern)|T{
+True if pattern found in target
+T}
+replace(target, pattern, replace)|T{
+Replaces pattern matches in target with contents of replace
+T}
 .TE
 
