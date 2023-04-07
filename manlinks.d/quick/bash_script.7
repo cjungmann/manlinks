@@ -217,4 +217,20 @@ arrayify_string()
    IFS=$\(aq\(rsn\(aq as_array=( $( xargs -n1 <<< \(dq$2\(dq ) )
 }
 .EE
+.SH EDITOR SETUP
+.PP
+If omitting the
+.B shebang
+for some reason (ie the script is not intended to run alone), neither
+.BR Emacs " nor " Shellcheck
+will know how to handle the script.
+The following code fragment shows how to identify
+.B Bash
+mode without the
+.BR shebang :
+.IP
+.EX
+# -*- mode:shell-script; sh-shell:bash -*-
+# shellcheck shell=bash
+.EE
 
