@@ -8,19 +8,13 @@ This is not (yet) an organized cheat sheet.
 For now, it is simply a place where I can save simple scripting
 techniques that I don't use frequently enough to memorize.
 .SH STRING MANIPULATIONS
-.TS
-tab(|);
-l lx.
-T{
-Grab file name from path
-T}|T{
-.nf
+.TP
+.B Grab filename from path
+.EX
 declare path="/usr/share/man/man1/grep.1.gz"
-declare file="${path##*/}" # trim longest prefix ending in \(lq/\(rq
-declare root="${file%%.*}" # trim longest suffix beginning with \(lq.\(rq
-.fi
-T}
-.TE
+declare file="\(Do{path##*/}"  # trim prefix ending in \(lq/\(rq
+declare root="\(Do{file%%.*}"  # trim suffix starting with \(lq.\(rq
+.EE
 .SH READ BUILTIN SPECIAL CASES
 .PP
 Special case hints to get you started.
@@ -216,6 +210,17 @@ arrayify_string()
    local -n as_array=\(dq$1\(dq
    IFS=$\(aq\(rsn\(aq as_array=( $( xargs -n1 <<< \(dq$2\(dq ) )
 }
+.EE
+.SS Get Absolute Path to Script
+.PP
+Even though a script is called through an isolated symlink, the script
+can find files relative to the scipt's absolute path using the
+.B readlink
+command.
+.IP
+.EX
+declare SPATH=$( readlink -f \(dq$0\(dq ) # path to script
+declare RPATH=\(dq\(Do{SPATH%/*}/\(dq        # path to directory
 .EE
 .SH EDITOR SETUP
 .PP
