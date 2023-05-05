@@ -222,6 +222,19 @@ command.
 declare SPATH=$( readlink -f \(dq$0\(dq ) # path to script
 declare RPATH=\(dq\(Do{SPATH%/*}/\(dq        # path to directory
 .EE
+.SS When a Scripted Command Must Run in Parent Shell
+.PP
+Several times I have written a script to apply complicated computed
+arguments to a command, only to have it fail because the command only
+applies to the current shell, which is lost when the script ends.
+.PP
+The solution is to write a script that only outputs the arguments to
+the sensitive command, then apply the arguments to the command with
+a subshell:
+.IP
+.EX
+$ enable=$( enable_bfm )
+.EE
 .SH EDITOR SETUP
 .PP
 If omitting the
