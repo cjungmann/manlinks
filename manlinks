@@ -2,7 +2,7 @@
 
 # Load appropriate sources even if script is a symlink:
 declare AFOLDER SFOLDER AppPath
-AFOLDER=$( readlink -f "$0" )n   # App's true location
+AFOLDER=$( readlink -f "$0" )   # App's true location
 AFOLDER="${AFOLDER%/*}"
 SFOLDER="${AFOLDER}/sources"
 source "$SFOLDER"/include
