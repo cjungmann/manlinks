@@ -87,30 +87,6 @@ int(*fptr_arr[])(int,char*) = { my_function1, alt1, alt2 };
 int result = (*fptr_arr[0])(3,"Rachel");   // invoke
 .EE
 
-.SH EMACS LOCAL VARIABLES
-.PP
-This was not obvious, but for Emacs
-.B Local Variables
-blocks, a multi-line
-.B compile-command
-value can extend over multiple lines.
-.IP
-.EX
-.\" escape 'L' of Local Variables to disable Emacs warning:
-\(sl* \[char76]ocal Variables:                  *\(sl
-\(sl* compile-command: \(dqgcc            \(rs*\(sl
-\(sl*   -std=c99 -Wall -Werror -ggdb   \(rs*\(sl
-\(sl*   -fsanitize=address             \(rs*\(sl
-\(sl*   -o test test.c\(dq                 *\(sl
-\(sl* End:                              *\(sl
-.EE
-.PP
-Use backslash to continue a quoted string over multiple lines.
-.B GCC
-cannot handle multi-line comments, so we need to use the old-style
-comments (\(sl* *\(sl).
-The close comment must immediately follow a line-continuation
-backslash.
 .SH MEMORY CHECKING
 .PP
 .B Valgrind
@@ -183,3 +159,81 @@ int main(int argc, const char **argv)
    return 0;
 }
 .EE
+
+.SH TEMPORARYILY DISABLE WARNING
+.PP
+Compiler warnings are a powerful tool for ensuring good coding practice.
+However, sometimes valid code may lead to an unwanted warning.
+Case in point, sometimes an appropriately designed
+.I unused
+variable will generate a warning.
+For a one-time disabling of the warning, use the
+.B \(ul\(ulattribute\(ul\(ul
+decoration.
+This notifies both the compiler and anyone reading the code that the
+behavior being coded is intentional.
+.PP
+Here are two examples:
+.SS UNUSED VARIABLE
+.PP
+For situations where a variable is conditionally set but is only
+used indirectly, the compiler will warn of an unused variable.
+.IP
+.EX
+__attribute__((unused)) const char *name = NULL;
+switch(action)
+{
+   case 'n':
+      name = list_optarg;
+      break;
+}
+.EE
+.SS FALLTHROUGH
+.PP
+Generally, forgetting to
+.B break
+after a
+.B case
+is an error, so the compiler may warn against it.
+For times where omitting the
+.B break
+command is intentional, use
+.BR \(ul\(ulattribute\(ul\(ul ((fallthrough)):
+.IP
+.EX
+int apress = 0;
+switch(action)
+{
+   case 'a':
+      apress = 1;
+      __attribute__(fallthrough));
+   case 'b':
+      execute_option();
+      break;
+}
+.EE
+
+.SH EMACS LOCAL VARIABLES
+.PP
+This was not obvious, but for Emacs
+.B Local Variables
+blocks, a multi-line
+.B compile-command
+value can extend over multiple lines.
+.IP
+.EX
+.\" escape 'L' of Local Variables to disable Emacs warning:
+\(sl* \[char76]ocal Variables:                  *\(sl
+\(sl* compile-command: \(dqgcc            \(rs*\(sl
+\(sl*   -std=c99 -Wall -Werror -ggdb   \(rs*\(sl
+\(sl*   -fsanitize=address             \(rs*\(sl
+\(sl*   -o test test.c\(dq                 *\(sl
+\(sl* End:                              *\(sl
+.EE
+.PP
+Use backslash to continue a quoted string over multiple lines.
+.B GCC
+cannot handle multi-line comments, so we need to use the old-style
+comments (\(sl* *\(sl).
+The close comment must immediately follow a line-continuation
+backslash.
