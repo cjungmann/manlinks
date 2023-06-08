@@ -8,6 +8,15 @@ This manual is a compilation of hints to help me remember useful
 options and methods to help me be more productive using the
 .B GDB
 tool.
+.SH SAVING VALUES
+.PP
+.B GDB
+allows a user to create arbitrary variables for saving values.
+The ad-hoc variable name should start with a dollar-sign (\(Do):
+.IP
+.EX
+(gdb) set $saved = &mystruct->member
+.EE
 .SH SETTING BREAKPOINTS
 .PP
 IMHO, Breakpoints are the most important feature of a debugger.
@@ -36,6 +45,11 @@ has been called.
 Conditionally pause at line. In this case, break when
 .B errno
 indicates an error.
+.TP
+.BI break " screen.c:1234 " "if $_streq(" x ", " \(dqhello\(dq )
+Break when value matches a string value.
+Use special gdb function
+.BR $_streq .
 .SS Breakpoints on the Command Line
 .PP
 If you know the function name or line number of the point where you
@@ -46,3 +60,39 @@ invoking
 .BR "gdb --tui --args -ex " "\(dqbreak screen.c:938\(dq"
 .TQ
 .BR "gdb --tui --args -ex " "\(dqbreak special_key_str\(dq"
+.SS Watchpoints
+.PP
+A watchpoint is a breakpoint that is triggered by reading or writing
+a variable.
+A watchpoint can also be set for when a memory location changes.
+.PP
+The following example sets a break when the value of a data member
+is changed.
+The local name of the data may go out of scope, so in this example,
+the address of the data member is saved and then used when defining
+the watchpoint.
+.IP
+.EX
+(gdb) set $addr = &(*(ARRAY*)svar->value)->num_elements
+(gdb) watch *(char*)$addr
+.EE
+.SH STUDY \(dqDATA\(dq SECTION OF INFO GDB
+.PP
+There is too much in this
+.B info gdb
+section to cover here.
+In the main page of the
+.B data
+section is a treatment of the
+.B print
+command with its command line options.
+Further down is the
+.B explore
+function, which merits consideration.
+.PP
+Under the main
+.B data
+section are many subsections, of particular merit are the
+sections on
+.BR "memory tagging" ", " "convenience vars" ", and " "convenience funs" .
+
