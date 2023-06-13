@@ -131,6 +131,19 @@ to a variable.
 declare process_result
 process_result=$(< <( cat sample.txt; xsltproc basic.xsl basic.xml ) )
 .EE
+.SS Error Output Redirection
+.PP
+For times when the warning error output overwhelms the desired output,
+a user can redirect
+.B stderr
+to
+.B /dev/null
+or to a file.
+.IP
+.EX
+grep \(dqtarget\(dq * 2>/dev/null
+grep \(dqtarget\(dq * 2>/temp/greperror
+.EE
 .SS Heredoc to String
 .PP
 Create a mulitline string variable with a
