@@ -53,15 +53,16 @@ Let's just use examples to illustrate usage:
  *
  * The detailed description can span several lines or paragraphs.
  *
- * @param Arg1   Integer argument for the function
- * @param Arg2   String argument for the function
- * @param Arg3   Struct argument for the function.  The argument
- *               description can span multiple lines.
+ * @param result [in,out] Allocated char* returned through this parameter
+ * @param Arg1 [in]       Integer argument for the function
+ * @param Arg2 [in]       String argument for the function
+ * @param Arg3 [in]       Struct argument for the function.  The argument
+ *                        description can span multiple lines.
  *
  * @return The exit value is 0 for success, or an error code
  *         for failure.  Refer to errno(1) for values.
  */
-int my_function(int Arg1, const char *Arg2, struct myobj Arg3)
+int my_function(chat **result, int Arg1, const char *Arg2, struct myobj Arg3)
 {
 .EE
 .SS Enum Documentation
