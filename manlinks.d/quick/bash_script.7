@@ -248,6 +248,94 @@ a subshell:
 .EX
 $ enable $( enable_bfm )
 .EE
+.SH REGULAR EXPRESSIONS
+.PP
+Some Bash-specific meta-characters may require escaping with a
+single backslash (\(rs) to avoid misinterpretation when assigning
+a string:
+.br
+.B |&;()<> space tab newline
+.PP
+In Bash, regular expression (regex) meta-characters must be escaped
+to be intpreted literally:
+.br
+.B ()[]{}?+*^$|.
+.PP
+In a Bash string, a single backslash will force the shell to literally
+interpret the escaped character.  Mind the exceptions like \(rst, which
+is a tab character rather than an \(dqt\(dq.
+.PP
+The regex meta-characters must be escaped to be interpreted as literal
+characters.
+However, a literal backslash \(dq\(rs\(dq must itself be escaped to
+prevent it from escaping the following character.
+Thus, for most regex meta-characters, when expressed in Bash, must
+be preceeded with a double-backslash when included in a string to be
+assigned to a regex.
+.PP
+Some Regular-expression meta-characters may require escaping with
+a double-backslash \(dq\(rs\(rs\(dq.
+.PP
+The following email parsing example will illustrate how the above
+rules apply in different situations:
+.PP
+.EX
+.RS 4
+declare -a regex_arr=(
+.RS 4
+.TS
+tab(|);
+l lx.
+\(rs\(rs\(rs(\(rs*|T{
+# Optional enclosing parenthesis,
+# triple-backslash the parentheses, two to
+# preserve the backslash to persist into the
+# regex, and one more to prevent interpretation
+# as introducing a subshell.
+# Single backslash the quantifier \(dq*\(dq to use
+# as a regex meta-character, but to avoid
+# expansion to a list of file (a \(dq?\(dq would
+# be a better regex choice, but it would fail
+# to make the point).
+T}
+
+\(rs([^@]+\(rs)|T{
+# \fBFor name capture\fP, single-escape the grouping
+# parentheses to preempt shell interpretation
+# as a subshell, but maintaining the regex
+# meta-character meaning.
+T}
+
+@|T{
+# no escaping necessary to match a literal
+# character that is neither a regex nor a shell
+# metacharacter.
+T}
+
+\(rs(.\(rs*\(rs)|T{
+# \fBFor subdomain capture\fP, single escape for
+# asterisk \(dq*\(dq because it's used here as a
+# quantifier, not a literal asterisk.
+T}
+
+\(rs\(rs.|T{
+# Escape for regex, not the shell: only two
+# backslashes.
+T}
+
+\(rs([^\(rs)]+\(rs)|T{
+# \fBFor domain capture\fP 
+T}
+
+\(rs\(rs\(rs)?|T{
+# Final match for optional closing parenthesis,
+# properly quantified with a \(dq?\(dq.
+T}
+.TE
+.RE
+)
+.RE
+.EE
 .SH EDITOR SETUP
 .PP
 If omitting the
