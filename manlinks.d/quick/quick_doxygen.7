@@ -22,20 +22,35 @@ PROJECT_NAME|T{
 Change this to your project name.
 Don't be lame!
 T}
+
 EXTRACT_ALL = YES|T{
 Set the value to
 .I YES
 to read all files as identified in
 .BR FILE_PATTERNS .
 T}
+
 RECURSIVE = YES|T{
 Especially if your project puts source files in subdirectories,
 set this tag to
 .B YES
 to enable searching subdirectories for files.
 T}
+
 OPTIMIZE_OUTPUT_FOR_C = YES|T{
 (Example) Consider setting an optimize flag for your primary source language.
+T}
+
+WARN_FORMAT =\(dq$file:$line: $text\(dq|T{
+Consider inserting console codes for colorizing.
+You'll need to insert the literal ESCAPE character, Ctrl-Q ESCAPE
+in Emacs, to construct the escape codes.   Replacing the
+.RB \(dq ^[ \(dq
+with a literal ESCAPE, try
+.RB \(dq ^[[31;1m \(dq
+to turn on red text,
+.RB \(dq ^[[m \(dq
+to return to default text.
 T}
 .TE
 
