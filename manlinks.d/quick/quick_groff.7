@@ -67,11 +67,43 @@ A single line conditional can include a dot-prefixed request:
 A multi-line conditional uses curly-braces to enclose result:
 .RS 4
 .EX
-\&.if '\(rs*[bogus]'bogus' \(rs{
+\&.if '\(rs*[value]'bogus' \(rs{ \(rs
 \&.  nop mystring is \fB\(rs(dq\fPbogus\fB\(rs(dq\fP
 \&.\(rs}
 .EE
 .RE
+Multiple \.ie requests must be enclosed in \.el requests:
+.RS 4
+.EX
+\&.ie '\(rs*[value]'bogus' .nop bogus
+\&.el \(rs{ \(rs
+\&.  ie '\(rs[value]'ersatz' .nop ersatz
+\&.  el .nop neither bogus or ersatz
+\&.\(rs}
+.EE
+.RE
+.RE
+.PP
+Detecting the first letter of a string can be derailed if the input
+might be a backslash.
+When comparing the potential backslash character, add another
+character to prevent the backslash from disrupting the comparison
+delimiters.
+For the extra character, some characters work, some don't.
+In this example, I'm using a dot to detect the backslash.
+.PP
+.RS 4
+.EX
+\&.\(rs\(dq first isolate the first character
+\&.ds first_char \(Do1
+\&.substring first_char 0 0
+\&.\(rs\(dq
+\&.ie '\(rs\(rs*[first_char].'\(rs.' .nop backslash
+\&.el \(rs{ \(rs
+\&.   ie '\(rs\(rs*[first_char]'-' .nop dash
+\&.   el .nop neither backslash or dash
+\&.\(rs}
+.EE
 .RE
 .PP
 Refer to
