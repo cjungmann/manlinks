@@ -437,17 +437,33 @@ The output will be to a PDF file, and the
 .B stderr
 output will be visible on the terminal, including very helpful
 error messages.
+.SH LEFT-JUSTIFIED TEXT
+.PP
+To prevent extra spaces being applied to fill an output line,
+set
+.B groff
+into left-justified mode with the
+.B .ad
+mode.
+.IP
+.EX
+\&.nr ojust \(rsn[.j]      \(rs\(dq save current adjust mode
+\&.ad l                 \(rs\(dq 'l' for left-justified
+Output your content
+\&.ad \(rsn[ojust]         \(rs\(dq restore previous adjust mode
+.EE
 .SH NO-BREAK SECTION
 .PP
 Several requests are needed to toggle a no-break mode.
 .IP
 .EX
 \&.nr ohyph \(rsn[.hy]      \(rs\(dq save hyphenation value
+\&.nr ofill \(rsn[.u]       \(rs\(dq save fill mode status
 \&.nf                    \(rs\(dq no-fill request
 \&.nh                    \(rs\(dq turn-off hyphenation
 Output your stuff
 \&.hy \(rsn[ohyph]          \(rs\(dq restore hyphenation
-\&.fi                    \(rs\(dq restore fill mode
+\&.if \(rsn[ofill] .fi      \(rs\(dq restore fill mode if on previously
 \&.rr ohyph              \(rs\(dq remove \fIohyph\fP register
 .EE
 .SH SEE ALSO
