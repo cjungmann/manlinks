@@ -212,17 +212,18 @@ done <<< \(dq$string\(dq
 .EE
 .SS Parse String of Values Into an Array
 .PP
-Rather than parsing quote-enclosed phrases in a string, use
-a system tool to separate the values:
+Rather than parsing quote-enclosed phrases in a string, exploit an
+unusual
+.B declare
+syntax to split the string:
 .IP
 .EX
-# $1 is name of array variable
-# $2 is string of values (ie 3 values in \fB1 \(dqthe best\(dq https://url.com\fP)
-arrayify_string()
-{
-   local -n as_array=\(dq$1\(dq
-   IFS=$\(aq\(rsn\(aq as_array=( $( xargs -n1 <<< \(dq$2\(dq ) )
-}
+# String representing three values, a two-word
+# value, a one-word value, and an empty value:
+declare string=\(dq\(rs\(dqget milk\(rs\(dq now \(rs\(dq\(rs\(dq\(dq
+
+declare -a \(dqitems=($string)\(dq
+echo \(dq\(Do{#items[@]} items in items array.\(dq
 .EE
 .SS Get Absolute Path to Script
 .PP
