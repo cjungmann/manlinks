@@ -184,19 +184,19 @@ T{
 .B git tag -l
 T}|List tags on current repository.
 T{
-.BI "git tag " 0.1
+.BI "git tag " v0.1
 T}|T{
-Create a raw tag,
-.IR 0.1 ,
+Create a lightweight tag,
+.IR v0.1 ,
 in the current repository.
 T}
 T{
 .nf
-.BI "git tag " 0.2 " -m " \(dqdescription\(dq
+.BI "git tag -a " v0.2 " -m " \(dqdescription\(dq
 .fi
 T}|T{
-Create a tag,
-.IR 0.2 ,
+Create an annotated tag,
+.IR v0.2 ,
 and assign a string represented by
 .I description
 to the tag.
