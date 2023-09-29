@@ -86,6 +86,34 @@ int(*fptr_arr[])(int,char*) = { my_function1, alt1, alt2 };
                                            // instantiate
 int result = (*fptr_arr[0])(3,"Rachel");   // invoke
 .EE
+.SS Use String Length for Struct Definition
+.PP
+This is a trick question.
+You can't initialize a
+.B const static int
+or an struct array data member with
+.BR strlen .
+Instead of making a
+.B const char[]
+variable, 
+.B #define
+the string, then use
+.B sizeof
+to calculate string lengths or struct array member sizes:
+.IP
+.EX
+#define AHEAD_ID \(dqATE_HANDLE\(dq
+
+// sizeof(AHEAD_ID) includes terminating \(aq\(rs0\(aq
+// strlen equivalent is size of define less the \(aq\(rs0\(aq
+static const int head_len = sizeof(AHEAD_ID)-1;
+
+// for a struct member, you probably want the \(aq\(rs0\(aq:
+struct ahead {
+   const char typeid[sizeof(AHEAD_ID)];
+   \[vellip]
+};
+.EE
 
 .SH MEMORY CHECKING
 .PP
