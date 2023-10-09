@@ -171,6 +171,27 @@ EOF
 .PP
 The termination string will be recognized with or without the
 leading TAB.
+.SS Heredoc to Array
+.PP
+Compound statements cannot be parsed by line, so initializing arrays
+with values that might contain spaces needs a different concise
+expression.
+.IP
+.EX
+IFS=\(Do\(aq\(rsn\(aq read -r -d '' -a array_name <<EOF
+    African bush elephant
+    Asian elephant
+    African forest elephant
+    White rhinoceros
+    Hippopotamus
+    Indian rhinoceros
+    Black rhinoceros
+    Javan rhinoceros
+    Giraffe
+    Gaur
+EOF
+
+.EE
 .SS Heredoc to Screen
 .PP
 Use a heredoc rather than a long series of
