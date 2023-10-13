@@ -26,6 +26,24 @@ T{
 .B git status
 T}|Show untracked and uncommitted files, among other things.
 T{
+.B git status -u
+.I no
+T}|Status report but excluding untracked files
+T{
+.B git status --
+.I .
+T}|T{
+Status report for directory
+.B .
+only.
+The
+.I .
+is a
+.B pathspec
+which is described in
+.BR gitglossary (7).
+T}
+T{
 .B git diff
 .RI [ file ]
 T}|T{
