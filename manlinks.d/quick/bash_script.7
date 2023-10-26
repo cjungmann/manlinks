@@ -131,6 +131,83 @@ to a variable.
 declare process_result
 process_result=$(< <( cat sample.txt; xsltproc basic.xsl basic.xml ) )
 .EE
+.SS Two-way Array Conversions
+.PP
+One really nice feature of using
+.B read
+to split strings into arrays is that when the
+.B IFS
+value is set before and on the same line as the
+.B read
+command, the
+.B IFS
+value only affect the
+.B read
+command and does not change the global
+.B IFS
+value.
+.PP
+This section demonstrates how to use the one-line construction for
+both string-to-array as well as array-to-string operations.
+.TP
+.B Array from string
+.EX
+IFS='|' read -r -a array <<< \(dqone|two|three\(dq
+.EE
+.TP
+.B Array of lines from text file
+IFS=\(Do\(aq\(rsn\(aq read -d \(dq\(dq -r -a array_target < file_name
+.TP
+.B String from array
+This is trickier.
+In-line temporary
+.B IFS
+assignment is not possible with an assignment statement.
+Here are two ways to make the assignment in a function, the calling
+of which is eligible for the in-line
+.B IFS
+assignment.
+.RS 7
+.TP 4
+.B Bespoke join function
+You can make a quick-and-dirty function that hard-codes the operation
+on the string target and the array source:
+.IP
+.RS 8
+.EX
+temp_setter() { target=\(dq\(Do{array[*]}\(dq; }
+IFS='|' temp_setter
+.EE
+.RE
+.TP 4
+.B Generic join function
+If the script often concatenates arrays, a reusable function may be
+more suitable.
+.IP "" 4
+This
+.B join_array
+function will use an existing variable or create it if it doesn't
+exist.
+.IP "" 8
+.EX
+join_array()
+{
+   if ! declare -p \(dq\(Do1\(dq 1>/dev/null 2>&1; then
+      if ! declare -g \(dq\(Do1\(dq; then exit 1; fi
+   fi
+   local -n ca_target=\(dq\(Do1\(dq
+   local -n ca_source=\(dq\(Do2\(dq
+   ca_target=\(dq\(Do{ca_source[*]}\(dq
+}
+.EE
+.IP "" 4
+Then call it like this:
+.IP "" 8
+.EX
+IFS=\(Do\(aq|\(aq join_array flines my_big_array
+.EE
+
+.RE
 .SS Error Output Redirection
 .PP
 For times when the warning error output overwhelms the desired output,
