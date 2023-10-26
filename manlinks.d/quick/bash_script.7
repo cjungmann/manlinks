@@ -126,10 +126,10 @@ Save output of a process (or two, or more) to a variable.
 The example below directs output of two processes,
 .BR cat " and " xsltproc ,
 to a variable.
-.IP
+.IP "" 4
 .EX
 declare process_result
-process_result=$(< <( cat sample.txt; xsltproc basic.xsl basic.xml ) )
+process_result=$(< <( cat file.txt; xsltproc file.xsl file.xml ) )
 .EE
 .SS Two-way Array Conversions
 .PP
@@ -167,6 +167,21 @@ Here are two ways to make the assignment in a function, the calling
 of which is eligible for the in-line
 .B IFS
 assignment.
+.IP
+.B NOTE:
+Sadly, this method will not work for
+.BR echo " or " printf
+because the argument in which the array expansion resides is processed
+before the function is called, so it's too late for the
+.B IFS
+value to be respected.
+Either save and restore the original
+.B IFS
+around the
+.BR echo " or " printf
+statement, or convert the array to a string in a previous
+statement then use the string with
+.BR echo " or " printf .
 .RS 7
 .TP 4
 .B Bespoke join function
