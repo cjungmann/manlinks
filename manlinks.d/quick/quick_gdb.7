@@ -17,6 +17,22 @@ The ad-hoc variable name should start with a dollar-sign (\(Do):
 .EX
 (gdb) set $saved = &mystruct->member
 .EE
+.SH LOGGING OUTPUT
+.PP
+The GDB command window handles commands
+.B and
+program output, and while commands can be revisited, output text that
+scrolls up cannot be retrieved.
+.PP
+.B Initiate logging
+and view the logged output using
+.B tail
+in a separate window.
+The following URL includes an explanation (I hadn't used it yet at
+the time of writing):
+.PP
+.UR https://stackoverflow.com/questions/9257085/
+.UE
 .SH SETTING BREAKPOINTS
 .PP
 IMHO, Breakpoints are the most important feature of a debugger.
