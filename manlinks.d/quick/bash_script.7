@@ -75,6 +75,25 @@ done < \(dq\(DoLS_COLORS\(dq
 .EE
 T}
 .TE
+.TP
+.B Read Warning
+If
+.B LS_COLORS
+above did not end with the ':' delimiter, the last value pair would
+have been read but not processed.
+To process an unprocessed
+.BR read -parsed
+element, follow the
+.B while-read
+loop with something similar to:
+.IP "" 11
+.EX
+# Process complete but unprocessed element:
+if [ \(dq\(Do{row[*]}\(dq -eq 2 ]; then
+   heap+=( \(dq\(Do{row[@]}\(dq )
+fi
+.EE
+
 .SS READ PERFORMANCE HINTS
 .TP
 .B Preserving spaces
@@ -104,7 +123,7 @@ Don't forget that piping output creates subshells.
 Construct your
 .B read
 like this:
-.RS 12
+.RS 11
 .EX
 while read -r; do
    USE \(dq&REPLY\(dq
@@ -113,7 +132,7 @@ done < <( awk -f script /etc/passwd )
 .RE
 .IP
 Don't do this:
-.RS 12
+.RS 11
 .EX
 awk -f script /etc/passwd | while read -r; do
    use \(dq$REPLY\(dq
