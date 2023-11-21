@@ -111,4 +111,31 @@ Under the main
 section are many subsections, of particular merit are the
 sections on
 .BR "memory tagging" ", " "convenience vars" ", and " "convenience funs" .
+.SH ATTACHING TO A RUNNING PROCESS
+.PP
+Preserve the integrity of the display of the debugged program by
+debugging it in a separate terminal.
+.SS Enable PTRACE for debugging
+.PP
+The safety default disables
+.B ptrace
+in the kernel.
+Enable
+.B ptrace
+by setting the value in
+.B /proc/sys/kernel/yama/ptrace_scope
+to 0.
+.SS Start GDB
+.PP
+You will need to specify the program's executable as well as the
+.B pid
+to attach to a running program.
+Imagine you are debugging a
+.I pwb
+command:
+.IP
+.EX
+cd work/pwb
+gdb -tui pwb -pid=3210
+.EE
 
