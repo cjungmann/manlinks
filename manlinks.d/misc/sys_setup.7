@@ -1,0 +1,135 @@
+.TH sys_setup 7 2023-12-04
+.SH NAME
+.PP
+.B sys_setup
+- Universal steps for migrating to a new computer
+.SH DESCRIPTION
+.PP
+It takes many steps to regain complete productivity in a new computer
+when migrating from an mature computer whose working environment has
+been configurd with deliberate and careful planning or with accidental
+results following trial-and-error settings and package installations.
+.PP
+A new computer is a chance for a fresh start, to increase the ratio
+of deliberate to accidental configurations.
+.PP
+The focus of this document is on
+.BR Debian ,
+a stable and minimal distribution.
+.B Manjaro
+was an experiment that mostly worked, but software updates often
+disrupted my working environment, forcing me to waste precious hours
+trying to restore my computer to working state.
+.SH STEPS
+.SS BUILD THE COMPUTER
+.PP
+This is obvious and won't be much discussed.
+It is includedd for completeness.
+.SS ENABLE SUDO
+.PP
+Installing software required
+.I root
+privileges, typically accessed through the
+.B sudo
+command.
+.SS INSTALL FUNDAMENTAL SOFTWARE
+.PP
+At minimum, I need
+.BR git ", "
+.BR "C compiler" ", and"
+.BR "offline documentation" .
+
+.SH PREPARE FOR NFS CONNECTION
+.PP
+Connect to other computers in your network through the
+.IR "network filesystem" ,
+otherwise known as
+.BR nfs .
+This will require both the host (the old computer) and the new
+computer to be properly configured.
+.SS ENABLE NFS ON NEW COMPUTER
+.PP
+.EX
+sudo apt-get install nfs-common
+.EE
+.SS ENABLE NFS-SERVER ON HOST COMPUTER
+.PP
+For security purposes, having
+.B nfs-server
+enabled should be a temporary state: you'll have to turn it on before
+using it, then turning it off as soon as you're done:
+.TP
+.B Making the connection
+.EX
+# Add \fB/home/chuck *(rw,sync,insecure)\fP to:
+sudo emacs /etc/exports
+sudo exportfs -rav
+sudo systemctl enable --now nfs-server
+
+# Do your copying then, after disconnecting at the client,
+
+sudo systemctl nfs-server
+# remove line \fB/home/chuck *(rw,sync,insecure)\fP from:
+sudo emacs /etc/exports
+.EE
+.TP
+.B Copying the data
+.EX
+tar zcf \fBsource\fP | ( cd \fBtarget\fP; tar xzfp - )
+.EE
+
+
+.SH COPY FROM PREVIOUS WORKSTATION
+.PP
+Email is the obvious big necessity, but there are countless files on
+a mature system that will need to be duplicated on the new system.
+
+
+.SH SSH SETUPS
+.PP
+From non-password access to SSH servers for working and
+.B scp
+access, to
+secure access to
+.B https://www.github.com
+and hosting services, preparation of SSH 
+
+
+.SH ENABLE FINGERPRINT
+.PP
+If the fingerprint reader is reliable, using a fingerprint to login
+and with
+.B sudo
+is a great convenience.
+Configuration is not complicated, and consists of the following steps:
+.TS
+tab(|);
+l lx.
+install software|T{
+.EX
+apt install fprintd libpam-fprint
+.EE
+T}
+enroll fingerprints CLI|T{
+.EX
+fprintd-enroll
+.EE
+T}
+enroll fingerprints GUI|T{
+Open
+.B settings
+app
+.br
+open
+.B Users
+.br
+Use the
+.B Fingerprint Login
+T}
+fingerprint with sudo|T{
+.EX
+pam-auth-update
+.EE
+T}
+
+.TE

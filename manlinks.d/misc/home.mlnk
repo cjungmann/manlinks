@@ -52,3 +52,8 @@ man
 Clarification of confusing certbot services
 man
 |-l|certbot_tips.7
+
+&System Setup
+Reminders of what worked migrating from another computer
+man
+|-l|sys_setup.7
