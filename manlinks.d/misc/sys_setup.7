@@ -134,11 +134,26 @@ T}
 
 .TE
 .SH CONFIGURE GIT
-.PP
-For a new installation, you will want to setup the global default
-email and name.
-An easy way to do this is to type:
-.IP
+.TP
+.B Name and email
 .EX
 git config --global --edit
 .EE
+.TP
+.B Enable SSH access
+Create your key with
+.BR ssh-keygen ,
+change directory to
+.BR /~/.ssh ,
+copy the contents of the .pub file to your copy buffer.
+Then go to your https://www.github.com profile and add the key.
+.IP
+With the change, you will clone with an address like:
+.IP
+.RS 11
+.EX
+git clone git@github.com/cjungmann/manlinks.git
+.EE
+.RE
+
+
