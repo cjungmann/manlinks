@@ -145,6 +145,12 @@ This will require both the host (the old computer) and the new
 computer to be properly configured.
 .SS ENABLE NFS ON BOTH COMPUTERS
 .PP
+On server only:
+.EX
+sudo apt-get install nfs-kernel-server
+.EE
+
+On both computers:
 .EX
 sudo apt-get install nfs-common
 .EE
