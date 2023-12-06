@@ -24,7 +24,7 @@ trying to restore my computer to working state.
 .SS BUILD THE COMPUTER
 .PP
 This is obvious and won't be much discussed.
-It is includedd for completeness.
+It is included for completeness.
 .SS ENABLE SUDO
 .PP
 Installing software required
@@ -36,18 +36,114 @@ command.
 .PP
 At minimum, I need
 .BR git ", "
-.BR "C compiler" ", and"
-.BR "offline documentation" .
-
-.SH PREPARE FOR NFS CONNECTION
+.BR "C compiler" ", "
+.BR Emacs ", "
+.BR "offline documentation" ", and (maybe)"
+.BR nfs-common .
+.SS COPY IMPORTANT DATA FROM PREVIOUS COMPUTER
 .PP
-Connect to other computers in your network through the
-.IR "network filesystem" ,
-otherwise known as
-.BR nfs .
+There will be many files in the old computer's
+.B home
+directory that should be copied to the new computer.
+This starts with your email client, but includes any documents
+you expect to be quickly available.
+
+.SH INSTALLING IMPORTANT SOFTWARE
+.TP
+.B Update Apt Sources
+Debian makes a distinction between free and non-free software, and
+that ends up leaving out
+.BR gcc(1) " and "  gdb(1) ,
+among other things.
+.IP
+Use root (sudo) to open
+.BR /etc/apt/sources.list .
+I used a copy of the first line up to the
+.I bookworm
+argument to add two sources lines so they fit comfortable in
+a man page.
+.IP
+.RS 11
+.EX
+deb http://deb.debian.org/debian/ bookworm contrib
+deb http://deb.debian.org/debian/ bookworm non-free
+.EE
+.RE
+.IP
+Save the changes and update:
+
+.RS 11
+.EX
+sudo apt-get update
+.EE
+.RE
+.TP
+.B Install Fundamental Software
+As mentioned above, there are a few fundamental programs that you will
+want available before going much further.
+.IP
+.EX
+sudo apt-get install texinfo
+sudo apt-get install git
+sudo apt-get install emacs-nox
+sudo apt-get install build-essential
+sudo apt-get install gcc-doc gdb-doc
+.EE
+.TP
+.B Color Styles
+The commands have been installed for use, and comfortable use has
+likely previously displayed colors for bold and italic in man and
+info pages.
+Below are a few applications that benefit from setting colors,
+along with where the colors are set.
+Consult or copy the corresponding files from the old computer to
+set colors.
+.RS 11
+.TP
+.B man (and less)
+The colors for
+.B less
+are changed by means of environment variables starting with
+.BR LESS_TERMCAP_ ,
+usually found in the
+.B ~/.bashrc
+file.
+.TP
+.B Emacs
+The colors in Emacs are usually set in the
+.B ~/.emacs.d/init.el
+configuration file.
+.TP
+.B info
+This is not clearly defined, but creating or editing file
+.BR ~/.infokey ,
+a hidden file in the home directory defines many customizations,
+among them are color-setting variables
+.BR link-style ", " active-link-style ", and " match-style .
+These do not style the bold and italic typefaces, but they do make
+the info display more pleasing.
+.IP
+These settings are documented with an example in
+.BI info " info"
+main section \(dqColors and Styles\(dq.
+.RE
+
+
+.SH COPYING DATA FROM OLD COMPUTER
+.PP
+You will probably want to copy important data from the old computer
+to your new computer.
+In particular, the email client on the the computer should have your
+saved emails for reference.
+.PP
+Some people advise using a flash drive to copy data from your old to
+your new computer.
+I think it is much easier to make a network connection, using
+.B NFS
+(network filesystem).
 This will require both the host (the old computer) and the new
 computer to be properly configured.
-.SS ENABLE NFS ON NEW COMPUTER
+.SS ENABLE NFS ON BOTH COMPUTERS
 .PP
 .EX
 sudo apt-get install nfs-common
@@ -66,7 +162,7 @@ sudo emacs /etc/exports
 sudo exportfs -rav
 sudo systemctl enable --now nfs-server
 
-# Do your copying then, after disconnecting at the client,
+# Copy data (see COPY DATA BETWEEN COMPUTERS below)
 
 sudo systemctl nfs-server
 # remove line \fB/home/chuck *(rw,sync,insecure)\fP from:
@@ -79,10 +175,24 @@ tar zcf \fBsource\fP | ( cd \fBtarget\fP; tar xzfp - )
 .EE
 
 
-.SH COPY FROM PREVIOUS WORKSTATION
+.SS COPY DATA BETWEEN COMPUTERS
+.PP
+With an established connection, we can start copying files.
 .PP
 Email is the obvious big necessity, but there are countless files on
 a mature system that will need to be duplicated on the new system.
+.PP
+I used
+.B tar
+with the
+.B z
+option to compress the archive with
+.BR gzip :
+.IP
+.EX
+tar -czvf 
+.EE
+
 
 
 .SH SSH SETUPS
@@ -155,5 +265,21 @@ With the change, you will clone with an address like:
 git clone git@github.com/cjungmann/manlinks.git
 .EE
 .RE
-
+.SH DOWNLOAD AND INSTALL FONTS
+.PP
+If the standard collection of terminal fonts does not include one to
+your liking, it is pretty easy to install new fonts.
+.PP
+We'll assume you can find and download True-Type fonts.
+Once downloaded, go to directory
+.BR /usr/share/fonts
+and create a new directory named after the font you want to install.
+Copy or move the font files you've download into the new font family
+directory.
+.PP
+When the font files are properly resident under
+.BR /usr/share/fonts ,
+run the utility
+.B fc-cache
+to alert the computer to the existence of the new fonts.
 
