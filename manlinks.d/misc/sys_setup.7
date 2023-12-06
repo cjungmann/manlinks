@@ -282,4 +282,22 @@ When the font files are properly resident under
 run the utility
 .B fc-cache
 to alert the computer to the existence of the new fonts.
-
+.SH HOW TO INSTALL CERTAIN DOCUMENTATION FILES
+.PP
+Assuming that the
+.B apt
+system on the new computer will search for
+.BR contrib " and " non-free
+programs, you will be able to install several
+.B info
+manuals.
+.IP
+.EX
+sudo apt-get install gcc-doc
+sudo apt-get install gdb-doc
+sudo apt-get install bash-doc
+sudo apt-get install tar-doc
+.EE
+.PP
+Refer to http://gnu.org/manual/manual.html for a very long list
+of Gnu applications that might be useful to you.
