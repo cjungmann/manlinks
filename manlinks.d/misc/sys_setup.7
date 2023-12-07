@@ -154,7 +154,7 @@ On both computers:
 .EX
 sudo apt-get install nfs-common
 .EE
-.SS ENABLE NFS-SERVER ON HOST COMPUTER
+.SS ENABLE NFS-SERVER ON SOURCE COMPUTER
 .PP
 For security purposes, having
 .B nfs-server
@@ -162,13 +162,18 @@ enabled should be a temporary state: you'll have to turn it on before
 using it, then turning it off as soon as you're done:
 .TP
 .B Making the connection
+The old computer is the source of data.  The following commands will
+enable the new computer to connect before and disconnect and disable
+.B nfs
+immediately after copying data:
 .EX
 # Add \fB/home/chuck *(rw,sync,insecure)\fP to:
 sudo emacs /etc/exports
 sudo exportfs -rav
 sudo systemctl enable --now nfs-server
 
-# Copy data (see COPY DATA BETWEEN COMPUTERS below)
+# Target computer connect and copy data
+# (see TARGET CONNECT AND COLLECT DATA below)
 
 sudo systemctl nfs-server
 # remove line \fB/home/chuck *(rw,sync,insecure)\fP from:
@@ -180,13 +185,52 @@ sudo emacs /etc/exports
 tar zcf \fBsource\fP | ( cd \fBtarget\fP; tar xzfp - )
 .EE
 
-
-.SS COPY DATA BETWEEN COMPUTERS
+.SS TARGET CONNECT AND COLLECT DATA
 .PP
-With an established connection, we can start copying files.
+Look at the following simple example of connecting, collecting data,
+and disconnecting.
+We first make an empty directory to which the mount will be attached.
+Pick an appropriate directory and name for this.
+It's probably not
+.IR source .
+.IP
+.EX
+mkdir source
+sudo mount -t nfs target_id:/home/chuck ~/source -o async
+cp source/.bashrc copied_bashrc
+sudo umount source
+.EE
+.TP
+.B Email, specifically Thunderbird
+I have been using Thunderbird through multiple computers and I likely
+will continue in order to keep old emails handy.
+.IP
+The Thunderbird configuration is found in hidden file
+.BR ~/.thunderbird .
+In that directory, among other files, there are two profile directories
+with the extension
+.BR default " or " default-default .
+.IP
+To migrate the email, we'll replace the empty profile
+directories of the new computer with copies of the profile directories
+in the old computer.
+.IP
+The file
+.B ~/.thunderbird/profiles.ini of both computers configures the
+profiles.
+Make sure that you install the copies under the same
+.IR [Profile1] " or " [Profile0]
+sections in the new computer as they were installed in the old
+computer.
 .PP
-Email is the obvious big necessity, but there are countless files on
-a mature system that will need to be duplicated on the new system.
+Also make sure that
+.B Default
+variable in
+.B ~/.thunderbird/installs.ini
+is set to the same profile directory name as the value under the
+.I [Profile0]
+section of
+.BR ~/.thunderbird/profiles.ini .
 .PP
 I used
 .B tar
@@ -196,7 +240,8 @@ option to compress the archive with
 .BR gzip :
 .IP
 .EX
-tar -czvf 
+tar -czvf tbird_profiles.tar.gz .thunderbird/*.default*
+cp tbird_profiles.tar.gz 
 .EE
 
 
@@ -299,6 +344,7 @@ programs, you will be able to install several
 manuals.
 .IP
 .EX
+sudo apt-get install emacs-common-non-dfsg
 sudo apt-get install gcc-doc
 sudo apt-get install gdb-doc
 sudo apt-get install bash-doc
