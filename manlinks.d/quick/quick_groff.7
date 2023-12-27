@@ -437,6 +437,19 @@ The output will be to a PDF file, and the
 .B stderr
 output will be visible on the terminal, including very helpful
 error messages.
+.TP
+.B Access GROFF diagnostics
+Use the following statement to get a helpful debugging output.
+It helped be isolate a coding error, using
+.B \(rs\(rs*[]
+for a
+number register (it should have been
+.B \(rs\(rsn[] \c
+):
+.IP
+.EX
+zcat $( man -w gproto.7 ) | groff -ww -man -b
+.EE
 .SH LEFT-JUSTIFIED TEXT
 .PP
 To prevent extra spaces being applied to fill an output line,
