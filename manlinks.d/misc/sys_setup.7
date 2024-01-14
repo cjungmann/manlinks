@@ -115,20 +115,44 @@ The colors in Emacs are usually set in the
 .B ~/.emacs.d/init.el
 configuration file.
 .TP
+.B ls
+Dark colors make it difficult to read the output of the
+.B ls
+command.
+The colors used are defined in the environment variable
+.BR LS_COLORS ,
+set either in
+.B .bashrc
+or through
+.BR dircolors .
+See
+.BR dircolors (1).
+.TP
 .B info
-This is not clearly defined, but creating or editing file
-.BR ~/.infokey ,
-a hidden file in the home directory defines many customizations,
-among them are color-setting variables
-.BR link-style ", " active-link-style ", and " match-style .
-These do not style the bold and italic typefaces, but they do make
-the info display more pleasing.
+Managing colors for
+.B info
+is more complicated.
+While colors can be changed in the
+.B ~/.infokey
+file (see info info), you still must select from 16 named colors.
 .IP
-These settings are documented with an example in
-.BI info " info"
-main section \(dqColors and Styles\(dq.
-.RE
-
+The solution for blues too dark to read is
+.I to change the color palette
+used by the terminal profile.
+.IP
+Open a
+.B terminal
+window, find the menu, select
+.BR Preferences ,
+then click on your main profile.
+Open the
+.B Colors
+tab and look toward the bottom for
+.B Palette
+section and select a palette with brighter colors.
+I ultimately selected the
+.B Solarized
+palette. YMMV
 
 .SH COPYING DATA FROM OLD COMPUTER
 .PP
