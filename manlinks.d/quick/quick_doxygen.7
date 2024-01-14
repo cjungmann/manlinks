@@ -45,11 +45,13 @@ WARN_FORMAT =\(dq$file:$line: $text\(dq|T{
 Consider inserting console codes for colorizing.
 You'll need to insert the literal ESCAPE character, Ctrl-Q ESCAPE
 in Emacs, to construct the escape codes.   Replacing the
-.RB \(dq ^[ \(dq
+.RB \(lq ^[ \(rq
 with a literal ESCAPE, try
-.RB \(dq ^[[31;1m \(dq
-to turn on red text,
-.RB \(dq ^[[m \(dq
+.RB \(lq ^[[31;1m \(rq
+for red text, or
+.RB \(lq ^[[38;5;208m \(rq
+for my favorite, orange text.
+.RB \(lq ^[[m \(rq
 to return to default text.
 T}
 .TE
