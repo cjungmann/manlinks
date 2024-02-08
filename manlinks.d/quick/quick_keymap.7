@@ -1,0 +1,44 @@
+.TH keymap 7
+.SH NAME
+.PP
+.B keymap
+\- quick keymap for cursor control keys
+.SH DESCRIPTION
+.PP
+The following tables should help you identify keystroke strings that
+represent certain keyboard keys.
+.SS Basic Table
+.TS
+tab(|);
+l l l l l l l l.
+arrow up   |\(rseOA  | shift:|\(rse[1;2A| alt:|\(rse[1;3A | ctrl:|\(rse[1;5A
+arrow down |\(rseOB  | shift:|\(rse[1;2B| alt:|\(rse[1;3B | ctrl:|\(rse[1;5B
+arrow right|\(rseOC  | shift:|\(rse[1;2C| alt:|\(rse[1;3C | ctrl:|\(rse[1;5C
+arrow left |\(rseOD  | shift:|\(rse[1;2D| alt:|\(rse[1;3D | ctrl:|\(rse[1;5D
+end        |\(rseOF  | shift:|na        | alt:|\(rse[1;3F | ctrl:|\(rse[1;5F
+home       |\(rseOH  | shift:|\(rse     | alt:|\(rse[1;3H | ctrl:|\(rse[1;5H
+page down  |\(rse[6~ | shift:|na        | alt:|\(rse[6;3~ | ctrl:|\(rse[6;5~
+page up    |\(rse[5~ | shift:|na        | alt:|\(rse[5:3~ | ctrl:|\(rse[5;5~
+.TE
+.SS Alteration Table
+.PP
+I can't completely confirm the theory because many combinations on
+my workstation are mapped to shifting workspaces, but I think the
+general theory of combining function/control/shift/alt keys are:
+.PP
+The second-to-last character of a keystroke string seems to identify
+the set of alteration keys.  Use this table to modify the keystroke
+strings above to recognize other key combinations:
+.TS
+tab(|);
+l l.
+shift|2
+alt|3
+shift + alt|4
+control|5
+shift + control|6
+control + alt|7
+shift + control + alt|8
+.TE
+
+
