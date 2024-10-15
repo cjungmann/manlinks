@@ -138,4 +138,53 @@ command:
 cd work/pwb
 gdb -tui pwb -pid=3210
 .EE
-
+.SH SEPARATE OUTPUT AND DEBUG WINDOWS
+.PP
+For times when the output of a program overwhelms the debugging
+display, it can be helpful to run both parts in separate terminal
+windows.  The following steps demonstrate how to produce the
+separation.
+.SS OUTPUT WINDOW
+.PP
+Use the
+.B tty
+command to identify the tty device used by the current console window.
+Note the output of the
+.B tty
+command, you will use it when running
+.BR gdb .
+.PP
+The current working directory is not important:
+.IP
+.EX
+user@workstation: ~ $ tty
+/dev/pts/3
+user@workstation: ~ $
+.EE
+.PP
+The output window should be left at the command prompt to start.
+.SS DEBUG WINDOW
+.PP
+Start the
+.B gdb
+debugger as you normally would, in the appropriate directory with
+appropriate arguments:
+.IP
+.EX
+user@workstation: ~ $ gdb --tui --args myprog arg1 arg2
+.EE
+.PP
+At the
+.I gdb
+prompt, instruct
+.B gdb
+to use the tty value of the output window:
+.IP
+.EX
+(gdb) tty /dev/pts/3
+(gdb) run
+.EE
+.PP
+In most (many?) cases, you should now be able to interact with the
+program on the output screen and view the underlying execution on
+the debug screen.
