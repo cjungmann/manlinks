@@ -41,6 +41,10 @@ inspecting variables, depend on being able to stop execution at
 critical points.
 .SS Breakpoints While Running GDB
 .TP
+.B break
+will set a breakpoint at the currently-selected source line in
+the source window.
+.TP
 .BI break " 1234"
 Pause execution at line number
 .I 1234
@@ -52,9 +56,9 @@ Pause execution at line
 of source file
 .IR screen.c .
 .TP
-.BI break " special_key_str"
+.BI break " run_func"
 Pause execution when function
-.I special_key_str
+.I run_func
 has been called.
 .TP
 .BI break " screen.c:1234 " if " errno!=0"
@@ -66,6 +70,19 @@ indicates an error.
 Break when value matches a string value.
 Use special gdb function
 .BR $_streq .
+.TP
+.BI list " run_func"
+.TQ
+.BI break " 1234"
+Use the
+.B list
+command to open source code that is not currently displayed in the
+source window.
+Then either use a simple
+.B break
+command after highlighting the appropriate line of code, or use the
+.BI break " 1234"
+command to set the breakpoint at an un-highlighted line.
 .SS Breakpoints on the Command Line
 .PP
 If you know the function name or line number of the point where you
