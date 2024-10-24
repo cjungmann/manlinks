@@ -74,6 +74,17 @@ while IFS='=' read -d ':' -a row; do
 done < \(dq\(DoLS_COLORS\(dq
 .EE
 T}
+
+T{
+To preserve leading- and trailing-
+spaces, set an empty IFS
+T}|T{
+.EX
+while IFS=\(aq\(aq read -r; do
+   use_reply \(dq\(doREPLY\(dq
+done
+.EE
+T}
 .TE
 .TP
 .B Read Warning
