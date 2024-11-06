@@ -278,6 +278,16 @@ or to a file.
 grep \(dqtarget\(dq * 2>/dev/null
 grep \(dqtarget\(dq * 2>/temp/greperror
 .EE
+.PP
+When you only need the exit code of a command, redirect all output to
+.B /dev/null
+to silence the command:
+.IP
+.EX
+if ! declare -p funcname >/dev/null 2>&1; then
+   echo \(dqMissing function \(aqfuncname\(aq\(dq
+fi
+.EE
 .SS Heredoc to String
 .PP
 Create a mulitline string variable with a
