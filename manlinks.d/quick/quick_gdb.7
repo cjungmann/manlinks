@@ -205,3 +205,39 @@ to use the tty value of the output window:
 In most (many?) cases, you should now be able to interact with the
 program on the output screen and view the underlying execution on
 the debug screen.
+.SH RESIZE GDB TUI WINDOWS
+.PP
+Since you cannot scroll back through the
+.B cmd
+window output, pertinent data can be lost through scrolling.
+In some cases, a taller
+.B cmd
+window can help.
+.PP
+You can increase the height of a
+.B gdb tui
+window with the
+.B winheight
+command.
+.PP
+For this example, we assume a two-pane
+.B gdb
+debugging display, with the source window on top and the command
+window below.  We use the
+.B info win
+command to confirm the window names, then call the
+.B winheight
+command to add 10 lines to the
+.B cmd
+window, taking 10 lines from the
+.B src
+window above:
+.IP
+.EX
+(gdb) info win
+Name     Lines Columns Focus
+src         34      94
+status       1      94
+cmd         17      94 (has focus)
+(gdb) winheight cmd + 10
+.EE
