@@ -129,20 +129,6 @@ l lx.
 Recovery Commands
 _
 T{
-.B git reset HEAD --
-T}|T{
-Unstage all staged files and return to latest commit state.
-T}
-T{
-.BI "git reset HEAD " file
-T}|T{
-Unstage
-.I file
-so it won't be committed with
-.B git commit
-called.
-T}
-T{
 .B git checkout
 .I file
 T}|T{
@@ -157,6 +143,20 @@ T}|T{
 Replace project's content with content from branch
 .IR branch ,
 adding, replacing, and deleting files as needed.
+T}
+T{
+.BI "git reset HEAD " file
+T}|T{
+Unstage
+.I file
+so it won't be committed with
+.B git commit
+called.
+T}
+T{
+.B git reset HEAD~
+T}|T{
+Undo the last commit.
 T}
 T{
 .B git stash
