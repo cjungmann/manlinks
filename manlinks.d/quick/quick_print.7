@@ -1,0 +1,44 @@
+.TH quick_print 7
+.SH NAME
+.B quick_print
+\- record of things I have learned.
+.SH DESCRIPTION
+.PP
+When printing from Linux fails, I cannot count on being able to
+find the solution.  I found it tonight, so I'm recording it here.
+.PP
+I may also record other interesting things.
+.SH PRINTABLE FILES
+.PP
+The
+.B CUPS
+service can handle .pdf files directly.  Just send 'em to the printer.
+.PP
+I don't know what other formats are supported.  There's not too much
+cost involved in just trying.  I expect they'll probably just work, if
+they're widely-known formats, such as Postscript, etc.
+.SH PRINT FROM COMMAND LINE
+.PP
+I had to do this tonight, it was not obvious.  These steps worked.
+.IP
+.EX
+# Display list of available printers:
+$ lpstat -p -d
+
+# Search the list for your preferred printer.  Note its name.
+# Print to the printer with
+$ lp -d <print_name> <file_name>
+.EE
+
+.SH FIX NO SUITABLE DESTINATION HOST error
+.PP
+This seems to be a simple matter of restarting the
+.B cups-browsed
+server.
+.IP
+.EX
+sudo systemctl restart cups-browsed
+.EE
+.PP
+You can thank me later!
+

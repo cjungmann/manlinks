@@ -76,10 +76,20 @@ Simple hints for using GDB
 man
 |-l|quick_gdb.7
 
+&WezTerm
+wezterm cheatsheet
+man
+|-l|quick_wezterm.7
+
 &XSLT
 XSLT Trivial
 man
 |-l|quick_xslt.7
+
+&Printing
+Print hints
+man
+|-l|quick_print.7
 
 # Local Variables:
 # mode: sh
