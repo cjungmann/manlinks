@@ -173,6 +173,32 @@ to a variable.
 declare process_result
 process_result=$(< <( cat file.txt; xsltproc file.xsl file.xml ) )
 .EE
+.SS Convert Character to ASCII Value
+.PP
+Use an apostrophe (single-quote) prefix to treat the first character
+of a string as an ASCII value:
+.IP
+.EX
+declare sval=\(dqfox\(dq
+
+\(sh get ASCII of first character in string \(dqfox\(dq.
+printf -v aval \(dq%d\(dq \(dq\(aq\(Dosval\(dq
+
+\(sh get ASCII of second character in string \(dqfox\(dq.
+printf -v aval \(dq\(aq\(Do{sval:1}\(dq
+
+\(sh get ASCII of string/char constant
+printf -v aval \(dq%d\(dq \(rs\(aqa
+.EE
+.PP
+Refer to the
+.B printf
+function as documented in the
+.B Bash
+man page, where
+.B printf
+supports a special notation where an argument with a \(lqleading single
+or double quote\(rq returns \(lqASCII value of the following character.\(rq
 .SS Two-way Array Conversions
 .PP
 One really nice feature of using
@@ -490,7 +516,7 @@ T}
 T}
 
 \(rs([^\(rs)]+\(rs)|T{
-# \fBFor domain capture\fP 
+# \fBFor domain capture\fP
 T}
 
 \(rs\(rs\(rs)?|T{
