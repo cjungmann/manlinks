@@ -1,0 +1,52 @@
+.TH quick_wezterm 7 "Miscellaneous Information Manual"
+.SH NAME
+.B quick_wezterm
+\- Abbreviated WezTerm Cheatsheet
+.SH DESCRIPTION
+.PP
+Unhappy with the sluggishness of
+.BR tmux ,
+I am trying a new terminal with multipane support builtin.
+If it performs well, I will probably switch over from the default
+.BR gnome-terminal ,
+but until then, I need to familiarize myself with the control
+keys.
+.SH KEYBINDINGS
+.TS
+tab(|);
+lb lb l.
+CTRL-ALT-SHIFT|%|Open new pane to right
+CTRL-SHIFT|left-arrow|Move leftward to another pane
+CTRL-SHIFT|right-arrow|Move rightward to another pane
+SHIFT|pgup|Scroll up in pane
+SHIFT|pgdn|Scroll down in pane
+.TE
+.SH CONFIGURATION
+.PP
+.B wezterm
+attempts to load a configuration file named
+.B .wezterm.lua
+when it opens.
+It consults multiple directories in the following order:
+.BR some/system/file ", " ~/.wezterm.lua ", and " $PWD/.wezterm.lua .
+.SS Disabling Keys
+.PP
+.B WezTerm
+configures dozens of keybindings, some of which conflict with my
+beloved
+.B Emacs
+keybindings.
+I disabled the
+.B WezTerm
+.B CTRL-SHIFT -
+keybinding in favor of
+.B Emacs
+undo keybinding.
+.PP
+It may actually be best advised to disable all default
+.B wezterm
+keybindings and enable just the ones I need to navigate.
+.PP
+In the absence of offline documentation, please refer to
+.UR https://wezfurlong.org/wezterm/config/key-tables.html
+.UE .
