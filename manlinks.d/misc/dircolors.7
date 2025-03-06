@@ -1,0 +1,49 @@
+.TH dircolors 7 2024-11-19
+.SH NAME
+.PP
+.B dircolors
+- Discussion of Bash system variable
+.B LS_COLORS
+.SH DESCRIPTION
+While playing with my own version of
+.BR ls ,
+I discovered the
+.B LS_COLORS
+variable.
+Referring to
+.B LS_COLORS
+should enable a consistent color scheme on a user's computer,
+but the meaning of some of the values are obscure, and documentation
+is hard to find.
+.PP
+This information is probably more useful for people who want to change
+the colors of their
+.B ls
+output.
+For example, the default blue color indicating a directory is too dark
+for my screen.  I set the 
+.BR di " value in " LS_COLORS " to " 38;5;33
+for a ligher shade of blue.
+.SS OFFLINE HELP
+.PP
+Some help, maybe all you need, can be obtained from the system
+command
+.BR dircolors .
+In fact,
+.IP
+.EX
+dircolors --print-database
+.EE
+.PP
+prints an easier to read display of the contents of the
+.B LS_COLORS
+variable, with commented explanations of recognized file types
+that hint at the two-letter codes that are so cryptically
+obscure.
+.SS ONLINE HELP
+.PP
+For more help, refer to this URL:
+.PP
+.UR https://www.bigsoft.co.uk/blog/2008/04/11/configuring-ls_colors
+.UE .
+
