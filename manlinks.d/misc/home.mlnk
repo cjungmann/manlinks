@@ -18,6 +18,11 @@ Small guide which files are needed and why
 man
 |-l|firewall_tips.7
 
+&Dircolors
+Guide to information about the LS_COLORS variable
+man
+|-l|dircolors.7
+
 &ISO copy
 Pathetic reminder of steps I can\'t remember
 man
