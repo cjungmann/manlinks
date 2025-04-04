@@ -181,14 +181,20 @@ of a string as an ASCII value:
 .EX
 declare sval=\(dqfox\(dq
 
-\(sh get ASCII of first character in string \(dqfox\(dq.
+\(sh get numeric value of first character in string \(dqfox\(dq.
 printf -v aval \(dq%d\(dq \(dq\(aq\(Dosval\(dq
 
-\(sh get ASCII of second character in string \(dqfox\(dq.
+\(sh get numeric value of second character in string \(dqfox\(dq.
 printf -v aval \(dq\(aq\(Do{sval:1}\(dq
 
-\(sh get ASCII of string/char constant
+\(sh get numeric value of string/char constant
 printf -v aval \(dq%d\(dq \(rs\(aqa
+
+\(sh \fBReverse\fP from number to char in two steps.  First make an
+\(sh octal string, then convert octal to character with %b:
+printf -v keyoct \(dq\(rs\(rs%03o\(dq \(dq\(Doaval\(dq
+printf \(dq%b\(dq \(dq\(Dokeyoct\(dq
+
 .EE
 .PP
 Refer to the
