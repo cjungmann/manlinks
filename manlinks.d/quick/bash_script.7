@@ -232,6 +232,23 @@ IFS='|' read -r -a array <<< \(dqone|two|three\(dq
 .B Array of lines from text file
 IFS=\(Do\(aq\(rsn\(aq read -d \(dq\(dq -r -a array_target < file_name
 .TP
+.B Array with trailing delimiter
+Suddenly (seemingly) one day, a trailing delimiter in a string
+stopped converting to an empty array element.
+The following example shows a practice that ensures proper handling
+of a trailing delimiter.
+The important thing about
+.B TRL
+is that it doesn't occur in the string.
+I'm using Control-?, otherwise known as DEL, with value 0x7F.
+.IP
+.EX
+   declare TRL=\(Do\(aq\(rsc?\(aq
+   declare source=\(dqone|two|three|\(dq
+   IFS=\(aq|\(aq read -ra array <<< \(dq\(Do{source}\(DoTRL\(dq
+   array=( \(dq\(Do{array[@]%$TRL}\(dq )
+.EE
+.TP
 .B String from array
 This is trickier.
 In-line temporary
