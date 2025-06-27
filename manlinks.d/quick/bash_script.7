@@ -107,6 +107,20 @@ fi
 
 .SS READ PERFORMANCE HINTS
 .TP
+.B Last text line missing newline
+Using
+.B read
+to read a file will miss the last line if it's not followed
+by a newline.  The following
+.B read
+statement tweak will remedy the omission:
+.IP
+.EX
+while read -r line || [[ -n \(dq\(Doline\(dq ]]; do
+:
+done < \(dq\(Dofilename\(dq
+.EE
+.TP
 .B Preserving spaces
 By default,
 .B read
@@ -249,70 +263,42 @@ I'm using Control-?, otherwise known as DEL, with value 0x7F.
    array=( \(dq\(Do{array[@]%$TRL}\(dq )
 .EE
 .TP
-.B String from array
-This is trickier.
-In-line temporary
-.B IFS
-assignment is not possible with an assignment statement.
-Here are two ways to make the assignment in a function, the calling
-of which is eligible for the in-line
-.B IFS
-assignment.
-.IP
-.B NOTE:
-Sadly, this method will not work for
-.BR echo " or " printf
-because the argument in which the array expansion resides is processed
-before the function is called, so it's too late for the
-.B IFS
-value to be respected.
-Either save and restore the original
-.B IFS
-around the
-.BR echo " or " printf
-statement, or convert the array to a string in a previous
-statement then use the string with
-.BR echo " or " printf .
-.RS 7
-.TP 4
-.B Bespoke join function
-You can make a quick-and-dirty function that hard-codes the operation
-on the string target and the array source:
-.IP
-.RS 8
-.EX
-temp_setter() { target=\(dq\(Do{array[*]}\(dq; }
-IFS='|' temp_setter
-.EE
-.RE
-.TP 4
-.B Generic join function
-If the script often concatenates arrays, a reusable function may be
-more suitable.
-.IP "" 4
-This
-.B join_array
-function will use an existing variable or create it if it doesn't
-exist.
-.IP "" 8
-.EX
-join_array()
-{
-   if ! declare -p \(dq\(Do1\(dq 1>/dev/null 2>&1; then
-      if ! declare -g \(dq\(Do1\(dq; then exit 1; fi
-   fi
-   local -n ca_target=\(dq\(Do1\(dq
-   local -n ca_source=\(dq\(Do2\(dq
-   ca_target=\(dq\(Do{ca_source[*]}\(dq
-}
-.EE
-.IP "" 4
-Then call it like this:
-.IP "" 8
-.EX
-IFS=\(Do\(aq|\(aq join_array flines my_big_array
-.EE
+.B String from array (AKA join)
+The standard way to join arrays is to use parameter expansion.
+This example will print the array elements with separating spaces:
 
+.EX
+   echo \(dq\(Do{arr[*]}\(dq
+.EE
+.IP
+If another delimiter is needed, set
+.B IFS
+to the desired delimited before expanding.
+
+.EX
+   local IFS=\(dq|\(dq
+   echo \(dq\(Do{arr[*]}\(dq
+.EE
+.IP
+.B printf
+can also be used to join arrays.
+Add a delimiter after every element, then remove the redundant last
+delimiter when done:
+
+.EX
+   local joinedarr
+   printf -v joinedarr \(dq%s\(DoDELIM\(dq \(dq\(Do{arr[@]}\(dq
+   joinedarr=\(dq\(Do{joinedarr:0: -1}\(dq
+.EE
+.IP
+Use
+.B printf
+to join arrays with no delimiters:
+
+.EX
+   local joinedarr
+   printf -v joinedarr \(dq%s\(dq \(dq\(Do{arr[@]}\(dq
+.EE
 .RE
 .SS Error Output Redirection
 .PP
@@ -496,7 +482,7 @@ rules apply in different situations:
 .PP
 .EX
 .RS 4
-declare -a regex_arr=(
+declare -a regex_parts=(
 .RS 4
 .TS
 tab(|);
@@ -549,6 +535,10 @@ T}
 .TE
 .RE
 )
+
+# Instantiate regex from parts with printf-join:
+declare regex
+printf -v regex \(dq%s\(dq \(dq\(Do{regex_parts[@]}\(dq
 .RE
 .EE
 .SH EDITOR SETUP
