@@ -82,6 +82,26 @@ Let's just use examples to illustrate usage:
 int my_function(chat **result, int Arg1, const char *Arg2, struct myobj Arg3)
 {
 .EE
+.SS GROUPS
+.PP
+Establish a group consisting of related functions by using the
+.B @defgroup
+declaration.
+The following group will be named
+.B MathOps
+and its description will be
+.BR "Simple Math Operators" .
+.PP
+.EX
+/**
+ * @defgroup MathOps Simple Math Operators
+ * @{
+ */
+int add(int left, int right)      { return left + right; }
+int subtract(int left, int right) { return left - right; }
+int multiply(int left, int right) { return left * right; }
+ /** @} */
+.EE
 .SS Enum Documentation
 .PP
 An enumeration may document the set of allowed values for an
