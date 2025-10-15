@@ -76,6 +76,22 @@ T}|Go to line number
 T{
 .KEYP "M-g c"
 T}|Go to character number
+T{
+.B C-M-f
+T}|T{
+Move
+.B forward
+to closing bracket, paren, etc
+T}
+T{
+.BR C-M-b " or " C-M-p
+T}|T{
+Move
+.B backward
+or to
+.B previous
+opening bracket, paren, etc.
+T}
 .TE
 .SS UNDO
 .TS
@@ -273,6 +289,12 @@ T}|Convert region to upper case
 .TS
 tab(|);
 l lx .
+T{
+.BI C-h " m"
+T}|T{
+describe-mode (show all current major and minor modes,
+scroll down for description of each mode.)
+T}
 T{
 .BI M-x " hexl-mode"
 T}|Switch to hex-editor mode
