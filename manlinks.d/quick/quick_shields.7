@@ -1,0 +1,142 @@
+.TH shield 7
+.SH NAME
+shield
+\- build a shield.io badge from scratch
+.SH DESCRIPTION
+.PP
+https://shields.io is a widely-used online resource for generating the
+familiar small graphic
+.B badges
+seen on
+.B GitHub
+pages.
+.PP
+While it is pretty easy to find canned URLs to print nearly any badge
+you need, learning how to construct the URL from scratch can be useful
+if the canned output is not right for a given document.
+.PP
+This document introduces how to request a static badge.  
+.SH THE URL
+.PP
+Here is an example of a URL that returns a badge icon:
+.PP
+.BI "https://img.shields.io/badge/" "lbl-msg-red" "?logo=gnu&logoColor=FFF"
+.PP
+Let's break it down to understand how the URL works:
+.TP
+.B Base
+The
+.B https\://img.shields.io/badge/
+portion of the URL is the base. The text that follows dictates
+the badge output.
+.TP
+.TP
+.B Content
+The
+.I lbl-msg-red
+is the
+.B content
+part of the URL.  It consists of one to three
+parts that are separated by
+.RB (\(lq - \(rq)
+characters.
+It consists of a mandatory
+.BR label ,
+followed by an
+.B message
+and
+.BR color .
+If the
+.B content
+has two parts, the second part must be the
+.B color
+or it will be ignored.
+.IP
+Spaces in either the label or message must be converted to
+either an underscore
+.RB \(lq _ \(rq
+or
+.RB \(lq %20 \(rq,
+and doubled dashes or underscored are output as singles.
+.IP
+An optional
+.RB \(lq .svg \(rq
+can be added to the end of the
+.B content
+to help with content recognition.
+.TP
+
+.B Options
+Additional options can follow the
+.B content
+part of the URL.
+.B ?logo=gnu&logoColor=white
+are
+.I options
+that decorate the badge.
+
+.SH COLORS
+.PP
+Colors can be expressed in several styles.  The list of URLs below
+show green badges using all of the available color styles.
+.PP
+You can open the links below to display the color.
+.TS
+tab(|);
+lb lb
+l l.
+style|sample
+_|_
+css|https://img.shields.io/badge/foo-bar-green
+hex|https://img.shields.io/badge/foo-bar-00FF00
+rgb|https://img.shields.io/badge/foo-bar-rgb(0,255,0)
+hsl|https://img.shields.io/badge/foo-bar-hsl(120,75,50)
+rgba|https://img.shields.io/badge/foo-bar-rgba(0,255,0,100)
+hsla|https://img.shields.io/badge/foo-bar-hsla(120,75,50,50)
+.TE
+.SS Notes on colors
+.TP
+.B Opacity for rgba and hsla Styles
+For
+.BR rgba " and " hsla
+values, the
+.RB \(lq a \(rq
+refers to the color's opacity.  The range of values
+is from 0 to 100, with 0 being fully transparent and 100 being
+fully opaque.
+.TP
+.B Color Names
+The collection of CSS color names are recognized for the color
+portion of the
+.B content
+part of the URL.  A link to a CSS color table can be found below.
+
+.SH REFERENCES
+.PP
+This document is a very brief introduction to constructing
+static badges.  Dynamic batches are also available
+.TP
+.B https://shields.io/badges/static-badge
+The main reference for the
+.B shields.io
+badges.  This page includes the URL options and includes
+links on the left for other topics in shield badges.
+.TP
+.B https://simpleicons.org/
+is a searchable library of icons that can invoked with the
+.B logo
+option of the badge URL.  The search results show the icons and
+can fill the copy buffer with an icon name.
+.TP
+.B https://badges.pages.dev/
+is a generator of URLs for badges.  There is a similar search
+interface similar to Simple Icons above, but the copy buffer can
+be filled with a complete URL the badges.
+.TP
+.B https://www.w3schools.com/cssref/css_colors.php
+is a table of colors with their names that can be used as the
+color value in the
+.B content
+part of the URL.
+
+
