@@ -66,11 +66,6 @@ Help with cryptic vi commands
 man
 |-l|quick_vi.7
 
-&Lui_list
-Guide to lui_list
-man
-|-l|../../sources/list_ui.7
-
 G&nu Debugger
 Simple hints for using GDB
 man
@@ -81,6 +76,11 @@ Print hints
 man
 |-l|quick_print.7
 
+&Shields
+Markdown badge URLs for shields.io
+man
+|-l|quick_shields.7
+
 &XSLT
 XSLT Trivial
 man
@@ -90,6 +90,11 @@ man
 wezterm cheatsheet
 man
 |-l|quick_wezterm.7
+
+&Lui_list
+Guide to lui_list
+man
+|-l|../../sources/list_ui.7
 
 # Local Variables:
 # mode: sh
