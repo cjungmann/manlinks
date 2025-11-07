@@ -348,7 +348,53 @@ will only match if the query case matches the target case.
 Invoke
 .I isearch-toggle-case-fold
 again to restore case-sensitive matching (it's a toggle).
-
+.SS LOCAL VARIABLES
+.PP
+Emacs maintains a set of local variables that determine how it
+works with a given source file.  The two particular local variables
+that I often set are the
+.BR "editing mode" " and the " compile
+variables.
+.PP
+Sometimes Emacs cannot discern the appropriate editing mode to
+use for a specific source file.  In this case, a developer can
+help Emacs by setting the editing mode in a local variables block.
+.PP
+Local variables can be at the top or bottom of a source file.
+.TP
+.B Variables at the Top
+The variables declared at the top must fit in a single line,
+so its capacity is limited.  I like to indicate the editing mode
+at the top of a file.  The following examples should be self-
+explanatory, each one uses its own particular comment delimiter
+to set the mode.
+.IP
+.EX
+// -*- mode: c -*-
+.EE
+.IP
+.EX
+\(sh -*- mode: shell-script; sh-shell: bash -*-
+.EE
+.IP
+.EX
+\&.\(rs\(dq -*- mode: nroff -*-
+.EE
+.IP
+Sometimes I set the editing mode at the top just to define a comment
+delimiter for syntax highlighting.
+.TP
+.B Variables at the Bottom
+At the bottom, the local variables are contained in a comment
+block that has a prescribed beginning and end.  The comment
+delimiters depends on the file type, or the editing mode if
+it's explicitely declared.
+.IP
+.EX
+/* Local Variables:                         */
+/* compile-command \(dqgcc -o myfile myfile.c\(dq */
+/* End:                                     */
+.EE
 .SS MISCELLANEOUS
 .TS
 tab(|);
