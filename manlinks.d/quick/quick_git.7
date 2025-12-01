@@ -24,7 +24,9 @@ Information Commands
 _
 T{
 .B git status
-T}|Show untracked and uncommitted files, among other things.
+T}|T{
+Show untracked and uncommitted files, among other things.
+T}
 T{
 .B git status -u
 .I no
@@ -52,11 +54,16 @@ Show changes between old and current versions.  Only for
 if specified, otherwise all changes in repository.
 T}
 T{
-.B git config --global --edit
+.B git config --global
 T}|T{
-Replace
-.B --global
-with other domains to use an editor to set or change values.
+Use
+.B config
+to configure your
+.BR git .
+For example, set the default editor with
+.BR --edit .
+Just look at the man page for
+.BR git-config .
 T}
 
 .T&
@@ -174,10 +181,10 @@ T{
 .B git branch
 T}|List branches in the current repository.
 T{
-.BI "git checkout -b " new_branch
+.BI "git checkout -b " branch
 T}|T{
 Create new branch,
-.IR new_branch .
+.IR branch .
 T}
 T{
 .BI "git checkout " branch
@@ -193,10 +200,10 @@ Merge branch
 into the current branch.
 T}
 T{
-.BI "git branch -d " branch_name
+.BI "git branch -d " branch
 T}|T{
 Delete branch
-.I branch_name
+.I branch
 from the repository
 T}
 
@@ -214,13 +221,13 @@ in the current repository.
 T}
 T{
 .nf
-.BI "git tag -a " v0.2 " -m " \(dqdescription\(dq
+.BI "git tag -a " v0.2 " -m " \(dqnote\(dq
 .fi
 T}|T{
 Create an annotated tag,
 .IR v0.2 ,
 and assign a string represented by
-.I description
+.I note
 to the tag.
 T}
 T{
@@ -252,9 +259,9 @@ from repository.
 T}
 T{
 .B git mv
-.I source destination
+.I source dest
 T}|T{
-.RI Move " source " to " destination" .
+.RI Move " source " to " dest" "ination."
 T}
 T{
 .B git ls-files
