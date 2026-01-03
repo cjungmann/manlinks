@@ -110,6 +110,76 @@ Refer to
 .BR groff(7),
 search for
 .IR ^CONDITIONS .
+.SS BREAKING UP MAN PAGE SOURCE
+.PP
+When developing long man pages, it is helpful to break the content
+into several files and combine them with
+.B .so
+requests.
+.PP
+Emacs will fail to properly render the subordinate files without a
+\&.TH command, but simply putting a \&.TH command in the subordinate
+files will cause redundant and annoying header lines to be
+interspersed in the output.
+.PP
+One solution is to conditionally add the \&.TH request in the
+subordinate files, so they are only added when they are being rendered
+independently.
+.PP
+.TS
+tab(|);
+l lx.
+1|T{
+Set a identifying register near the top of the main man page
+source file.
+T}
+2|T{
+Conditioned on the identifying register, include the \&.TH
+request near the top of each subordinate section source file.
+T}
+3|T{
+Include subordinate sections with a \&.so request.
+T}
+4|T{
+Use
+.B soelim
+to incorporate the subordinate files into a single man page source
+file for installation.
+T}
+.TE
+.PP
+For example, assuming main page
+.B main.7
+and subordinate page
+.BR main.7.d/sub_topic.7 :
+.PP
+At the top of
+.BR main.7 :
+.RS 4
+.EX
+\&.TH main 7 2026-01-03
+\&.nr main_page 1
+\&.so main.7.d/sub_topic.7
+.EE
+.RE
+.PP
+At the top of
+.BR main.7.d/sub_topic.7 :
+.RS 4
+.EX
+\&.if ![\(rsn[main_page] = 1) \&.TH section_isolation 7
+\&.SH SUB_TOPIC
+.EE
+.RE
+.PP
+Install using
+.BR soelim :
+.RS 4
+.EX
+soelim -r main.7 | gzip -c - > /usr/local/share/man/man7/main.7.gz
+.EE
+.RE
+
 .SH USING SPECIAL CHARACTERS
 .PP
 Generally, just typing a character is enough to include it in a text.
