@@ -286,6 +286,8 @@ T}|Convert region to upper case
 .TE
 .SS MODES
 .PP
+.\" set to "n"o "a"lignment (for apropos-command line)
+.na
 .TS
 tab(|);
 l lx .
@@ -301,7 +303,12 @@ T}|Switch to hex-editor mode
 T{
 .BI M-x " text-mode"
 T}|Plain, uninterpreted text mode
+T{
+.BI M-x " apropos-command " RET " mode"
+T}|list available modes (and more)
 .TE
+.\" restore default adjustment mode:
+.ad
 .SS CUSTOMIZATION
 .PP
 Change syntax-highlighting colors to your work style.
