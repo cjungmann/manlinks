@@ -81,45 +81,32 @@ spaces, set an empty IFS
 T}|T{
 .EX
 while IFS=\(aq\(aq read -r; do
-   use_reply \(dq\(doREPLY\(dq
-done
+   use_reply \(dq\(DoREPLY\(dq
+done < \(dq\(Dofilename\(dq
 .EE
 T}
 .TE
-.TP
-.B Read Warning
-If
-.B LS_COLORS
-above did not end with the ':' delimiter, the last value pair would
-have been read but not processed.
-To process an unprocessed
-.BR read -parsed
-element, follow the
-.B while-read
-loop with something similar to:
-.IP "" 11
-.EX
-# Process complete but unprocessed element:
-if [ \(dq\(Do{row[*]}\(dq -eq 2 ]; then
-   heap+=( \(dq\(Do{row[@]}\(dq )
-fi
-.EE
-
 .SS READ PERFORMANCE HINTS
+.PP
+Some details of the
+.B read
+command are not obvious.xs
 .TP
-.B Last text line missing newline
-Using
+.B Accessing Last Line
+When reading multi-line input, the
 .B read
-to read a file will miss the last line if it's not followed
-by a newline.  The following
-.B read
-statement tweak will remedy the omission:
+command reads lines that end with a newline.
+If the final line of a multi-line input file or string
+does not end in a newline, it may be dropped.
+Ensure access to the final line with the following syntax:
 .IP
+.RS 11
 .EX
-while read -r line || [[ -n \(dq\(Doline\(dq ]]; do
-:
+while IFS=\(aq\(aq read -r || [ -n \(dq\(DoREPLY\(dq ]; do
+   use_reply \(dq\(DoREPLY\(dq
 done < \(dq\(Dofilename\(dq
 .EE
+.RE
 .TP
 .B Preserving spaces
 By default,
