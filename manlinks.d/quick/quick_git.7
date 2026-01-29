@@ -207,6 +207,12 @@ Delete branch
 from the repository
 T}
 
+NOTE:|T{
+See section
+.B BRANCH DESCRIPTION
+below for a limited method for documenting the
+purpose of a branch.
+T}
 .T&
 lB s
 l lx.
@@ -345,3 +351,32 @@ command by typing:
 Also consider browsing
 .BR giteveryday (7)
 for an overview of \*[git] usage.
+.SH BRANCH DESCRIPTION
+.PP
+Branches are useful tools for development, but old branches
+can be mysteries of uncertain value.  To preserve the context
+before moving on from a development branch, use the
+.B edit_description argument of
+.BR "git config" :
+.PP
+.RS 4
+.EX
+git branch --edit-description
+.EE
+.RE
+.PP
+It will open an editor instance in which the description can be
+written.
+Note that the description is only local, and does not get uploaded
+with a
+.BR "git push" ,
+but having a description can preserve some context information that
+would otherwise be forgotten when cleaning up in the uncertain future.
+.PP
+View the description with the following command:
+.PP
+.RS 4
+.EX
+.RI "git config branch\fR.\fP" "branch_name\fR.\fP"description
+.EE
+.RE
