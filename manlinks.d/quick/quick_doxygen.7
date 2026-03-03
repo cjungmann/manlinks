@@ -174,7 +174,41 @@ l l l.
 \(rse|emphasis|italic
 \(rsp|parameter|monospace
 .TE
+.SS LINK TO VIEW OF SOURCE CODE
+.PP
+Real source code is often the best resource for learning how to use
+a library.  It is possible to create a link to a view of the source
+file using the doxygen command
+.BR @verbinclude ,
+though it is particular.
+Even here, a demonstration is more efficient that an explanation.
+.PP
+.EX
+/**
+ * @page MY_SOURCE_C Source Code for my_source.c
+ * @verbinclude my_source.c
+ */
+
+/**
+ * @defgroup LIBRARY_GROUP Hypothetical Comment Block
+ * @brief Describing the Library
+ *
+ * Look at @ref MY_SOURCE_C to see the source code.
+ * @{
+ */
+.EE
+.PP
+In the version available when this was written, the @verbinclude
+block had to precede the reference to it.  That seems like an
+arbitrary restriction that should go away, but if problem occur,
+try moving the page using @verbinclude.
 .SS HIDE CODE FROM DOXYGEN
+.TP
+.B NOTE
+This advice may be obsolete.  My recent observation is that code
+that is excluded through an
+.B #ifdef
+command is also invisible to doxygen.
 .PP
 Sometimes it is not appropriate to include certain blocks of
 code in the documentation.
