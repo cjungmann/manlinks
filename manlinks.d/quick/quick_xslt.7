@@ -52,6 +52,20 @@ The
 .I len
 parameter can be omitted to extract the rest of the string.
 .TP
+.B substring-before \c
+.RI ( source ", " match )
+Returns characters in string
+.I source
+that comes before the first instance of
+.IR match " in " source .
+.TP
+.B substring-after \c
+.RI ( source ", " match )
+Returns characters in string
+.I source
+that comes after the first instance of
+.IR match " in " source .
+.TP
 .B normalize-space \c
 .RI ( string )
 Remove leading, trailing spaces, replaces all spaces-strings with a single space.
