@@ -1,0 +1,33 @@
+.TH quick_quick 7 "Miscellaneous Information Manual"
+.SH NAME
+.B quick_quick
+\- Collection of quick one-liner solutions
+.SH DESCRIPTION
+.PP
+Many Linux tasks can be accomplished with a single command, but
+the right command and the right arguments can be elusive.
+.SH SOLUTIONS
+.TP
+.B fc
+Builtin command (use
+.B help fc
+rather than
+.B man fc
+for guidance.
+.IP
+Mnemonic for
+.IR "fix command" .
+.TP
+.B upower
+Reports battery health.
+.IP
+.B upower -i $( upower -e | grep battery )
+.TP
+.B cups-browsed
+This service is sometimes compromised, according to printer error
+messages.  A reset may fix the problem:
+.IP
+.B sudo systemctl restart cups-browsed
+
+
+

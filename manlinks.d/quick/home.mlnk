@@ -6,6 +6,11 @@ Simple guides to help learn or recall basic software functions.
 
 4 2
 
+Q&uick
+Reference for quick one-line solutions
+man
+|-l|quick_quick.7
+
 &Emacs
 Basic Emacs commands
 man
