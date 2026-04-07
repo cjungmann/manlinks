@@ -142,6 +142,34 @@ variables in a Makefile.
 If using
 .B GCC
 to compile and link, only one instance of the option is necessary.
+.SS Memory Addresses
+.PP
+Sometimes, it will be useful to know the addresses of leaked memory
+in order to debug leaks.
+.PP
+Unfortunately, the default
+.B fsanitize
+output includes only the addresses (stack or instruction?) of the
+memory allocations, not the addresses of the allocated memory.
+.PP
+While I couldn't find a compile flag that enables the display of
+memory block addresses, there
+.I is
+a runtime flag that triggers it:
+.BR LSAN_OPTIONS=report_objects=1 .
+.PP
+This can be exported to the environment, or it can be prepended to
+the program call:
+.PP
+.RS 4
+.EX
+LSAN_OPTIONS=report_objects=1 ./mycommand
+.EE
+.RE
+.PP
+The address of the leaked memory will be printed after the call stack
+display.
+
 .SH VARIABLE NUMBER OF ARGUMENTS
 .PP
 This is a quick fundamental demonstration of using **va_args**.
