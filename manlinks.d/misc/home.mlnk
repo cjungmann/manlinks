@@ -43,6 +43,11 @@ A few useful Command Line solutions to enable or disable extensions
 man
 |-l|gnome_extensions.7
 
+G&nome Styles
+A guide for customizing the Gnome Desktop
+man
+|-l|gnome_styles.7
+
 &Bash_patterns sources
 Quick reference for List User Interface from Bash_patterns
 manlinks
