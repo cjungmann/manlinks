@@ -1,0 +1,132 @@
+.TH "Gnome Styles" 7 2026-05-01
+.SH NAME
+.B Gnome Styles
+\- Changing Styles on the Gnome Desktop
+.SH DESCRIPTION
+.PP
+This document explains how to use Cascading Stylesheets to customize
+styles, especially color, on a Gnome Desktop.
+.RB ( CSS ).
+.SS THE GNOME DESKTOP
+.PP
+While the Gnome Desktop is not an HTML document, it does make use
+of the CSS precedent.  Explaining CSS is beyond the scope of this
+document, but the information contained here should enable a user
+to make color changes to their desktop.
+.SH CSS STRATEGY
+.PP
+There are two main challenges in targeting a display element on the
+Gnome Desktop:
+.B identifying the target
+and
+.BR "managing the cascade" .
+.SS IDENTIFYING THE TARGET
+.PP
+.B Liquid Glass
+is a utility that enables the inspection of Gnome Desktop display
+elements to find object names or class identifiers, which are used
+to identify the target of a CSS rule.
+.RS 0
+.TP
+.B Starting Liquid Glass
+Click
+.BR Alt-f2 ,
+then type
+.BR lg .
+.TP
+.B Inspect Stationary Items
+Using Liquid Glass, fixed display elements are easy to find
+with
+.B inspect mode
+cursor.
+.RS 7
+.TP
+.B Enter Inspect Node
+Click on inspect button at top-left of Liquid Glass screen,
+then use the cursor to select a display element.
+.TP
+.B Click Display Element
+Use the inspect mode cursor to select an element.  Click to
+evaluate.
+.TP
+.B Open Element Properties View
+The last element in the list is the most recently selected.
+Open it to see the properties.
+.TP
+.B Find One of the Identifier Properties
+The values of properties
+.BR name ", " styleClass ", or " style_class
+are useful as CSS selectors.  If you can't find any of these,
+the object can only be selected as a child of its parent element.
+.RE \" cancel RS 7
+.TP
+.B Alternate Search
+For transient elements like popups, it may not be possible to
+click on the elements using the inspect cursor.  In these cases,
+Liquid Glass can be used to access extension source code to find
+an identifier property.
+.RS 7
+.TP
+.B Activate Extensions Mode
+Click the
+.B Extensions
+link among the links on the top-right edge of the Liquid Glass
+display.
+.TP
+.B Open the Source Code of an Extension
+After finding the extension of interest, click on the
+.B Source Code
+link at the bottom of the box of the extension.
+.TP
+.B Open in Terminal
+Use the dot menu of the path input box to open a terminal in the
+source directory of the extension.
+.TP
+.B Use grep to find selector candidates
+Once in the terminal window, you can use
+.B grep
+to search for selector candidates.  Search for either
+.BR 'style_class:' " or " 'name:' :
+.EX
+grep -r style_class: *
+grep -r name: *
+.EE
+.RE \" cancel RS 7
+.RE \" cancel RS 0
+
+.SS MANAGING THE CASCADE
+.PP
+Success in customizing a Gnome Desktop display element is determined
+by where the custom rules are placed.  It is important to understand
+the order that various stylesheets are read in order to ensure the
+custom rules win the priority competition.
+.PP
+There are two mostly effective places to write CSS rules to
+customize a Gnome Desktop:
+.TP
+.B ~/.config/gnome-shell/gnome-shell.css
+.B Pro:
+should be safe from any software update.
+.br
+.B Con:
+lower priority than an extension's stylesheet.
+.br
+.B Note:
+this file may not exist.
+.br
+.B Hint:
+use the
+.B !important
+flag to make a rule prevail over a conflicting rule in an
+extension's stylesheet.
+.TP
+.B /usr/share/gnome-shell/extensions/<name>/stylesheet.css
+.TQ
+.B ~/.local/share/gnome-shell/extensions/<name>/stylesheet.css
+.B Pro:
+most specific, highest priority
+.br
+.B Con:
+vulnerable to being overwritten when the extension has a
+software update.
+
