@@ -213,6 +213,55 @@ T{
 .KEYP "C-x o"
 T}|Switch to next pane
 .TE
+.SS SPECIAL CHARACTERS
+.PP
+It's not hard, but it's not obvious how to enter special characters
+in Emacs.
+The trick is to use the
+.B insert-char
+command (either
+.B M-x insert-char
+or
+.BR "C-x 8" ).
+.PP
+This is an example showing three ways to emplace a division symbol, otherwise known as
+an
+.BR obelus ,
+with a unicode value of
+.BR 00F7 .
+.TS
+tab(|);
+l lx.
+Unicode shortcut:|T{
+.KEYP "C-x 8" /
+T}
+Unicode hexcode:|T{
+.KEYP "C-x 8" ⏎ 00F7
+T}
+Character name:|T{
+.KEYP "C-x 8" ⏎ "DIVISION SIGN"
+T}
+.TE
+.TP
+.B Finding Other Emacs Symbol Names
+The name,
+.B DIVISION SIGN
+is not obvious, and other symbols may be even less obvious.
+Use Emacs' auto-complete to search for symbol names.
+Call the
+.B insert-char
+command by one of the methods shown above, hit
+.BR ENTER ,
+then type part of your best guess, and then type
+.BR TAB .
+You should see a list of names that include your string.  Select
+one of them if they seem appropriate.
+.IP
+For example,
+.B RETURN SYMBOL
+is the name of the ⏎ character.
+
+
 .SS RECTANGLES
 .PP
 We assume you know how to define a rectangle.
