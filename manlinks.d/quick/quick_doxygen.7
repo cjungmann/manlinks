@@ -8,13 +8,27 @@
 Just the basics for documenting functions and their arguments.
 .SH SETUP
 .PP
-Before Doxygen can be used, it must be initialized and configured.
-.TP 3
-.BI doxygen " -g"
-Initialize \D for the current directory.
-.TP 3
-.BI emacs " Doxyfile"
-Search for and change the following settings:
+While there is good value in basic conformance to Doxygen standards
+while documenting code, there are a few setup steps that will make
+the Doxygen output easier to use.
+.SS Initialize Doxygen
+.PP
+Before Doxygen can be used, it must be initialized and configured:
+.IP
+.EX
+doxygen -g
+.EE
+.SS Update Default Doxyfile
+.PP
+The generated file,
+.BR doxyfile ,
+contains a huge assortment of settings that dictate how Doxygen
+generates the document.  The default settings are sufficient for most
+things, but there are several for which the default setting will not
+be appropriate:
+.TP
+.B PROJECT_NAME
+The default is
 .TS
 tab(|);
 l lx.
