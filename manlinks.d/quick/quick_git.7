@@ -76,6 +76,9 @@ T{
 T}|T{
 Download \*[git] repository from
 .IR URL .
+See
+.B GITHUB URL STYLES
+below.
 T}
 T{
 .BI "git fetch " repo
@@ -279,6 +282,21 @@ T{
 .B git ls-files
 T}|List repository files.
 .TE
+.SH GITHUB URL STYLES
+.PP
+There are two forms of a
+.B git clone
+URL, particularly for
+.BR github.com .
+The following URLs follow the command
+.BR "git clone":
+.TP
+.B HTTPS URL
+https://www.github.com/username/repository.git
+.TP
+.B SSH URL
+git@github.com:username/repository.git
+
 .SH ATTACH TO REMOTE REPOSITORY
 .PP
 After creating a repository on your remote \*[git] host, use the following
