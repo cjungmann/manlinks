@@ -114,6 +114,48 @@ struct ahead {
    \[vellip]
 };
 .EE
+.SS Wait for ENTER Press
+.PP
+Standard C collects keypresses until ENTER is pressed (or EOF).
+Wait for an ENTER press by discarding all keypresses that come
+in a bunch after the keypress:
+.PP
+.RS 4
+.EX
+void wait_for_enter(void)
+{
+   int chr;
+   while ((chr = getchar()) != '\n' && chr != EOF)
+      ;
+}
+.EE
+.RE
+.SS Set Members of Struct/Class
+.PP
+It's common knowledge that you can initialize a struct's member values
+with curly brackets.  It's less known that you can set the members
+later with the same syntax:
+.PP
+.RS 4
+.EX
+struct demo {
+   const char *name;
+   int         age;
+   int         siblings;
+   int         children;
+};
+
+// initialize values:
+struct demo person = { "Tom", 35, 4, 5 };
+
+// change values (0-fill missing values):
+demo = (struct demo){ "Judy", 32, 3 };
+
+// Set a pointer:
+struct demo *pdemo = &demo;
+*demo = (struct demo){"Chris", 12, 1 };
+.EE
+.RE
 
 .SH MEMORY CHECKING
 .PP
