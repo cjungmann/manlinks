@@ -36,10 +36,15 @@ Developing shared and static libraries
 man
 |-l|quick_libraries.7
 
-&Doxgyen
-Basic Doxygen Markup
-man
-|-l|quick_doxygen.7
+# &Doxgyen
+# Basic Doxygen Markup
+# man
+# |-l|quick_doxygen.7
+
+&Doxygen
+Doxygen-generate Webpage
+thorium-browser
+'/home/chuck/work/doxygen_patterns/html/index.html'
 
 &Regex Escaping
 Guide to escaping regular expression characters
