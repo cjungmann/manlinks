@@ -20,6 +20,60 @@ to make it easier to navigate.
 This document attempts to address these issues by providing an
 easy-to-access reference with categories and more accessible.
 .SH BASIC STUFF
+.SS TYPEFACES
+.PP
+There are strict rules about typefaces to be used for specific code
+elements:
+.TS
+tab(|);
+lb lx.
+italics|T{
+.RI "variable instance names ( " name " ),"
+.br
+.RI "path and filename placeholders ( " "/usr/include filename" " ),"
+.br
+.RI "struct and union members ( " class -> member " ),"
+.br
+.RI "string placeholders ( \(dq" value "\(dq \(dq" ptr "\(dq )"
+T}
+
+bold|T{
+.RB "data types ( " int ", " "struct person" ", or " person_t " )"
+.br
+.RB "macros ( " NULL " or " MAX " ),"
+.br
+.RB "keywords (" static ", " const ", or " void " )"
+.br
+.RB "function names ( " malloc "() or " free "() ),"
+.br
+.RB "preprocessor and macros (" NULL ", " MAX ", or " #include " )"
+.br
+.RB "command line flags ( " -ggdb ", " -v " )"
+.br
+.RB "environment variables ( " PATH " or " HOME " )"
+T}
+
+roman|T{
+operators ( =  + -> ),
+.br
+punctuation ( ; , )
+.br
+literal constants ( 256  0x100 )
+T}
+
+mixed|T{
+definition:
+.BI struct " person" "\fR;"
+.br
+declaration:
+.BI "struct person " employee "\fR;"
+.br
+command line option:
+.BI "-m " NUM
+T}
+.br
+
+.TE
 .SS TH Manpage Header
 .PP
 I always get this wrong.  Consider these:
