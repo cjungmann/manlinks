@@ -1,0 +1,145 @@
+.TH struct 7 2026-10-01
+.SH NAME
+.B struct
+\- digest of concepts and practices
+.SH DESCRIPTION
+.PP
+Structs in C are the foundation of C++ classes.  Structs can express
+much of the same utility as a class.
+.SH SYNOPSIS
+.PP
+.EX
+/* Typedefs and Definitions */
+.B "typedef struct address" \c
+.IR address_t ;
+.B "typedef struct person" \c
+.IR person_t ;
+
+.BI struct " address " \c
+{
+.RS 4
+.BR "const char " *\c
+.IR street ;
+.\"
+.BR "const char " *\c
+.IR postcode ;
+.RE
+};
+
+.BI struct " person " \c
+{
+.RS 4
+.BR "const char " *\c
+.IR name ;
+.\"
+.BR "struct address "\c
+.IR address ;
+.RE
+};
+
+/* Initialization */
+.BI "struct address" " home " \c
+.RI "= { \(dq" "12 Main St" "\(dq, \(dq" 10000 "\(dq };"
+
+.BI person_t " Mama "\c
+.RI "= { \(dq" "Mama Bear" "\(dq, { \(dq" "12 main St" "\(dq, \(dq" 10000 "\(dq }};"
+
+.BI person_t " Papa "\c
+= {
+.RS 4
+.RI . name " = \(dq" "Papa Bear" "\(dq,"
+.RI . address " = { \(dq" "12 Main Street" "\(dq, \(dq" 10000 "\(dq }"
+.RE
+};
+
+.BI person_t " Sister "\c
+= {
+.RS 4
+.RI . name " = \(dq" "Sister Bear" "\(dq,"
+.RI . address . postcode " = \(dq" 10000 \(dq
+.RE
+};
+
+
+.BI person_t " Brother "\c
+= {
+.RS 4
+.RI . name " = \(dq" "Brother Bear" "\(dq,"
+.RI . address " = " Mama . address
+.RE
+};
+
+/* Compound Literal (cast to struct) */
+.BI address_t " neighbor " \c
+.RB "= (" address_t "){ \(dq" \c
+.IR "100 Main St" "\(dq, \(dq" 10000 "\(dq };"
+.\"
+.B address_t \c
+.RI * favorite \c
+.RB " = &(" address_t ) \c
+.RI "{ \(dq" "100 Main St" "\(dq, \(dq" 10000 "\(dq };"
+.\" 
+.BI person_t " Baby " \c
+.RB "= (" person_t ){
+.RS 4
+.RI . name " = \(dq" "Baby Bear" \(dq,
+.RI . address " = " \c
+.RB ( address_t ){
+.RS 4
+.RI . street " = \(dq" "100 Main St" "\(dq,"
+.RI . postcode " = \(dq" 10000 "\(dq"
+.RE
+}
+.RE
+};
+
+/* Assignments */
+.B person_t \c
+.IR "friend" ;
+.\"
+.IR friend . name " = \(dq" Tammy "\(dq;"
+.\"
+.IR friend . address \c
+.RB " = (" "struct address" ) \c
+.RI "{ \(dq" "24 Elm St" "\(dq, \(dq" 10000 "\(dq };"
+
+.SH DESCRIPTION
+.PP
+Structs are an outlier in the C programming language.  While most
+things in C are simple and direct, a struct is a composite type with
+unusual (for C) rules initialization and assignment.
+.PP
+Typically, struct members are accessed individually for assignment
+or for their value.  This page is about less well-known methods for
+preparing a struct by inialization and assignment.
+.SS INITIALIZATION
+.PP
+Braces, AKA curly-brackets, are used to initialize a struct instance
+in a single statement.  During initialization, the member can be
+assigned by position or by name.
+.PP
+.EX
+/* by position */
+\fBstruct address\fR \fIhome\fR = {
+   \(dq\fI12 Main St\fR\(dq,
+   \(dq\fI55447\fR\(dq
+};
+
+/* by name */
+\fBstruct address\fR \fIhome\fR = {
+   .\fIstreet\fR   = \(dq\fI12 Main St\fR\(dq,
+   .\fIpostcode\fR = \(dq\fI55447\fR\(dq
+};
+.EE
+.PP
+Uninitialized struct instances should be assumed to contain random
+member values.  However, with an initialization statement, members
+not specifically addressed by field initializers will be set to 0:
+.PP
+.EX
+\fBstruct address\fI home\fR = { \(dq\fI12 Main St\fR\(dq };
+printf(\(dqpostcode = %s\(rsn\(dq, \fIhome\fR.\fIpostcode\fR );
+
+postcode = NULL;
+.EE
+

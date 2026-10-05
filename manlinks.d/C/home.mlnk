@@ -1,0 +1,16 @@
+#!manlinks
+
+C Concepts
+
+A set of documents supporting C development
+
+4 0
+
+&Assignments
+Treatment of Assigning Struct Members
+man
+|-l|struct_assign.7
+
+# Local Variables:
+# mode: sh
+# End:
