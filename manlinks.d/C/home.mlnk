@@ -6,10 +6,10 @@ A set of documents supporting C development
 
 4 0
 
-&Assignments
-Treatment of Assigning Struct Members
+&Structs
+How to define, initialize, and assign structs
 man
-|-l|struct_assign.7
+|-l|struct.7
 
 # Local Variables:
 # mode: sh
