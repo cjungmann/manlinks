@@ -69,7 +69,7 @@ much of the same utility as a class.
 .RE
 };
 
-/* Compound Literal (cast to struct) */
+/* Compound Literal */
 .BI address_t " neighbor " \c
 .RB "= (" address_t "){ \(dq" \c
 .IR "100 Main St" "\(dq, \(dq" 10000 "\(dq };"
@@ -97,11 +97,20 @@ much of the same utility as a class.
 .B person_t \c
 .IR "friend" ;
 .\"
-.IR friend . name " = \(dq" Tammy "\(dq;"
-.\"
-.IR friend . address \c
-.RB " = (" "struct address" ) \c
-.RI "{ \(dq" "24 Elm St" "\(dq, \(dq" 10000 "\(dq };"
+/* from another instance: */
+.IR friend " = " Sister ";"
+
+/* from compound literal
+.IR friend " = ("\c
+.BR person_t ") {"
+.RS 4
+.RI "\(dq" "Tammy Bear" "\(dq,"
+{ \c
+.RI "\(dq" "24 Elm St" "\(dq," \c
+.RI "\(dq" "10000" "\(dq " \c
+}
+.RE
+};
 
 .SH DESCRIPTION
 .PP
@@ -119,16 +128,22 @@ in a single statement.  During initialization, the member can be
 assigned by position or by name.
 .PP
 .EX
-/* by position */
-\fBstruct address\fR \fIhome\fR = {
-   \(dq\fI12 Main St\fR\(dq,
-   \(dq\fI55447\fR\(dq
+/* by an Initialization List (anonymous, by position) */
+.BI "struct address" " home " \c
+= {
+.RS 4
+.RI \(dq "12 Main St" \(dq,
+.RI \(dq "55555" \(dq
+.RE
 };
 
-/* by name */
-\fBstruct address\fR \fIhome\fR = {
-   .\fIstreet\fR   = \(dq\fI12 Main St\fR\(dq,
-   .\fIpostcode\fR = \(dq\fI55447\fR\(dq
+/* by a list of Designated Initializers (by name, random order) */
+.BI "struct address" " home " \c
+= {
+.RS 4
+.RI . postcode " = \(dq" "55555" \(dq,
+.RI . street "   = \(dq" "12 Main St" \(dq
+.RE
 };
 .EE
 .PP
@@ -137,9 +152,35 @@ member values.  However, with an initialization statement, members
 not specifically addressed by field initializers will be set to 0:
 .PP
 .EX
-\fBstruct address\fI home\fR = { \(dq\fI12 Main St\fR\(dq };
-printf(\(dqpostcode = %s\(rsn\(dq, \fIhome\fR.\fIpostcode\fR );
+.BI "struct address" " home "\c
+.RI "= { \(dq" "12 Main St" "\(dq };"
+.\"
+.B printf \c
+.RI "(\(dq" "postcode = %s\(rsn" "\(dq, " home . postcode ");"
 
-postcode = NULL;
+postcode = (null)
 .EE
-
+.SS COMPOUND LITERAL
+.PP
+A
+.B compound literal
+is an anonymous data item in memory, initialized with a type name
+and an initialization list.  This can be used to create simple or
+complex data types, including arrays and structs.
+.PP
+A struct instance can be set using a compound literal:
+.PP
+.EX
+.B struct address\c
+.IR " home" ;
+.IR home " = ("\c
+.BR "struct address" "){ "
+.RS 4
+.RI . postcode " = \(dq" "55555" \(dq,
+.RI . street "   = \(dq" "12 Main St" \(dq
+.RE
+};
+.PP
+Since the result of a compound literal is an anonymous instance in
+memory, you can also use the address of the instance.  For example,
+pass the address of the compound literal as an argument to a function.
