@@ -34,6 +34,10 @@ much of the same utility as a class.
 .\"
 .BR "struct address "\c
 .IR address ;
+
+/* Pointer member for optional additional data: */
+.B char \c
+.IR payload [];
 .RE
 };
 
@@ -121,6 +125,20 @@ unusual (for C) rules initialization and assignment.
 Typically, struct members are accessed individually for assignment
 or for their value.  This page is about less well-known methods for
 preparing a struct by inialization and assignment.
+.SS PAYLOAD
+.PP
+The
+.I payload
+member of the
+.B struct person
+is a zero-length member that can be used to access memory that
+follows an instance of a struct.  It can be used to access derived
+structs, post-struct strings, or other unspecified data.
+.PP
+If a
+.I payload
+member is used to access post-struct data, there can be only one
+such member, and it must be the last member of the struct.
 .SS INITIALIZATION
 .PP
 Braces, AKA curly-brackets, are used to initialize a struct instance
